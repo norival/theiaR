@@ -76,10 +76,17 @@ TheiaQuery <-
 
 TheiaTile <- function(file.path, url, file.hash = NULL)
 {
-  status <- list(exists  = FALSE, checked = FALSE)
+  status <- list(exists  = FALSE, checked = FALSE, correct = NA)
 
   if (file.exists(file.path)) {
-    status$exists <- TRUE
+    status$exists  <- TRUE
+    status$checked <- TRUE
+
+    if (tools::md5sum(file.path) == file.hash) {
+      status$correct <- TRUE
+    } else {
+      status$correct <- FALSE
+    }
   }
 
   new("TheiaTile",
