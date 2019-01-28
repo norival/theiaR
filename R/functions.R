@@ -35,11 +35,11 @@ setMethod("theia_download", "TheiaTile",
           })
 
 
-#' @describeIn theia_download Download a full cart
+#' @describeIn theia_download Download a full collection
 #'
 #' @export
 
-setMethod("theia_download", "TheiaCart",
+setMethod("theia_download", "TheiaCollection",
           function(object, override = FALSE) {
             lapply(object@tiles, theia_download, override = override)
           })

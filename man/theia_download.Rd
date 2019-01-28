@@ -4,14 +4,14 @@
 \name{theia_download}
 \alias{theia_download}
 \alias{theia_download,TheiaTile-method}
-\alias{theia_download,TheiaCart-method}
+\alias{theia_download,TheiaCollection-method}
 \title{Download theia object}
 \usage{
 theia_download(object, override = FALSE)
 
 \S4method{theia_download}{TheiaTile}(object, override = FALSE)
 
-\S4method{theia_download}{TheiaCart}(object, override = FALSE)
+\S4method{theia_download}{TheiaCollection}(object, override = FALSE)
 }
 \arguments{
 \item{object}{An object of class \linkS4class{Theia*}}
@@ -29,6 +29,6 @@ Download an object of class Theia*
 \itemize{
 \item \code{TheiaTile}: Download a single tile
 
-\item \code{TheiaCart}: Download a full cart
+\item \code{TheiaCollection}: Download a full collection
 }}
 
