@@ -2,3 +2,5 @@
 
 export(TheiaCart)
 export(TheiaTile)
+export(theia_download)
+exportMethods(theia_download)
