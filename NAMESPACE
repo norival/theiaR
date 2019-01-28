@@ -3,5 +3,7 @@
 export(TheiaCart)
 export(TheiaCollection)
 export(TheiaTile)
+export(theia_check)
 export(theia_download)
+exportMethods(theia_check)
 exportMethods(theia_download)
