@@ -18,7 +18,7 @@ setGeneric("theia_download", function(object, override = FALSE) standardGeneric(
 
 #' @describeIn theia_download Download a single tile
 #'
-#' @param object
+#' @param object An object of class \linkS4class{Theia*}
 #'
 #' @export
 
@@ -32,4 +32,14 @@ setMethod("theia_download", "TheiaTile",
             } else {
               message("File ", object@file.path, " already exists, skipping.")
             }
+          })
+
+
+#' @describeIn theia_download Download a full cart
+#'
+#' @export
+
+setMethod("theia_download", "TheiaCart",
+          function(object, override = FALSE) {
+            lapply(object@tiles, theia_download, override = override)
           })

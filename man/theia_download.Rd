@@ -4,14 +4,17 @@
 \name{theia_download}
 \alias{theia_download}
 \alias{theia_download,TheiaTile-method}
+\alias{theia_download,TheiaCart-method}
 \title{Download theia object}
 \usage{
 theia_download(object, override = FALSE)
 
 \S4method{theia_download}{TheiaTile}(object, override = FALSE)
+
+\S4method{theia_download}{TheiaCart}(object, override = FALSE)
 }
 \arguments{
-\item{object}{}
+\item{object}{An object of class \linkS4class{Theia*}}
 
 \item{override}{Logical: download files that are already present? (default to
 FALSE)}
@@ -25,5 +28,7 @@ Download an object of class Theia*
 \section{Methods (by class)}{
 \itemize{
 \item \code{TheiaTile}: Download a single tile
+
+\item \code{TheiaCart}: Download a full cart
 }}
 
