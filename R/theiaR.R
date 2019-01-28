@@ -3,4 +3,5 @@
 #' Search, manage and download data from Theia website
 #'
 #' @docType package
+#' @name theiaR
 NULL
