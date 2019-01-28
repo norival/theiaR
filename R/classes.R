@@ -142,6 +142,9 @@ TheiaCollection <- function(from, dest.dir)
     stop("'from', must be either of class 'character' or 'TheiaQuery'")
   }
 
+  # check dest.dir
+  dest.dir <- check_dir(dest.dir)
+
   if (is.character(from)) {
     # create a 'TheiaCart' object
     origin <- TheiaCart(from, dest.dir)
