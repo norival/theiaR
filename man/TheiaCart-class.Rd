@@ -15,7 +15,5 @@ Class to represent a theia cart
 \item{\code{cart.file}}{'.meta4' cart file downloaded from Theia}
 
 \item{\code{cart.infos}}{Informations about the cart}
-
-\item{\code{tiles}}{A list of tiles}
 }}
 

@@ -9,7 +9,7 @@ TheiaCart(cart.file, dest.dir)
 \arguments{
 \item{cart.file}{'.meta4' cart file downloaded from Theia}
 
-\item{des.dir}{Directory to store tiles}
+\item{dest.dir}{Directory to store tiles}
 }
 \value{
 An object of class \linkS4class{TheiaCart}

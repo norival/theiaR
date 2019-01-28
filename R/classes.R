@@ -19,15 +19,41 @@ TheiaTile <-
 #'
 #' @slot cart.file '.meta4' cart file downloaded from Theia
 #' @slot cart.infos Informations about the cart
-#' @slot tiles A list of tiles
 #'
 #' @rdname TheiaCart-class
 
 TheiaCart <-
   setClass("TheiaCart",
            slots = c(cart.file  = "character",
-                     cart.infos = "list",
-                     tiles      = "list"))
+                     cart.infos = "list"))
+
+
+#' Class to represent a theia collection
+#'
+#' @slot from Either a \code{character} giving the path to a cart file
+#' ('.meta4' file) or an object of class \linkS4class{TheiaQuery}
+#' @slot cart.infos Informations about the cart
+#' @slot dest.dir Directory to store tiles
+#'
+#' @rdname TheiaCollection-class
+
+TheiaCollection <-
+  setClass("TheiaCollection",
+           slots = c(from  = "ANY",
+                     tiles = "list"))
+
+
+#' Class to represent a theia query
+#'
+#' @slot credentials A list with login and password
+#' @slot query A list of search terms. See Details.
+#'
+#' @rdname TheiaQuery-class
+
+TheiaQuery <-
+  setClass("TheiaQuery",
+           slots = c(credentials  = "list",
+                     query        = "list"))
 
 
 # ------------------------------------------------------------------------------
@@ -69,7 +95,7 @@ TheiaTile <- function(file.path, url, file.hash = NULL)
 #' Construct an object of class TheiaCart.
 #'
 #' @param cart.file '.meta4' cart file downloaded from Theia
-#' @param des.dir Directory to store tiles
+#' @param dest.dir Directory to store tiles
 #'
 #' @rdname TheiaCart
 #'
@@ -91,17 +117,55 @@ TheiaCart <- function(cart.file, dest.dir)
     warning("Cart too old (>2h), token will be invalidated")
   }
 
-  tiles <- lapply(meta.xml[-1],
-                  function(x) {
-                    TheiaTile(file.path = paste0(dest.dir, as.character(x$.attrs)),
-                              file.hash = as.character(x$hash),
-                              url       = as.character(x$url$text))
-                  })
-  names(tiles) <- rep("tile", length(tiles))
-
   new("TheiaCart",
       cart.file   = cart.file, 
-      tiles       = tiles,
       cart.infos  = list(pub.date   = pub.date,
                          xml.data   = meta.xml))
+}
+
+
+#' Create a \code{TheiaCollection} object
+#'
+#' Create a \code{TheiaCollection} object from a cart file or a
+#' \linkS4class{TheiaQuery} object (not implemented yet)
+#'
+#' @param from Either a \code{character} giving the path to a cart file
+#' ('.meta4' file) or an object of class \linkS4class{TheiaQuery}
+#' @param dest.dir Directory to store tiles
+#'
+#' @export
+
+TheiaCollection <- function(from, dest.dir)
+{
+  # check arguments
+  if (!(class(from) %in% c("character", "TheiaQuery"))) {
+    stop("'from', must be either of class 'character' or 'TheiaQuery'")
+  }
+
+  if (is.character(from)) {
+    # create a 'TheiaCart' object
+    origin <- TheiaCart(from, dest.dir)
+
+    # initialize tiles
+    tiles <- lapply(origin@cart.infos$xml.data[-1],
+                    function(x) {
+                      TheiaTile(file.path = paste0(dest.dir, as.character(x$.attrs)),
+                                file.hash = as.character(x$hash),
+                                url       = as.character(x$url$text))
+                    })
+    names(tiles) <- rep("tile", length(tiles))
+
+  } else {
+    ## NOT IMPLEMENTED YET #####################################################
+    # reads TheiaQuery and initialize tiles objects
+    ## NOT IMPLEMENTED YET #####################################################
+    origin <- from
+    tiles  <- list()
+    warning("Not implemented yet for TheiaQuery objects")
+  }
+
+  # create new collection of tiles
+  new("TheiaCollection",
+      from  = origin,
+      tiles = tiles)
 }
