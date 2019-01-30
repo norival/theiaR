@@ -3,10 +3,16 @@ Title: Download and manage data from Theia
 Version: 0.0.1
 Authors@R: person("Xavier", "Laviron", email = "xavier.laviron@gmx.fr", role = c("aut", "cre"))
 Description: Search, download and manage
-Depends: R (>= 3.5.2), tools, methods, XML (>= 3.86)
+Depends: R (>= 3.5.2), tools, methods, XML (>= 3.86), R6
 License: GPL (>= 3.0)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Suggests: 
     testthat
+Collate: 
+    'TheiaTile.R'
+    'theiaR.R'
+    'TheiaCollection.R'
+    'TheiaQuery.R'
+    'utils.R'
