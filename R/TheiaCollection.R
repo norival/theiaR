@@ -34,6 +34,15 @@ TheiaCollection <-
                    } else if (!(missing(tiles))) {
                      # build from list of tiles
                    } else if (!(missing(query))) {
+                     self$tiles <-
+                       apply(query$tiles, 1,
+                             function(x) {
+                               TheiaTile$new(file.path = paste0(dir.path, x[1]),
+                                             file.hash = as.character(x[3]),
+                                             url       = as.character(x[2]))
+                             })
+
+                     self$tiles <- unname(self$tiles)
                      # build from query
                    }
                  },
