@@ -5,3 +5,6 @@
 #' @docType package
 #' @name theiaR
 NULL
+
+#' @importFrom R6 R6Class
+NULL
