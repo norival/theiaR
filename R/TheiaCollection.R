@@ -1,6 +1,7 @@
 #' @include TheiaTile.R
 NULL
 
+#' @export
 
 TheiaCollection <-
   R6Class("TheiaCollection",
