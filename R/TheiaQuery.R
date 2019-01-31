@@ -72,89 +72,108 @@ TheiaQuery <-
 
                  initialize = function(login, passwd, query)
                  {
-                   private$login  <- login
-                   private$passwd <- passwd
-
-                   # base url for theia
-                   base.url <- "https://theia.cnes.fr/atdistrib/resto2/api/collections"
-
-                   # how to display in query link
-                   q.link <- c("q",
-                               "location",
-                               "platform",
-                               "startDate",
-                               "completionDate",
-                               "lat",
-                               "lon")
-
-                   # how query is given by the user
-                   q.query <- c("town",
-                                "tile",
-                                "platform",
-                                "start.date",
-                                "end.date",
-                                "latitude",
-                                "longitude")
-
-                   # match search and links
-                   i <- which(q.query %in% names(query))
-                   j <- which(names(query) %in% q.query)
-
-                   # build query links
-                   query.link  <- paste(q.link[i], query[j], sep = "=", collapse = "&")
-                   private$url <- paste0(base.url, "/", query$collection, "/",
-                                         "search.json?", query.link)
+                   .TheiaQuery_initialize(self, private, login, passwd, query)
                  },
 
-                 update_token = function(...)
+                 update_token = function()
                  {
-                   # base url for authentification
-                   baseurl <- "https://theia.cnes.fr/atdistrib/services/authenticate/"
-
-                   # make request to get a new token
-                   req <- httr::POST(baseurl,
-                                     body = list(ident = private$login,
-                                                 pass  = private$passwd))
-
-                   # store token
-                   private$token <- content(req, as = "text")
-
-                   if (nchar(private$token) > 1
-                       & any(grepl("download$", self$tiles$url))) {
-                     # if tiles if filled but does not have a token, adds the
-                     # token to the links
-                     self$tiles$url <- gsub("\\?_tk=.*$", "", self$tiles$url)
-                     self$tiles$url <- paste0(self$tiles$url, "?_tk=", private$token)
-                   }
-
-                   return(invisible(self))
+                   .TheiaQuery_update_token(self, private)
                  },
 
-                 submit = function(...)
+                 submit = function()
                  {
-                   # TODO: gestion des erreurs
-                   # make http request to get catalog
-                   req <- httr::GET(private$url)
-
-                   # parse and save catalog
-                   private$catalog <- httr::content(req, as = "parsed")
-
-                   # extract tiles
-                   cart <-
-                     lapply(private$catalog$features,
-                            function(x) {
-                              data.frame(file.name = paste0(x$properties$title, ".zip"),
-                                         url       = x$properties$services$download$url,
-                                         file.hash = x$properties$services$download$checksum)
-                            })
-                   self$tiles <- do.call(rbind, cart)
-
-                   if (!(is.null(private$token)) && nchar(private$token) > 1) {
-                     # add the token to the links
-                     self$tiles$url <- paste0(self$tiles$url, "?_tk=", private$token)
-                   }
-
-                   return(invisible(self))
+                   .TheiaQuery_submit(self, private)
                  })
           )
 
+
+# Functions definitions --------------------------------------------------------
+
+.TheiaQuery_initialize <- function(self, private, login, passwd, query)
+{
+  private$login  <- login
+  private$passwd <- passwd
+
+  # base url for theia
+  base.url <- "https://theia.cnes.fr/atdistrib/resto2/api/collections"
+
+  # how to display in query link
+  q.link <- c("q",
+              "location",
+              "platform",
+              "startDate",
+              "completionDate",
+              "lat",
+              "lon")
+
+  # how query is given by the user
+  q.query <- c("town",
+               "tile",
+               "platform",
+               "start.date",
+               "end.date",
+               "latitude",
+               "longitude")
+
+  # match search and links
+  i <- which(q.query %in% names(query))
+  j <- which(names(query) %in% q.query)
+
+  # build query links
+  query.link  <- paste(q.link[i], query[j], sep = "=", collapse = "&")
+  private$url <- paste0(base.url, "/", query$collection, "/",
+                        "search.json?", query.link)
+
+  return(invisible(self))
+}
+
+
+.TheiaQuery_update_token <- function(self, private)
+{
+  # base url for authentification
+  baseurl <- "https://theia.cnes.fr/atdistrib/services/authenticate/"
+
+  # make request to get a new token
+  req <- httr::POST(baseurl,
+                    body = list(ident = private$login,
+                                pass  = private$passwd))
+
+  # store token
+  private$token <- content(req, as = "text")
+
+  if (nchar(private$token) > 1 & any(grepl("download$", self$tiles$url))) {
+    # if tiles if filled but does not have a token, adds the token to the links
+    self$tiles$url <- gsub("\\?_tk=.*$", "", self$tiles$url)
+    self$tiles$url <- paste0(self$tiles$url, "?_tk=", private$token)
+  }
+
+  return(invisible(self))
+}
+
+
+.TheiaQuery_submit <- function(self, private)
+{
+  # TODO: gestion des erreurs
+  # make http request to get catalog
+  req <- httr::GET(private$url)
+
+  # parse and save catalog
+  private$catalog <- httr::content(req, as = "parsed")
+
+  # extract tiles
+  cart <-
+    lapply(private$catalog$features,
+           function(x) {
+             data.frame(file.name = paste0(x$properties$title, ".zip"),
+                        url       = x$properties$services$download$url,
+                        file.hash = x$properties$services$download$checksum)
+           })
+  self$tiles <- do.call(rbind, cart)
+
+  if (!(is.null(private$token)) && nchar(private$token) > 1) {
+    # add the token to the links
+    self$tiles$url <- paste0(self$tiles$url, "?_tk=", private$token)
+  }
+
+  return(invisible(self))
+}
