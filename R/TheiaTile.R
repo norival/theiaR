@@ -41,7 +41,13 @@ TheiaTile <-
   R6Class("TheiaTile",
           # public -------------------------------------------------------------
           private =
-            list(meta.data = NULL),
+            list(meta.data = NULL,
+
+                 add_md = function()
+                 {
+                   # parse and add metadata from the zip archive
+                   .TheiaTile_add_md(self, private)
+                 }),
 
           # public -------------------------------------------------------------
           public =
@@ -52,7 +58,7 @@ TheiaTile <-
 
                  initialize = function(file.path, url, file.hash)
                  {
-                   .TheiaTile_initialize(self, file.path, url, file.hash)
+                   .TheiaTile_initialize(self, private, file.path, url, file.hash)
                  },
 
                  print = function(...)
@@ -67,7 +73,7 @@ TheiaTile <-
 
                  download = function(override = FALSE)
                  {
-                   .TheiaTile_download(self, override)
+                   .TheiaTile_download(self, private, override)
                  })
           )
 
@@ -84,7 +90,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_initialize <- function(self, file.path, url, file.hash)
+.TheiaTile_initialize <- function(self, private, file.path, url, file.hash)
 {
   # Fill fiedls of the object
   self$file.path <- file.path
@@ -96,6 +102,11 @@ TheiaTile <-
 
   # check the tile
   self$check()
+
+  # adds meta data if file is present and correct
+  if (self$status$correct == TRUE) {
+    private$add_md()
+  }
 
   return(invisible(self))
 }
@@ -123,7 +134,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_download <- function(self, override = FALSE)
+.TheiaTile_download <- function(self, private, override = FALSE)
 {
   # download the file if it is not present and override is set to FALSE
   if (!(file.exists(self$file.path)) | override == TRUE) {
@@ -138,6 +149,33 @@ TheiaTile <-
 
   # check the tile
   self$check()
+
+  # adds meta data if file is present and correct
+  if (self$status$correct == TRUE) {
+    private$add_md()
+  }
+
+  return(invisible(self))
+}
+
+
+.TheiaTile_add_md <- function(self, private)
+{
+  message("Parsing meta data...")
+
+  # create temporary directory
+  tmp.dir <- paste0(tempdir(), "/")
+
+  # get file name to extract
+  file.name <- unzip(self$file.path, list = TRUE, unzip = getOption("unzip"))
+  file.name <- file.name$Name[grepl("xml$", file.name$Name)]
+
+  # extract and parse xml file
+  unzip(self$file.path, files = file.name, exdir = tmp.dir, unzip = getOption("unzip"))
+  private$meta.data <- xmlToList(xmlParse(paste0(tmp.dir, file.name)))
+
+  # remove temporary file
+  unlink(paste(tmp.dir, file.name, sep = "/"))
 
   return(invisible(self))
 }
