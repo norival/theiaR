@@ -81,6 +81,9 @@ TheiaCollection <-
 
 .TheiaCollection_initialize <- function(self, cart.path, tiles, query, dir.path)
 {
+  # fill dir.path field
+  self$dir.path <- dir.path
+
   if (!(missing(cart.path))) {
     # build collection from cart file ------------------------------------------
     # parse xml data contained in '.meta4' cart file
