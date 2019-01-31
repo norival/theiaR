@@ -2,21 +2,26 @@ TheiaAuth <-
   R6Class("TheiaAuth",
           # private ------------------------------------------------------------
           private =
-            list(login      = NULL,
-                 passwd     = NULL,
-                 .token     = NULL,
+            list(.token     = NULL,
                  token.date = NULL,
                  baseurl    = "https://theia.cnes.fr/atdistrib/services/authenticate/"),
 
           # public -------------------------------------------------------------
           public =
-            list(initialize = function(login, passwd)
+            list(auth.file = NULL,
+
+                 initialize = function(auth.file)
                  {
-                   .TheiaAuth_initialize(self, private, login, passwd)
+                   .TheiaAuth_initialize(self, private, auth.file)
                  }),
             
           active = 
-            list(token = function()
+            list(auth = function()
+                 {
+                   .TheiaAuth_auth(self, private)
+                 },
+
+                 token = function()
                  {
                    .TheiaAuth_token(self, private)
 
@@ -27,16 +32,22 @@ TheiaAuth <-
 
 # Functions definitions --------------------------------------------------------
 
-.TheiaAuth_initialize <- function(self, private, login, passwd)
+.TheiaAuth_initialize <- function(self, private, auth.file)
 {
-  # fill login and password fields
-  private$login  <- login
-  private$passwd <- passwd
+  # fill auth.file field
+  self$auth.file <- auth.file
 
   # fill token field
   private$.token <- self$token
 
   return(invisible(self))
+}
+
+
+.TheiaAuth_auth <- function(self, private)
+{
+  # read auth file
+  return(readLines(auth.file))
 }
 
 
@@ -51,8 +62,8 @@ TheiaAuth <-
     # token is too old or dose not exist yet, request a new one
     # make request to get a new token
     req <- httr::POST(private$baseurl,
-                      body = list(ident = private$login,
-                                  pass  = private$passwd))
+                      body = list(ident = self$auth[1],
+                                  pass  = self$auth[2]))
 
     # store token
     private$.token <- content(req, as = "text")
