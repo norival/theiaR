@@ -1,34 +1,51 @@
 #' @include TheiaTile.R
 NULL
 
-#' Class representing a collection of tiles from Theia
+
+#' A collection of tiles from Theia
 #'
-#' Internal representation of a collection of tiles from Theia, storing their
-#' locations, statuses and metadata.
+#' Generate and manage collection of tiles from Theia. This collection can be
+#' created either from a cart file ('.meta4') downloaded from Theia website,
+#' from a \code{\link{TheiaQuery}} object or from a list of
+#' \code{\link{TheiaTile}} (not implemented yet).
 #'
-#' @docType class
 #' @name TheiaCollection
 #'
-#' @field dir.path The path to the directory containing zip files
-#' @field tiles A list of TheiaTile objects
-#' @field cart An XML cart parsed from a 'meta4' file downloaded from Theia
-#' website. Used only if Collection is created from a cart
-#' @field query A TheiaQuery object, used only if collection is created from a
-#' TheiaQuery object
+#' @section Usage:
+#' \preformatted{
+#'    c <- TheiaCollection$new(cart.path = NULL,
+#'                             tiles     = NULL,
+#'                             query     = NULL,
+#'                             dir.path  = NULL)
 #'
-#' @section Methods:
-#' \describe{
-#'    \item{\code{$new()}}{
-#'      Create a new instance of the class
-#'    }
-#'    \item{\code{$download()}}{
-#'      Download the tiles of the collection and check the resulting files
-#'    }
-#'    \item{\code{$check()}}{
-#'      Check the tiles of the collection
-#'    }
+#'    c$download(override = FALSE)
+#'    c$check()
 #' }
 #'
+#' @section Arguments:
+#'
+#' \describe{
+#'    \item{c:}{A \code{TheiaCollection} object}
+#'    \item{dir.path:}{The path to the directory containing zip files}
+#'    \item{tiles:}{A list of TheiaTile objects}
+#'    \item{cart:}{An XML cart parsed from a 'meta4' file downloaded from Theia}
+#'    website. Used only if Collection is created from a cart
+#'    \item{query:}{A TheiaQuery object, used only if collection is created
+#'    from a TheiaQuery object}
+#'    \item{override:}{Override existing tiles (default to `FALSE`}
+#'  }
+#'
+#' @section Details:
+#'    \code{$new()} Create a new instance of the class
+#'
+#'    \code{$download(override = FALSE)} Download the tiles of the collection
+#'    and check the resulting files
+#'
+#'    \code{$check()} Check the tiles of the collection
+#'
+NULL
+
+
 #' @export
 
 TheiaCollection <-
@@ -50,6 +67,7 @@ TheiaCollection <-
                      # parse xml data contained in '.meta4' cart file
                      self$cart <- XML::xmlToList(XML::xmlParse(cart.path))
 
+                     # create needed TheiaTile objects
                      self$tiles <-
                        lapply(self$cart[-1],
                               function(x) {
@@ -58,10 +76,15 @@ TheiaCollection <-
                                               url       = as.character(x$url$text))
                               })
 
+                     # remove useless names of tiles list
                      self$tiles <- unname(self$tiles)
                    } else if (!(missing(tiles))) {
+                     # TODO: Implement building from a list of tiles
                      # build from list of tiles
                    } else if (!(missing(query))) {
+                     # build TheiaCollection from a TheiaQuery object
+
+                     # create needed TheiaTile objects
                      self$tiles <-
                        apply(query$tiles, 1,
                              function(x) {
@@ -70,12 +93,14 @@ TheiaCollection <-
                                              url       = as.character(x[2]))
                              })
 
+                     # remove useless names of tiles list
                      self$tiles <- unname(self$tiles)
                    }
                  },
 
                  check = function(...)
                  {
+                   # check all the tiles
                    lapply(self$tiles, function(x) x$check())
 
                    return(invisible(self))
@@ -83,6 +108,7 @@ TheiaCollection <-
 
                  download = function(override = FALSE)
                  {
+                   # download needed tiles
                    lapply(self$tiles,
                           function(x, override) {
                             x$download(override = override)
