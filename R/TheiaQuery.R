@@ -4,6 +4,8 @@ TheiaQuery <-
           # private ------------------------------------------------------------
           private =
             list(token    = NULL,
+                 login    = NULL,
+                 passwd   = NULL,
                  url      = NULL,
                  catalog  = NULL),
 
@@ -11,13 +13,11 @@ TheiaQuery <-
           public =
             list(query    = NULL,
                  tiles    = NULL,
-                 login    = NULL,
-                 passwd   = NULL,
 
                  initialize = function(login, passwd, query)
                  {
-                   self$login  <- login
-                   self$passwd <- passwd
+                   private$login  <- login
+                   private$passwd <- passwd
 
                    # base url for theia
                    base.url <- "https://theia.cnes.fr/atdistrib/resto2/api/collections"
