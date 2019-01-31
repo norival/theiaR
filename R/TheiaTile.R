@@ -13,6 +13,7 @@
 #'    t$download(override = FALSE)
 #'    t$check()
 #'    t$get_bands()
+#'    t$read(bands)
 #' }
 #'
 #' @section Arguments:
@@ -34,6 +35,7 @@
 #'
 #'    \code{t$check()} Check the tiles of the collection
 #'    \code{t$get_bands()} List bands available in the tile
+#'    \code{t$read(bands)} Read band(s) from the zip file
 #'
 NULL
 
@@ -82,6 +84,11 @@ TheiaTile <-
                  get_bands = function()
                  {
                    .TheiaTile_get_bands(self, private)
+                 },
+
+                 read = function(bands)
+                 {
+                   .TheiaTile_read(self, private, bands)
                  })
           )
 
@@ -204,4 +211,16 @@ TheiaTile <-
   rownames(bands) <- NULL
 
   return(bands)
+}
+
+
+.TheiaTile_read <- function(self, private, bands)
+{
+  # get file names to read from
+  files   <- unzip(self$file.path, list = TRUE)$Name
+  pattern <- paste(paste0("FRE_", bands, ".tif$"), collapse = "|")
+  files   <- files[grepl(pattern, files)]
+
+  # read tiles from zip file and create raster::rasterStack object
+  raster::stack(lapply(files, read_tiff_from_zip, zip.file = self$file.path))
 }

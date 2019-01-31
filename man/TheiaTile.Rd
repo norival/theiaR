@@ -15,6 +15,8 @@ Generate and manage a tile from Theia (download, check, load).
 
    t$download(override = FALSE)
    t$check()
+   t$get_bands()
+   t$read(bands)
 }
 }
 
@@ -32,11 +34,14 @@ Generate and manage a tile from Theia (download, check, load).
 
 \section{Details}{
 
-   \code{$new(file.path, url, file.hash)} Create a new instance of the class
+   \code{TheiaTile$new(file.path, url, file.hash)} Create a new instance of
+   the class
 
-   \code{$download(override = FALSE)} Download the tiles of the collection
+   \code{t$download(override = FALSE)} Download the tiles of the collection
    and check the resulting files
 
-   \code{$check()} Check the tiles of the collection
+   \code{t$check()} Check the tiles of the collection
+   \code{t$get_bands()} List bands available in the tile
+   \code{t$read(bands)} Read band(s) from the zip file
 }
 
