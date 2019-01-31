@@ -74,6 +74,11 @@ TheiaTile <-
                  download = function(override = FALSE)
                  {
                    .TheiaTile_download(self, private, override)
+                 },
+                  
+                 get_bands = function()
+                 {
+                   .TheiaTile_get_bands(self, private)
                  })
           )
 
@@ -178,4 +183,22 @@ TheiaTile <-
   unlink(paste(tmp.dir, file.name, sep = "/"))
 
   return(invisible(self))
+}
+
+
+.TheiaTile_get_bands <- function(self, private)
+{
+  # get bands list from 
+  bands <- lapply(private$meta.data$Product_Characteristics$Band_Group_List,
+                  function(x) {
+                    band.list <- unlist(x$Band_List[-(length(x$Band_List))])
+                    band.id   <- unname(x$.attrs)
+
+                    data.frame(band = band.list, band.id = band.id)
+                  })
+
+  bands <- do.call(rbind, bands)
+  rownames(bands) <- NULL
+
+  return(bands)
 }
