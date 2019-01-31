@@ -62,6 +62,16 @@ TheiaQuery <-
 
                    # store token
                    private$token <- content(req, as = "text")
+
+                   if (nchar(private$token) > 1
+                       & any(grepl("download$", self$tiles$url))) {
+                     # if tiles if filled but does not have a token, adds the
+                     # token to the links
+                     self$tiles$url <- gsub("\\?_tk=.*$", "", self$tiles$url)
+                     self$tiles$url <- paste0(self$tiles$url, "?_tk=", private$token)
+                   }
+
+                   return(invisible(self))
                  },
 
                  submit = function(...)
@@ -82,6 +92,11 @@ TheiaQuery <-
                                          file.hash = x$properties$services$download$checksum)
                             })
                    self$tiles <- do.call(rbind, cart)
+
+                   if (!(is.null(private$token)) && nchar(private$token) > 1) {
+                     # add the token to the links
+                     self$tiles$url <- paste0(self$tiles$url, "?_tk=", private$token)
+                   }
 
                    return(invisible(self))
                  })
