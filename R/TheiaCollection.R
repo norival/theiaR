@@ -73,6 +73,11 @@ TheiaCollection <-
                  download = function(override = FALSE)
                  {
                    .TheiaCollection_download(self, override)
+                 },
+                 
+                 get_bands = function()
+                 {
+                   .TheiaCollection_get_bands(self, private)
                  })
           )
 
@@ -144,4 +149,27 @@ TheiaCollection <-
          override = override)
 
   return(invisible(self))
+}
+
+
+.TheiaCollection_get_bands <- function(self, private)
+{
+  # get available bands in each tile
+  bands <- lapply(self$tiles,
+                      function(x)
+                      {
+                        cbind.data.frame(tile = x$file.path, x$get_bands())
+                      })
+
+  bands <- do.call(rbind, bands)
+
+  # format tiles names
+  bands$tile <- gsub(self$dir.path, "", bands$tile)
+  bands$tile <- gsub(".zip$", "", bands$tile)
+
+  # get bands that are present in each tile
+  bands.common <- bands$band[duplicated(bands$band)]
+  bands$common <- bands$band %in% bands.common
+
+  return(bands)
 }
