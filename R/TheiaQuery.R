@@ -50,6 +50,20 @@ TheiaQuery <-
                                          "search.json?", query.link)
                  },
 
+                 update_token = function(...)
+                 {
+                   # base url for authentification
+                   baseurl <- "https://theia.cnes.fr/atdistrib/services/authenticate/"
+
+                   # make request to get a new token
+                   req <- httr::POST(baseurl,
+                                     body = list(ident = private$login,
+                                                 pass  = private$passwd))
+
+                   # store token
+                   private$token <- content(req, as = "text")
+                 },
+
                  submit = function(...)
                  {
                    # TODO: gestion des erreurs
