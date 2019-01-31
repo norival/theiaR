@@ -20,6 +20,7 @@ NULL
 #'
 #'    c$download(override = FALSE)
 #'    c$check()
+#'    c$get_bands()
 #' }
 #'
 #' @section Arguments:
@@ -36,12 +37,14 @@ NULL
 #'  }
 #'
 #' @section Details:
-#'    \code{$new()} Create a new instance of the class
+#'    \code{TheiaCollection$new()} Create a new instance of the class
 #'
-#'    \code{$download(override = FALSE)} Download the tiles of the collection
+#'    \code{c$download(override = FALSE)} Download the tiles of the collection
 #'    and check the resulting files
 #'
-#'    \code{$check()} Check the tiles of the collection
+#'    \code{$ccheck()} Check the tiles of the collection
+#'
+#'    \code{c$get_bands()} List bands available in each tile
 #'
 NULL
 
