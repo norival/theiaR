@@ -1,4 +1,33 @@
+#' Class representing a single tile from Theia
+#'
+#' Internal representation of a tile from Theia, storing its location, status
+#' and metadata.
+#'
+#' @docType class
+#' @name TheiaTile
+#'
+#' @field file.path The path to the zip file containing the tile
+#' @field file.hash The hash of the file, used to check if the file is correctly
+#' downloaded
+#' @field url The url to download the tile from Theia website
+#' @field status A list giving the status of the tile: whether it is downloaded,
+#' checked, correctly downloaded
+#'
+#' @section Methods:
+#' \describe{
+#'    \item{\code{$new()}}{
+#'      Create a new instance of the class
+#'    }
+#'    \item{\code{$download()}}{
+#'      Download the tile and check the resulting file
+#'    }
+#'    \item{\code{$check()}}{
+#'      Check the tile
+#'    }
+#' }
+#'
 #' @export
+
 TheiaTile <-
   R6Class("TheiaTile",
           # public -------------------------------------------------------------
