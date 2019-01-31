@@ -216,6 +216,22 @@ TheiaTile <-
 
 .TheiaTile_read <- function(self, private, bands)
 {
+  # check if requested bands are available
+  avail.bands <- self$get_bands()
+  if (any(!(bands %in% avail.bands$band))) {
+    stop("Bands '",
+         paste(bands[!(bands %in% avail.bands)], collapse = ", "),
+         "' are not available!")
+  }
+
+  # check if requested bands hae the same ID
+  bands.id <- avail.bands$band.id[avail.bands$band %in% bands]
+  if (length(unique(bands.id)) > 1) {
+    stop("Bands '",
+         paste(bands[!(bands %in% avail.bands)], collapse = ", "),
+         "' are not at the same resolution!")
+  }
+
   # get file names to read from
   files   <- unzip(self$file.path, list = TRUE)$Name
   pattern <- paste(paste0("FRE_", bands, ".tif$"), collapse = "|")
