@@ -1,31 +1,40 @@
-#' Class representing a single tile from Theia
+#' A tile from Theia
 #'
-#' Internal representation of a tile from Theia, storing its location, status
-#' and metadata.
+#' Generate and manage a tile from Theia (download, check, load).
 #'
-#' @docType class
 #' @name TheiaTile
 #'
-#' @field file.path The path to the zip file containing the tile
-#' @field file.hash The hash of the file, used to check if the file is correctly
-#' downloaded
-#' @field url The url to download the tile from Theia website
-#' @field status A list giving the status of the tile: whether it is downloaded,
-#' checked, correctly downloaded
+#' @section Usage:
+#' \preformatted{
+#'    t <- TheiaTile$new(file.path,
+#'                       url,
+#'                       file.hash)
 #'
-#' @section Methods:
-#' \describe{
-#'    \item{\code{$new()}}{
-#'      Create a new instance of the class
-#'    }
-#'    \item{\code{$download()}}{
-#'      Download the tile and check the resulting file
-#'    }
-#'    \item{\code{$check()}}{
-#'      Check the tile
-#'    }
+#'    t$download(override = FALSE)
+#'    t$check()
 #' }
 #'
+#' @section Arguments:
+#'
+#' \describe{
+#'    \item{t:}{A \code{TheiaTile} object}
+#'    \item{file.path:}{The path to the zip file containing the tile}
+#'    \item{url:}{The url to download the tile}
+#'    \item{file.hash:}{The md5sum used to check the zip file}
+#'    \item{override:}{Override existing tiles (default to `FALSE`)}
+#'  }
+#'
+#' @section Details:
+#'    \code{$new(file.path, url, file.hash)} Create a new instance of the class
+#'
+#'    \code{$download(override = FALSE)} Download the tiles of the collection
+#'    and check the resulting files
+#'
+#'    \code{$check()} Check the tiles of the collection
+#'
+NULL
+
+
 #' @export
 
 TheiaTile <-
@@ -41,17 +50,22 @@ TheiaTile <-
                                        url,
                                        file.hash)
                  {
+                   # Fill fiedls of the object
                    self$file.path <- file.path
                    self$url       <- url
                    self$file.hash <- file.hash
                    self$status    <- list(exists  = FALSE,
                                           checked = FALSE,
                                           correct = NA)
+
+                   # check the tile
                    self$check()
                  },
 
                  print = function(...)
                  {
+                   # Special method to print
+                   # TODO: better method to print
                    cat("An Tile from Theia\n")
 
                    return(invisible(self))
@@ -59,12 +73,15 @@ TheiaTile <-
 
                  check = function()
                  {
+                   # check the tile
                    if (file.exists(self$file.path)) {
+                     # if the file exists, check it
                      message("Checking downloaded file...")
 
                      self$status$exists  <- TRUE
                      self$status$checked <- TRUE
 
+                     # compute the md5 sum and compare it to the hash
                      if (tools::md5sum(self$file.path) == self$file.hash) {
                        self$status$correct <- TRUE
                      } else {
@@ -77,15 +94,19 @@ TheiaTile <-
 
                  download = function(override = FALSE)
                  {
+                   # download the file if it is not present and override is set
+                   # to FALSE
                    if (!(file.exists(self$file.path)) | override == TRUE) {
                      tryCatch(download.file(self$url, destfile = self$file.path),
                               error = function(e) {
                                 warning("Could not download file!")
                               })
                    } else {
+                     # The file already exists
                      message("File ", self$file.path, " already exists, skipping.")
                    }
 
+                   # check the tile
                    self$check()
 
                    return(invisible(self))
