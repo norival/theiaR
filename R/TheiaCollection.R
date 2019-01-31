@@ -1,6 +1,34 @@
 #' @include TheiaTile.R
 NULL
 
+#' Class representing a collection of tiles from Theia
+#'
+#' Internal representation of a collection of tiles from Theia, storing their
+#' locations, statuses and metadata.
+#'
+#' @docType class
+#' @name TheiaCollection
+#'
+#' @field dir.path The path to the directory containing zip files
+#' @field tiles A list of TheiaTile objects
+#' @field cart An XML cart parsed from a 'meta4' file downloaded from Theia
+#' website. Used only if Collection is created from a cart
+#' @field query A TheiaQuery object, used only if collection is created from a
+#' TheiaQuery object
+#'
+#' @section Methods:
+#' \describe{
+#'    \item{\code{$new()}}{
+#'      Create a new instance of the class
+#'    }
+#'    \item{\code{$download()}}{
+#'      Download the tiles of the collection and check the resulting files
+#'    }
+#'    \item{\code{$check()}}{
+#'      Check the tiles of the collection
+#'    }
+#' }
+#'
 #' @export
 
 TheiaCollection <-
