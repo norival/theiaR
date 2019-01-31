@@ -62,59 +62,83 @@ TheiaCollection <-
                                        query      = NULL,
                                        dir.path   = NULL)
                  {
-                   if (!(missing(cart.path))) {
-                     # build from cart file
-                     # parse xml data contained in '.meta4' cart file
-                     self$cart <- XML::xmlToList(XML::xmlParse(cart.path))
-
-                     # create needed TheiaTile objects
-                     self$tiles <-
-                       lapply(self$cart[-1],
-                              function(x) {
-                                TheiaTile$new(file.path = paste0(dir.path, as.character(x$.attrs)),
-                                              file.hash = as.character(x$hash),
-                                              url       = as.character(x$url$text))
-                              })
-
-                     # remove useless names of tiles list
-                     self$tiles <- unname(self$tiles)
-                   } else if (!(missing(tiles))) {
-                     # TODO: Implement building from a list of tiles
-                     # build from list of tiles
-                   } else if (!(missing(query))) {
-                     # build TheiaCollection from a TheiaQuery object
-
-                     # create needed TheiaTile objects
-                     self$tiles <-
-                       apply(query$tiles, 1,
-                             function(x) {
-                               TheiaTile$new(file.path = paste0(dir.path, x[1]),
-                                             file.hash = as.character(x[3]),
-                                             url       = as.character(x[2]))
-                             })
-
-                     # remove useless names of tiles list
-                     self$tiles <- unname(self$tiles)
-                   }
+                   .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path)
                  },
 
-                 check = function(...)
+                 check = function()
                  {
-                   # check all the tiles
-                   lapply(self$tiles, function(x) x$check())
-
-                   return(invisible(self))
+                   .TheiaCollection_check(self)
                  },
 
                  download = function(override = FALSE)
                  {
-                   # download needed tiles
-                   lapply(self$tiles,
-                          function(x, override) {
-                            x$download(override = override)
-                          },
-                          override = override)
-
-                   return(invisible(self))
+                   .TheiaCollection_download(self, override)
                  })
           )
+
+
+# Functions definitions --------------------------------------------------------
+
+.TheiaCollection_initialize <- function(self, cart.path, tiles, query, dir.path)
+{
+  if (!(missing(cart.path))) {
+    # build collection from cart file ------------------------------------------
+    # parse xml data contained in '.meta4' cart file
+    self$cart <- XML::xmlToList(XML::xmlParse(cart.path))
+
+    # create needed TheiaTile objects
+    self$tiles <-
+      lapply(self$cart[-1],
+             function(x) {
+               TheiaTile$new(file.path = paste0(dir.path, as.character(x$.attrs)),
+                             file.hash = as.character(x$hash),
+                             url       = as.character(x$url$text))
+             })
+
+    # remove useless names of tiles list
+    self$tiles <- unname(self$tiles)
+
+  } else if (!(missing(tiles))) {
+    # TODO: Implement building from a list of tiles
+    # build from list of tiles
+
+  } else if (!(missing(query))) {
+    # build collection from a TheiaQuery object --------------------------------
+
+    # create needed TheiaTile objects
+    self$tiles <-
+      apply(query$tiles, 1,
+            function(x) {
+              TheiaTile$new(file.path = paste0(dir.path, x[1]),
+                            file.hash = as.character(x[3]),
+                            url       = as.character(x[2]))
+            })
+
+    # remove useless names of tiles list
+    self$tiles <- unname(self$tiles)
+  }
+
+  return(invisible(self))
+}
+
+
+.TheiaCollection_check <- function(self)
+{
+  # check all the tiles
+  lapply(self$tiles, function(x) x$check())
+
+  return(invisible(self))
+}
+
+
+.TheiaCollection_download <- function(self, override)
+{
+  # download needed tiles
+  lapply(self$tiles,
+         function(x, override) {
+           x$download(override = override)
+         },
+         override = override)
+
+  return(invisible(self))
+}
