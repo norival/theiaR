@@ -1,3 +1,59 @@
+#' A query to the Theia website
+#'
+#' Generate an send a query to Theia web API to get and download tiles based on
+#' input given by the user.
+#'
+#' @name TheiaQuery
+#'
+#' @section Usage:
+#' \preformatted{
+#'    q <- TheiaQuery$new(login, passwd, query)
+#'
+#'    q$update_token()
+#'    q$submit()
+#' }
+#'
+#' @section Arguments:
+#'
+#' \describe{
+#'    \item{q:}{A \code{TheiaQuery} object}
+#'    \item{login:}{\code{charcter}, the users' login}
+#'    \item{passwd:}{\code{charcter}, the users' password}
+#'    \item{query:}{\code{list}, the users' request, see `Queries` for
+#'    more informations}
+#' }
+#'
+#' @section Details:
+#'    \code{TheiaQuery$new()} Create a new instance of the class and parse
+#'    `query` list
+#'
+#'    \code{q$submit()} Submit the query to Theia and get a list af tiles
+#'    corresponding to search criteria
+#'
+#'    \code{q$update_token()} Get a token to download tiles
+#'
+#' @section Queries:
+#'
+#'    Search criterai are given with a `list` accepting these fields:
+#'    \itemize{
+#'      \item{collection:} The collection to look for. Accepted values are:
+#'        `SENTINEL2` (more will be added soon).
+#'      \item{town:} The location to look for. Give a common town name.
+#'      \item{tile:} The tile identifier to retrieve.
+#'      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
+#'      \item{end.data:} The last date to look for (format: YYYY-MM-DD).
+#'      \item{latitude:} The x coordinate of a point
+#'      \item{longitude:} The y coordinate of a point
+#'      \item{max.clouds:} The maximum of cloud cover wanted
+#'    }
+#'
+#' @seealso
+#'    \url{https://github.com/olivierhagolle/theia_download} for an alternative
+#'    download method based on Python. Inspiration for this function.
+#'
+NULL
+
+
 #' @export
 TheiaQuery <-
   R6Class("TheiaQuery",
