@@ -40,6 +40,10 @@ NULL
 TheiaTile <-
   R6Class("TheiaTile",
           # public -------------------------------------------------------------
+          private =
+            list(meta.data = NULL),
+
+          # public -------------------------------------------------------------
           public =
             list(file.path  = NA,
                  file.hash  = NA,
