@@ -23,6 +23,7 @@
 #'    \item{file.path:}{The path to the zip file containing the tile}
 #'    \item{url:}{The url to download the tile}
 #'    \item{file.hash:}{The md5sum used to check the zip file}
+#'    \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
 #'    \item{override:}{Override existing tiles (default to `FALSE`)}
 #'  }
 #'
@@ -30,7 +31,7 @@
 #'    \code{TheiaTile$new(file.path, url, file.hash)} Create a new instance of
 #'    the class
 #'
-#'    \code{t$download(override = FALSE)} Download the tiles of the collection
+#'    \code{t$download(auth, override = FALSE)} Download the tiles of the collection
 #'    and check the resulting files
 #'
 #'    \code{t$check()} Check the tiles of the collection
@@ -78,9 +79,9 @@ TheiaTile <-
                    .TheiaTile_check(self)
                  },
 
-                 download = function(override = FALSE)
+                 download = function(auth, override = FALSE)
                  {
-                   .TheiaTile_download(self, private, override)
+                   .TheiaTile_download(self, private, auth, override)
                  },
                   
                  get_bands = function()
@@ -148,17 +149,26 @@ TheiaTile <-
 }
 
 
-.TheiaTile_download <- function(self, private, override = FALSE)
+.TheiaTile_download <- function(self, private, auth, override = FALSE)
 {
-  # download the file if it is not present and override is set to FALSE
   if (!(file.exists(self$file.path)) | override == TRUE) {
-    tryCatch(download.file(self$url, destfile = self$file.path),
-             error = function(e) {
-               warning("Could not download file!")
-             })
+    # file does not exist or override is FALSE
+
+    # build the URL for the request: remove token if link has been created from
+    # a cart file and add needed part
+    url <- gsub("\\?_tk=.*$", "", self$url)
+    url <- paste0(url, "/?issuerId=theia")
+
+    # HTTP request
+    req <- httr::GET(url,
+                     add_headers(Authorization = paste("Bearer", auth$token)),
+                     write_disk(self$file.path, overwrite = override),
+                     progress())
   } else {
     # The file already exists
-    message("File ", self$file.path, " already exists, skipping.")
+    message("File ",
+            self$file.path,
+            " already exists. Use 'override=TRUE' to ovewrite.")
   }
 
   # check the tile

@@ -28,6 +28,7 @@ Generate and manage a tile from Theia (download, check, load).
    \item{file.path:}{The path to the zip file containing the tile}
    \item{url:}{The url to download the tile}
    \item{file.hash:}{The md5sum used to check the zip file}
+   \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
    \item{override:}{Override existing tiles (default to `FALSE`)}
  }
 }
@@ -37,7 +38,7 @@ Generate and manage a tile from Theia (download, check, load).
    \code{TheiaTile$new(file.path, url, file.hash)} Create a new instance of
    the class
 
-   \code{t$download(override = FALSE)} Download the tiles of the collection
+   \code{t$download(auth, override = FALSE)} Download the tiles of the collection
    and check the resulting files
 
    \code{t$check()} Check the tiles of the collection
