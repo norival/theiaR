@@ -82,30 +82,19 @@ TheiaQuery <-
 {
   # TODO: verification of request
 
-  # how to display in query link
-  q.link <- c("q",
-              "location",
-              "platform",
-              "startDate",
-              "completionDate",
-              "lat",
-              "lon")
+  # fill query fields
+  q.link <- list()
 
-  # how query is given by the user
-  q.query <- c("town",
-               "tile",
-               "platform",
-               "start.date",
-               "end.date",
-               "latitude",
-               "longitude")
-
-  # match search and links
-  i <- which(q.query %in% names(query))
-  j <- which(names(query) %in% q.query)
+  q.link[["q"]]               <- query$town
+  q.link[["location"]]        <- query$tile
+  q.link[["platform"]]        <- query$platform
+  q.link[["startDate"]]       <- query$start.date
+  q.link[["completionDate"]]  <- query$end.date
+  q.link[["lat"]]             <- query$latitude
+  q.link[["lon"]]             <- query$longitude
 
   # build query links
-  query.link  <- paste(q.link[i], query[j], sep = "=", collapse = "&")
+  query.link  <- paste(names(q.link), q.link, sep = "=", collapse = "&")
   private$url <- paste0(private$baseurl,
                         query$collection,
                         "/search.json?",
