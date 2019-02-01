@@ -138,7 +138,7 @@ TheiaCollection <-
             function(x) {
               TheiaTile$new(file.path = paste0(dir.path, x[1]),
                             file.hash = as.character(x[3]),
-                            url       = as.character(x[2]))
+                            url       = as.character(x[6]))
             })
 
     # remove useless names of tiles list

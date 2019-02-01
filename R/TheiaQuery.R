@@ -55,9 +55,10 @@ TheiaQuery <-
   R6Class("TheiaQuery",
           # private ------------------------------------------------------------
           private =
-            list(url     = NULL,
-                 catalog = NULL,
-                 baseurl = "https://theia.cnes.fr/atdistrib/resto2/api/collections/"),
+            list(url        = NULL,
+                 catalog    = NULL,
+                 server.url = NULL,
+                 resto      = NULL),
 
           # public -------------------------------------------------------------
           public =
@@ -81,8 +82,18 @@ TheiaQuery <-
 .TheiaQuery_initialize <- function(self, private, query)
 {
   # TODO: verification of request
+  private$server.url <-
+    ifelse(query$collection == "Landsat",
+           "https://theia-landsat.cnes.fr/",
+           "https://theia.cnes.fr/atdistrib/")
+  private$resto <-
+    ifelse(query$collection == "Landsat",
+           "resto/",
+           "resto2/")
 
   # fill query fields
+  self$query <- query
+
   q.link <- list()
 
   q.link[["q"]]               <- query$town
@@ -95,7 +106,9 @@ TheiaQuery <-
 
   # build query links
   query.link  <- paste(names(q.link), q.link, sep = "=", collapse = "&")
-  private$url <- paste0(private$baseurl,
+  private$url <- paste0(private$server.url,
+                        private$resto,
+                        "api/collections/",
                         query$collection,
                         "/search.json?",
                         query.link)
@@ -125,13 +138,24 @@ TheiaQuery <-
   cart <-
     lapply(private$catalog$features,
            function(x) {
-             data.frame(file.name   = paste0(x$properties$title, ".zip"),
-                        url         = x$properties$services$download$url,
-                        file.hash   = x$properties$services$download$checksum,
+             data.frame(file.name   = paste0(x$properties$productIdentifier, ".zip"),
+                        tile.id     = x$id,
+                        file.hash   = ifelse(is.null(x$properties$services$download$checksum),
+                                             NA,
+                                             x$properties$services$download$checksum),
                         cloud.cover = as.numeric(as.character(x$properties$cloudCover)),
                         snow.cover  = as.numeric(as.character(x$properties$snowCover)))
            })
   self$tiles <- do.call(rbind, cart)
+
+  # build url for downloading
+  self$tiles$url <- paste0(private$server.url,
+                           private$resto,
+                           "collections/",
+                           self$query$collection,
+                           "/",
+                           self$tiles$tile.id,
+                           "/download")
 
   return(invisible(self))
 }
