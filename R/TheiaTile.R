@@ -59,7 +59,9 @@ TheiaTile <-
             list(file.path  = NA,
                  file.hash  = NA,
                  url        = NA,
-                 status     = list(),
+                 status     = list(exists  = FALSE,
+                                   checked = FALSE,
+                                   correct = FALSE),
 
                  initialize = function(file.path, url, file.hash)
                  {
@@ -111,9 +113,6 @@ TheiaTile <-
   self$file.path <- file.path
   self$url       <- url
   self$file.hash <- file.hash
-  self$status    <- list(exists  = FALSE,
-                         checked = FALSE,
-                         correct = NA)
 
   # check the tile
   self$check()
