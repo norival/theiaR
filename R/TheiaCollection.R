@@ -21,6 +21,7 @@ NULL
 #'    c$download(auth, override = FALSE)
 #'    c$check()
 #'    c$get_bands()
+#'    c$status
 #' }
 #'
 #' @section Arguments:
@@ -46,6 +47,8 @@ NULL
 #'    \code{$ccheck()} Check the tiles of the collection
 #'
 #'    \code{c$get_bands()} List bands available in each tile
+#'
+#'    \code{c$status} Return the status of each tile of teh collection
 #'
 NULL
 
@@ -87,8 +90,15 @@ TheiaCollection <-
                  read = function(bands)
                  {
                    .TheiaCollection_read(self, private, bands)
-                 })
-          )
+                 }),
+
+            # active -----------------------------------------------------------
+            active =
+              list(status = function()
+                   {
+                     .TheiaCollection_status(self)
+                   })
+  )
 
 
 # Functions definitions --------------------------------------------------------
@@ -209,4 +219,23 @@ TheiaCollection <-
 
   # # read tiles from zip file and create raster::rasterStack object
   # raster::stack(lapply(files, read_tiff_from_zip, zip.file = self$file.path))
+}
+
+
+.TheiaCollection_status <- function(self)
+{
+  status <- lapply(self$tiles,
+                   function(x)
+                   {
+                     c(x$file.path, unlist(x$status))
+                   })
+  status <- do.call(rbind, status)
+  status <- as.data.frame(status)
+  colnames(status) <- c("tile", "exists", "checked", "correct")
+
+  # format tiles names
+  status$tile <- gsub(self$dir.path, "", status$tile)
+  status$tile <- gsub(".zip$", "", status$tile)
+
+  return(status)
 }

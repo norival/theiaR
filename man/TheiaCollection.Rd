@@ -20,6 +20,7 @@ from a \code{\link{TheiaQuery}} object or from a list of
    c$download(auth, override = FALSE)
    c$check()
    c$get_bands()
+   c$status
 }
 }
 
@@ -49,5 +50,7 @@ from a \code{\link{TheiaQuery}} object or from a list of
    \code{$ccheck()} Check the tiles of the collection
 
    \code{c$get_bands()} List bands available in each tile
+
+   \code{c$status} Return the status of each tile of teh collection
 }
 
