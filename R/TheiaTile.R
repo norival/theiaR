@@ -137,6 +137,13 @@ TheiaTile <-
     self$status$exists  <- TRUE
     self$status$checked <- TRUE
 
+    if (is.na(self$file.hash)) {
+      # if no hash is provided, assume the file is correct
+      self$status$correct <- TRUE
+
+      return(invisible(self))
+    }
+
     # compute the md5 sum and compare it to the hash
     if (tools::md5sum(self$file.path) == self$file.hash) {
       self$status$correct <- TRUE
