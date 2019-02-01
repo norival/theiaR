@@ -17,7 +17,7 @@ from a \code{\link{TheiaQuery}} object or from a list of
                             query     = NULL,
                             dir.path  = NULL)
 
-   c$download(auth, override = FALSE)
+   c$download(auth, overwrite = FALSE)
    c$check()
    c$get_bands()
    c$status
@@ -36,7 +36,7 @@ from a \code{\link{TheiaQuery}} object or from a list of
    \item{query:}{A TheiaQuery object, used only if collection is created
    from a TheiaQuery object}
    \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
-   \item{override:}{Override existing tiles (default to `FALSE`}
+   \item{overwrite:}{Overwrite existing tiles (default to `FALSE`}
  }
 }
 
@@ -44,7 +44,7 @@ from a \code{\link{TheiaQuery}} object or from a list of
 
    \code{TheiaCollection$new()} Create a new instance of the class
 
-   \code{c$download(override = FALSE)} Download the tiles of the collection
+   \code{c$download(overwrite = FALSE)} Download the tiles of the collection
    and check the resulting files
 
    \code{$ccheck()} Check the tiles of the collection

@@ -10,7 +10,7 @@
 #'                       url,
 #'                       file.hash)
 #'
-#'    t$download(override = FALSE)
+#'    t$download(overwrite = FALSE)
 #'    t$check()
 #'    t$get_bands()
 #'    t$read(bands)
@@ -24,14 +24,14 @@
 #'    \item{url:}{The url to download the tile}
 #'    \item{file.hash:}{The md5sum used to check the zip file}
 #'    \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
-#'    \item{override:}{Override existing tiles (default to `FALSE`)}
+#'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
 #'  }
 #'
 #' @section Details:
 #'    \code{TheiaTile$new(file.path, url, file.hash)} Create a new instance of
 #'    the class
 #'
-#'    \code{t$download(auth, override = FALSE)} Download the tiles of the collection
+#'    \code{t$download(auth, overwrite = FALSE)} Download the tiles of the collection
 #'    and check the resulting files
 #'
 #'    \code{t$check()} Check the tiles of the collection
@@ -79,9 +79,9 @@ TheiaTile <-
                    .TheiaTile_check(self)
                  },
 
-                 download = function(auth, override = FALSE)
+                 download = function(auth, overwrite = FALSE)
                  {
-                   .TheiaTile_download(self, private, auth, override)
+                   .TheiaTile_download(self, private, auth, overwrite)
                  },
                   
                  get_bands = function()
@@ -149,10 +149,10 @@ TheiaTile <-
 }
 
 
-.TheiaTile_download <- function(self, private, auth, override = FALSE)
+.TheiaTile_download <- function(self, private, auth, overwrite = FALSE)
 {
-  if (!(file.exists(self$file.path)) | override == TRUE) {
-    # file does not exist or override is FALSE
+  if (!(self$status$correct) | overwrite == TRUE ) {
+    # file does not exist, is not correct, or overwrite is TRUE
 
     # build the URL for the request: remove token if link has been created from
     # a cart file and add needed part
@@ -162,13 +162,13 @@ TheiaTile <-
     # HTTP request
     req <- httr::GET(url,
                      add_headers(Authorization = paste("Bearer", auth$token)),
-                     write_disk(self$file.path, overwrite = override),
+                     write_disk(self$file.path, overwrite = TRUE),
                      progress())
   } else {
     # The file already exists
     message("File ",
             self$file.path,
-            " already exists. Use 'override=TRUE' to ovewrite.")
+            " already exists. Use 'overwrite=TRUE' to ovewrite.")
   }
 
   # check the tile

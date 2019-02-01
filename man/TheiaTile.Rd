@@ -13,7 +13,7 @@ Generate and manage a tile from Theia (download, check, load).
                       url,
                       file.hash)
 
-   t$download(override = FALSE)
+   t$download(overwrite = FALSE)
    t$check()
    t$get_bands()
    t$read(bands)
@@ -29,7 +29,7 @@ Generate and manage a tile from Theia (download, check, load).
    \item{url:}{The url to download the tile}
    \item{file.hash:}{The md5sum used to check the zip file}
    \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
-   \item{override:}{Override existing tiles (default to `FALSE`)}
+   \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
  }
 }
 
@@ -38,7 +38,7 @@ Generate and manage a tile from Theia (download, check, load).
    \code{TheiaTile$new(file.path, url, file.hash)} Create a new instance of
    the class
 
-   \code{t$download(auth, override = FALSE)} Download the tiles of the collection
+   \code{t$download(auth, overwrite = FALSE)} Download the tiles of the collection
    and check the resulting files
 
    \code{t$check()} Check the tiles of the collection

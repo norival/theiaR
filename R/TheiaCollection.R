@@ -18,7 +18,7 @@ NULL
 #'                             query     = NULL,
 #'                             dir.path  = NULL)
 #'
-#'    c$download(auth, override = FALSE)
+#'    c$download(auth, overwrite = FALSE)
 #'    c$check()
 #'    c$get_bands()
 #'    c$status
@@ -35,13 +35,13 @@ NULL
 #'    \item{query:}{A TheiaQuery object, used only if collection is created
 #'    from a TheiaQuery object}
 #'    \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
-#'    \item{override:}{Override existing tiles (default to `FALSE`}
+#'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`}
 #'  }
 #'
 #' @section Details:
 #'    \code{TheiaCollection$new()} Create a new instance of the class
 #'
-#'    \code{c$download(override = FALSE)} Download the tiles of the collection
+#'    \code{c$download(overwrite = FALSE)} Download the tiles of the collection
 #'    and check the resulting files
 #'
 #'    \code{$ccheck()} Check the tiles of the collection
@@ -77,9 +77,9 @@ TheiaCollection <-
                    .TheiaCollection_check(self)
                  },
 
-                 download = function(auth, override = FALSE)
+                 download = function(auth, overwrite = FALSE)
                  {
-                   .TheiaCollection_download(self, auth, override)
+                   .TheiaCollection_download(self, auth, overwrite)
                  },
                  
                  get_bands = function()
@@ -158,14 +158,14 @@ TheiaCollection <-
 }
 
 
-.TheiaCollection_download <- function(self, auth, override)
+.TheiaCollection_download <- function(self, auth, overwrite)
 {
   # download needed tiles
   lapply(self$tiles,
-         function(x, auth, override) {
-           x$download(auth, override = override)
+         function(x, auth, overwrite) {
+           x$download(auth, overwrite = overwrite)
          },
-         auth = auth, override = override)
+         auth = auth, overwrite = overwrite)
 
   return(invisible(self))
 }
