@@ -18,7 +18,7 @@ NULL
 #'                             query     = NULL,
 #'                             dir.path  = NULL)
 #'
-#'    c$download(override = FALSE)
+#'    c$download(auth, override = FALSE)
 #'    c$check()
 #'    c$get_bands()
 #' }
@@ -33,6 +33,7 @@ NULL
 #'    website. Used only if Collection is created from a cart
 #'    \item{query:}{A TheiaQuery object, used only if collection is created
 #'    from a TheiaQuery object}
+#'    \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
 #'    \item{override:}{Override existing tiles (default to `FALSE`}
 #'  }
 #'
@@ -73,9 +74,9 @@ TheiaCollection <-
                    .TheiaCollection_check(self)
                  },
 
-                 download = function(override = FALSE)
+                 download = function(auth, override = FALSE)
                  {
-                   .TheiaCollection_download(self, override)
+                   .TheiaCollection_download(self, auth, override)
                  },
                  
                  get_bands = function()
@@ -147,14 +148,14 @@ TheiaCollection <-
 }
 
 
-.TheiaCollection_download <- function(self, override)
+.TheiaCollection_download <- function(self, auth, override)
 {
   # download needed tiles
   lapply(self$tiles,
-         function(x, override) {
-           x$download(override = override)
+         function(x, auth, override) {
+           x$download(auth, override = override)
          },
-         override = override)
+         auth = auth, override = override)
 
   return(invisible(self))
 }

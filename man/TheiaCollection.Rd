@@ -17,7 +17,7 @@ from a \code{\link{TheiaQuery}} object or from a list of
                             query     = NULL,
                             dir.path  = NULL)
 
-   c$download(override = FALSE)
+   c$download(auth, override = FALSE)
    c$check()
    c$get_bands()
 }
@@ -34,6 +34,7 @@ from a \code{\link{TheiaQuery}} object or from a list of
    website. Used only if Collection is created from a cart
    \item{query:}{A TheiaQuery object, used only if collection is created
    from a TheiaQuery object}
+   \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
    \item{override:}{Override existing tiles (default to `FALSE`}
  }
 }
