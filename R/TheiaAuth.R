@@ -100,7 +100,7 @@ TheiaAuth <-
 {
   if (!(is.null(private$.token))) {
     # token already exists: check its age and create a new one if needed
-    token.age <- as.numeric(difftime(Sys.Date(), private$token.date, units = "hours"))
+    token.age <- as.numeric(difftime(Sys.time(), private$token.date, units = "hours"))
   }
 
   if (is.null(private$.token) || token.age > 2) {
@@ -114,7 +114,7 @@ TheiaAuth <-
     private$.token <- content(req, as = "text")
 
     # store token publiation date
-    private$token.date <- Sys.Date()
+    private$token.date <- Sys.time()
   }
 
   return(invisible(self))
