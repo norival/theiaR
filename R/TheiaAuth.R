@@ -1,3 +1,47 @@
+#' Authentification system to Theia website
+#'
+#' Generate and manage authentification to Theia website from login and
+#' password. It requests a token to download tiles when created and
+#' autmotatically request a new one when it has expired (after 2h). It is used
+#' to download tiles from \link{TheiaTile} and \link{TheiaCollection} objects.
+#'
+#' @name TheiaAuth
+#'
+#' @section Usage:
+#' \preformatted{
+#'    a <- TheiaAuth$new(auth.file)
+#'
+#'    a$token()
+#' }
+#'
+#' @section Arguments:
+#'
+#' \describe{
+#'    \item{a:}{A \code{TheiaAuth} object}
+#'    \item{auth.file}{The path to the file containing login and password. See
+#'    `Details` for more informations}
+#'  }
+#'
+#' @section Details:
+#'    \code{TheiaAuth$new(auth.file)} Create a new instance of the class
+#'
+#'    \code{a$token()} Return the current token or generate a nex one if it has
+#'    expired
+#'
+#' @section Details:
+#'    This class is used to manage authentication to Theia website, without
+#'    intervention from the user. Login and password must be stored in a
+#'    separate text file with these two lines:
+#'    
+#'    login
+#'    password
+#'    
+#'    File content is read each time authentication is needed (to request a new
+#'    token), so login and password are not stored in R's memory.
+#'
+NULL
+
+
 #' @export
 TheiaAuth <-
   R6Class("TheiaAuth",
