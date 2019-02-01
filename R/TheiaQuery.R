@@ -7,7 +7,7 @@
 #'
 #' @section Usage:
 #' \preformatted{
-#'    q <- TheiaQuery$new(login, passwd, query)
+#'    q <- TheiaQuery$new(query, auth)
 #'
 #'    q$update_token()
 #'    q$submit()
@@ -17,8 +17,6 @@
 #'
 #' \describe{
 #'    \item{q:}{A \code{TheiaQuery} object}
-#'    \item{login:}{\code{charcter}, the users' login}
-#'    \item{passwd:}{\code{charcter}, the users' password}
 #'    \item{query:}{\code{list}, the users' request, see `Queries` for
 #'    more informations}
 #' }
@@ -29,8 +27,6 @@
 #'
 #'    \code{q$submit()} Submit the query to Theia and get a list af tiles
 #'    corresponding to search criteria
-#'
-#'    \code{q$update_token()} Get a token to download tiles
 #'
 #' @section Queries:
 #'
@@ -59,25 +55,18 @@ TheiaQuery <-
   R6Class("TheiaQuery",
           # private ------------------------------------------------------------
           private =
-            list(token    = NULL,
-                 login    = NULL,
-                 passwd   = NULL,
-                 url      = NULL,
-                 catalog  = NULL),
+            list(url     = NULL,
+                 catalog = NULL,
+                 baseurl = "https://theia.cnes.fr/atdistrib/resto2/api/collections/"),
 
           # public -------------------------------------------------------------
           public =
             list(query    = NULL,
                  tiles    = NULL,
 
-                 initialize = function(login, passwd, query)
+                 initialize = function(query)
                  {
-                   .TheiaQuery_initialize(self, private, login, passwd, query)
-                 },
-
-                 update_token = function()
-                 {
-                   .TheiaQuery_update_token(self, private)
+                   .TheiaQuery_initialize(self, private, query)
                  },
 
                  submit = function()
@@ -89,13 +78,9 @@ TheiaQuery <-
 
 # Functions definitions --------------------------------------------------------
 
-.TheiaQuery_initialize <- function(self, private, login, passwd, query)
+.TheiaQuery_initialize <- function(self, private, query)
 {
-  private$login  <- login
-  private$passwd <- passwd
-
-  # base url for theia
-  base.url <- "https://theia.cnes.fr/atdistrib/resto2/api/collections"
+  # TODO: verification of request
 
   # how to display in query link
   q.link <- c("q",
@@ -121,31 +106,10 @@ TheiaQuery <-
 
   # build query links
   query.link  <- paste(q.link[i], query[j], sep = "=", collapse = "&")
-  private$url <- paste0(base.url, "/", query$collection, "/",
-                        "search.json?", query.link)
-
-  return(invisible(self))
-}
-
-
-.TheiaQuery_update_token <- function(self, private)
-{
-  # base url for authentification
-  baseurl <- "https://theia.cnes.fr/atdistrib/services/authenticate/"
-
-  # make request to get a new token
-  req <- httr::POST(baseurl,
-                    body = list(ident = private$login,
-                                pass  = private$passwd))
-
-  # store token
-  private$token <- content(req, as = "text")
-
-  if (nchar(private$token) > 1 & any(grepl("download$", self$tiles$url))) {
-    # if tiles if filled but does not have a token, adds the token to the links
-    self$tiles$url <- gsub("\\?_tk=.*$", "", self$tiles$url)
-    self$tiles$url <- paste0(self$tiles$url, "?_tk=", private$token)
-  }
+  private$url <- paste0(private$baseurl,
+                        query$collection,
+                        "/search.json?",
+                        query.link)
 
   return(invisible(self))
 }
@@ -169,11 +133,6 @@ TheiaQuery <-
                         file.hash = x$properties$services$download$checksum)
            })
   self$tiles <- do.call(rbind, cart)
-
-  if (!(is.null(private$token)) && nchar(private$token) > 1) {
-    # add the token to the links
-    self$tiles$url <- paste0(self$tiles$url, "?_tk=", private$token)
-  }
 
   return(invisible(self))
 }

@@ -10,7 +10,7 @@ input given by the user.
 \section{Usage}{
 
 \preformatted{
-   q <- TheiaQuery$new(login, passwd, query)
+   q <- TheiaQuery$new(query, auth)
 
    q$update_token()
    q$submit()
@@ -22,8 +22,6 @@ input given by the user.
 
 \describe{
    \item{q:}{A \code{TheiaQuery} object}
-   \item{login:}{\code{charcter}, the users' login}
-   \item{passwd:}{\code{charcter}, the users' password}
    \item{query:}{\code{list}, the users' request, see `Queries` for
    more informations}
 }
@@ -36,8 +34,6 @@ input given by the user.
 
    \code{q$submit()} Submit the query to Theia and get a list af tiles
    corresponding to search criteria
-
-   \code{q$update_token()} Get a token to download tiles
 }
 
 \section{Queries}{
