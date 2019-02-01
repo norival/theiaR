@@ -98,7 +98,7 @@ TheiaCollection <-
   # fill dir.path field
   self$dir.path <- dir.path
 
-  if (!(missing(cart.path))) {
+  if (!(is.null(cart.path))) {
     # build collection from cart file ------------------------------------------
     # parse xml data contained in '.meta4' cart file
     self$cart <- XML::xmlToList(XML::xmlParse(cart.path))
@@ -115,11 +115,11 @@ TheiaCollection <-
     # remove useless names of tiles list
     self$tiles <- unname(self$tiles)
 
-  } else if (!(missing(tiles))) {
+  } else if (!(is.null(tiles))) {
     # TODO: Implement building from a list of tiles
     # build from list of tiles
 
-  } else if (!(missing(query))) {
+  } else if (!(is.null(query))) {
     # build collection from a TheiaQuery object --------------------------------
 
     # create needed TheiaTile objects
