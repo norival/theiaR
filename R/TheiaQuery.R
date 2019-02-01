@@ -114,6 +114,11 @@ TheiaQuery <-
   # submit the query
   self$submit()
 
+  if (!(is.null(query$max.clouds))) {
+    # remove tiles with too much clouds
+    self$tiles <- self$tiles[self$tiles$cloud.cover <= query$max.clouds, ]
+  }
+
   return(invisible(self))
 }
 
@@ -131,9 +136,11 @@ TheiaQuery <-
   cart <-
     lapply(private$catalog$features,
            function(x) {
-             data.frame(file.name = paste0(x$properties$title, ".zip"),
-                        url       = x$properties$services$download$url,
-                        file.hash = x$properties$services$download$checksum)
+             data.frame(file.name   = paste0(x$properties$title, ".zip"),
+                        url         = x$properties$services$download$url,
+                        file.hash   = x$properties$services$download$checksum,
+                        cloud.cover = as.numeric(as.character(x$properties$cloudCover)),
+                        snow.cover  = as.numeric(as.character(x$properties$snowCover)))
            })
   self$tiles <- do.call(rbind, cart)
 
