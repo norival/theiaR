@@ -1,3 +1,4 @@
+#' @export
 TheiaAuth <-
   R6Class("TheiaAuth",
           # private ------------------------------------------------------------
