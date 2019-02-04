@@ -92,11 +92,11 @@ TheiaQuery <-
 {
   # TODO: verification of request
   private$server.url <-
-    ifelse(query$collection == "Landsat",
+    ifelse(query$collection %in% c("Landsat", "SpotWorldHeritage"),
            "https://theia-landsat.cnes.fr/",
            "https://theia.cnes.fr/atdistrib/")
   private$resto <-
-    ifelse(query$collection == "Landsat",
+    ifelse(query$collection %in% c("Landsat", "SpotWorldHeritage"),
            "resto/",
            "resto2/")
 
