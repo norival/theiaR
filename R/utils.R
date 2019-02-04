@@ -120,7 +120,7 @@ parse_query <- function(q, q.name, type, help = NULL, choices = NULL)
 
   # if date, try to convert to a date
   if (grepl("date", q.name)) {
-    q <- as.Date(q, format = "%Y-%m-%d")
+    q <- as.character(as.Date(q, format = "%Y-%m-%d"))
 
     if (is.na(q)) {
       stop("Invalid query: date. Date format: YYYY-MM-DD",

@@ -108,13 +108,13 @@ TheiaQuery <-
 
   q.link <- list()
 
-  q.link[["q"]]               <- query$town
-  q.link[["location"]]        <- query$tile
-  q.link[["platform"]]        <- query$platform
-  q.link[["startDate"]]       <- query$start.date
-  q.link[["completionDate"]]  <- query$end.date
-  q.link[["lat"]]             <- query$latitude
-  q.link[["lon"]]             <- query$longitude
+  q.link[["q"]]              <- self$query$town
+  q.link[["location"]]       <- self$query$tile
+  q.link[["platform"]]       <- self$query$platform
+  q.link[["startDate"]]      <- self$query$start.date
+  q.link[["completionDate"]] <- self$query$end.date
+  q.link[["lat"]]            <- self$query$latitude
+  q.link[["lon"]]            <- self$query$longitude
 
   # build query links
   query.link  <- paste(names(q.link), q.link, sep = "=", collapse = "&")
@@ -179,8 +179,8 @@ TheiaQuery <-
                                        choices = collection.choices)
   self$query$platform   <- parse_query(self$query$platform, "platform", "character",
                                        choices = platform.choices)
-  self$query$start.date <- parse_query(self$query$start.date, "date", "numeric")
-  self$query$end.date   <- parse_query(self$query$end.date, "date", "numeric")
+  self$query$start.date <- parse_query(self$query$start.date, "date", "character")
+  self$query$end.date   <- parse_query(self$query$end.date, "date", "character")
   self$query$max.clouds <- parse_query(self$query$max.clouds, "max.clouds", "numeric",
                                        choices = 0:100)
   self$query$latitude   <- parse_query(self$query$latitude, "latitude", "numeric")
