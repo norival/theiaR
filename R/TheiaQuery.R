@@ -138,7 +138,13 @@ TheiaQuery <-
   cart <-
     lapply(private$catalog$features,
            function(x) {
-             data.frame(file.name   = paste0(x$properties$productIdentifier, ".zip"),
+             # get file extension
+             file.ext <- ifelse(grepl("gzip", x$properties$services$download$mimeType),
+                                ".tar.gz",
+                                ".zip")
+
+             # return important information
+             data.frame(file.name   = paste0(x$properties$productIdentifier, file.ext),
                         tile.id     = x$id,
                         file.hash   = ifelse(is.null(x$properties$services$download$checksum),
                                              NA,
