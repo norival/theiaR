@@ -171,6 +171,9 @@ TheiaTile <-
                      add_headers(Authorization = paste("Bearer", auth$token)),
                      write_disk(self$file.path, overwrite = TRUE),
                      progress())
+
+    httr::stop_for_status(req, task = paste0("download tile: ", self$file.path))
+
   } else {
     # The file already exists
     message("File ",

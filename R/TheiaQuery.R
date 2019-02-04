@@ -152,6 +152,8 @@ TheiaQuery <-
   # make http request to get catalog
   req <- httr::GET(private$url)
 
+  httr::stop_for_status(req, task = paste0("retrieve data, invalid query url:\n", private$url))
+
   # parse and save catalog
   private$catalog <- httr::content(req, as = "parsed")
 

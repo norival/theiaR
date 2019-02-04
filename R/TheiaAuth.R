@@ -110,8 +110,16 @@ TheiaAuth <-
                       body = list(ident = self$auth[1],
                                   pass  = self$auth[2]))
 
+    # check status of request
+    httr::stop_for_status(req, task = "retrieve token.")
+
     # store token
     private$.token <- content(req, as = "text")
+
+    # check if token is ok
+    if (nchar(private$.token) == 0) {
+      stop("Failed to retrieve token. Check your IDs.")
+    }
 
     # store token publiation date
     private$token.date <- Sys.time()
