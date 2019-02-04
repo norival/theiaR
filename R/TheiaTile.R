@@ -174,6 +174,12 @@ TheiaTile <-
 
     httr::stop_for_status(req, task = paste0("download tile: ", self$file.path))
 
+    # test if file is text
+    if (!(grepl("zip", httr::http_type(req)))) {
+      stop("Downloaded product is a text file, it should not be... Response:\n\n",
+           httr::content(req, as = "text"))
+    }
+
   } else {
     # The file already exists
     message("File ",
