@@ -198,11 +198,11 @@ TheiaTile <-
   tmp.dir <- paste0(tempdir(), "/")
 
   # get file name to extract
-  file.name <- unzip(self$file.path, list = TRUE, unzip = getOption("unzip"))
-  file.name <- file.name$Name[grepl("xml$", file.name$Name)]
+  file.name <- extraction_wrapper(self$file.path, args = list(list = TRUE))
+  file.name <- file.name[grepl("xml$", file.name)]
 
   # extract and parse xml file
-  unzip(self$file.path, files = file.name, exdir = tmp.dir, unzip = getOption("unzip"))
+  extraction_wrapper(self$file.path, args = list(files = file.name, exdir = tmp.dir))
   private$meta.data <- xmlToList(xmlParse(paste0(tmp.dir, file.name)))
 
   # remove temporary file

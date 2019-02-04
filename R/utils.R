@@ -71,3 +71,41 @@ read_tiff_from_zip <- function(file.name, zip.file)
   # convert to raster::raster object
   return(raster::raster(tile.tiff))
 }
+
+
+# wrapper to extract files from different archive formats
+extraction_wrapper <- function(path, args)
+{
+  # build arguments to function call
+  args <- lapply(args, function(x)
+                 if (is.character(x)) {
+                   paste0("'", x, "'")
+                 } else {
+                   x
+                 })
+
+  .args <- paste(names(args), args, sep = " = ", collapse = ", ")
+  .args <- paste0("'", path, "', ", .args)
+
+  # build function call
+  .call <- ifelse(grepl("tar.gz$", path),
+                  paste0("untar(", .args, ")"),
+                  paste0("unzip(", .args, ", unzip = getOption('unzip'))"))
+
+  # eval function call
+  result <- eval(parse(text = .call))
+
+  # return value
+  if (is.null(args$list) || args$list == FALSE) {
+    return(invisible(result))
+  } else {
+    # return only a vector of file names
+    if (grepl("^untar", .call)) {
+      return(result)
+    }
+
+    if (grepl("^unzip", .call)) {
+      return(result$Name)
+    }
+  }
+}
