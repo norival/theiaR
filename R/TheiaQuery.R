@@ -116,6 +116,11 @@ TheiaQuery <-
   # submit the query
   self$submit()
 
+  if (!(is.list(self$tiles)) && self$tiles ==  "No tiles matching search criteria") {
+    # exit function if no tiles are found, with an error
+    stop("No tiles matching search criteria", call. = FALSE)
+  }
+
   if (!(is.null(query$max.clouds))) {
     # remove tiles with too much clouds
     self$tiles <- self$tiles[self$tiles$cloud.cover <= query$max.clouds, ]
@@ -133,6 +138,13 @@ TheiaQuery <-
 
   # parse and save catalog
   private$catalog <- httr::content(req, as = "parsed")
+
+  if (length(private$catalog$features) == 0) {
+    # exit function if no tiles are found
+    self$tiles <- "No tiles matching search criteria"
+
+    return(invisible(self))
+  }
 
   # extract tiles
   cart <-
