@@ -123,7 +123,23 @@ TheiaQuery <-
 
   if (!(is.null(query$max.clouds))) {
     # remove tiles with too much clouds
-    self$tiles <- self$tiles[self$tiles$cloud.cover <= query$max.clouds, ]
+    clouds.over <- self$tiles$cloud.cover > query$max.clouds
+
+    if (sum(clouds.over) > 0) {
+      if (sum(clouds.over) == nrow(self$tiles)) {
+        # if every tile has too much clouds, throw an informative error
+        stop("Every tile has too much clouds (min cloud level: ",
+             min(self$tiles$cloud.cover), ")",
+             call. = FALSE)
+      }
+
+      # show number of bad tiles
+      message("Removing ", sum(clouds.over), " over ", nrow(self$tiles),
+              " tiles because too much clouds")
+
+      # remove bad tiles
+      self$tiles <- self$tiles[!(clouds.over), ]
+    }
   }
 
   return(invisible(self))
