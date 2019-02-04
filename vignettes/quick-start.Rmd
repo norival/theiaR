@@ -1,0 +1,32 @@
+---
+title: "Quick start guide to TheiaR package"
+author: "Xavier Laviron"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{"Quick start guide to TheiaR package"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## TheiaR package
+
+The TheiaR package intends to provide a clean interface to download and manage
+data issued by [Theia](https://theia.cnes.fr/atdistrib/rocket/#/home).
+
+
+## Quick start
+
+### Create a TheiaAuht object
+
+To search and download data fro Theia, you need to register to their
+[website](https://sso.theia-land.fr/theia/register/register.xhtml).
+Once you have credentials, store them in simple text file, let's say `auth.txt`.

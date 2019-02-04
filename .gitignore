@@ -3,3 +3,4 @@
 .RData
 old/
 *.zip
+inst/doc
