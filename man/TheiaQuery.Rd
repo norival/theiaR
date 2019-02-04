@@ -42,14 +42,17 @@ input given by the user.
    Search criterai are given with a `list` accepting these fields:
    \itemize{
      \item{collection:} The collection to look for. Accepted values are:
-       `SENTINEL2` (more will be added soon).
+       'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow', 'VENUS'
+     \item{platform:} The platform to look for. Accepted values are:
+       'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
+       'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B', 'VENUS'
      \item{town:} The location to look for. Give a common town name.
      \item{tile:} The tile identifier to retrieve.
      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
      \item{end.data:} The last date to look for (format: YYYY-MM-DD).
      \item{latitude:} The x coordinate of a point
      \item{longitude:} The y coordinate of a point
-     \item{max.clouds:} The maximum of cloud cover wanted
+     \item{max.clouds:} The maximum of cloud cover wanted (0-100)
    }
 }
 

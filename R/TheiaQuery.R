@@ -33,14 +33,17 @@
 #'    Search criterai are given with a `list` accepting these fields:
 #'    \itemize{
 #'      \item{collection:} The collection to look for. Accepted values are:
-#'        `SENTINEL2` (more will be added soon).
+#'        'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow', 'VENUS'
+#'      \item{platform:} The platform to look for. Accepted values are:
+#'        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
+#'        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B', 'VENUS'
 #'      \item{town:} The location to look for. Give a common town name.
 #'      \item{tile:} The tile identifier to retrieve.
 #'      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
 #'      \item{end.data:} The last date to look for (format: YYYY-MM-DD).
 #'      \item{latitude:} The x coordinate of a point
 #'      \item{longitude:} The y coordinate of a point
-#'      \item{max.clouds:} The maximum of cloud cover wanted
+#'      \item{max.clouds:} The maximum of cloud cover wanted (0-100)
 #'    }
 #'
 #' @seealso
@@ -58,7 +61,13 @@ TheiaQuery <-
             list(url        = NULL,
                  catalog    = NULL,
                  server.url = NULL,
-                 resto      = NULL),
+                 resto      = NULL,
+
+                 
+                 check      = function()
+                 {
+                   .TheiaQuery_check(self, private)
+                 }),
 
           # public -------------------------------------------------------------
           public =
@@ -93,6 +102,9 @@ TheiaQuery <-
 
   # fill query fields
   self$query <- query
+
+  # check query list
+  private$check()
 
   q.link <- list()
 
@@ -141,6 +153,38 @@ TheiaQuery <-
       self$tiles <- self$tiles[!(clouds.over), ]
     }
   }
+
+  return(invisible(self))
+}
+
+
+.TheiaQuery_check <- function(self, private)
+{
+  # check for incompatible queries
+  if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
+    stop("'Tile' is only available for SENTINEL2 collection",
+         call. = FALSE)
+  }
+
+  # available choices
+  collection.choices <- c('Landsat', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
+  platform.choices <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
+                        'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
+                        'VENUS')
+
+  # check queries
+  self$query$tile       <- parse_query(self$query$tile, "tile", "character")
+  self$query$town       <- parse_query(self$query$town, "town", "character")
+  self$query$collection <- parse_query(self$query$collection, "collection", "character",
+                                       choices = collection.choices)
+  self$query$platform   <- parse_query(self$query$platform, "platform", "character",
+                                       choices = platform.choices)
+  self$query$start.date <- parse_query(self$query$start.date, "date", "numeric")
+  self$query$end.date   <- parse_query(self$query$end.date, "date", "numeric")
+  self$query$max.clouds <- parse_query(self$query$max.clouds, "max.clouds", "numeric",
+                                       choices = 0:100)
+  self$query$latitude   <- parse_query(self$query$latitude, "latitude", "numeric")
+  self$query$longitude  <- parse_query(self$query$longitude, "longitude", "numeric")
 
   return(invisible(self))
 }

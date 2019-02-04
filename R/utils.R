@@ -109,3 +109,50 @@ extraction_wrapper <- function(path, args)
     }
   }
 }
+
+
+parse_query <- function(q, q.name, type, help = NULL, choices = NULL)
+{
+  # if NULL, exit function
+  if (is.null(q)) {
+    return(NULL)
+  }
+
+  # if date, try to convert to a date
+  if (grepl("date", q.name)) {
+    q <- as.Date(q, format = "%Y-%m-%d")
+
+    if (is.na(q)) {
+      stop("Invalid query: date. Date format: YYYY-MM-DD",
+           call. = FALSE)
+    }
+  }
+
+  # try to convert to needed mode
+  tryCatch(mode(q) <- type,
+           warning = function(w) {
+             stop("Invalid query: ", q, ". ",
+                  "Should be of type: ", type,
+                  call. = F)
+           },
+           error = function(e) {
+             stop("Invalid query: ", q, ". ",
+                  "Should be of type: ", type,
+                  call. = F)
+           })
+
+  # if clouds, remove digits
+  if (grepl("clouds", q.name)) {
+    q <- trunc(q)
+  }
+
+  # check if value is in available choices
+  if (!(missing(choices)) && !(q %in% choices)) {
+    stop("Invalid query: ", q.name, ". ",
+         "Should be one of: ",
+         paste0(choices, collapse = ", "),
+         call. = F)
+  }
+
+  return(q)
+}
