@@ -34,7 +34,9 @@ from a \code{\link{TheiaQuery}} object or from a list of
    \item{cart:}{An XML cart parsed from a 'meta4' file downloaded from Theia}
    website. Used only if Collection is created from a cart
    \item{query:}{A TheiaQuery object, used only if collection is created
-   from a TheiaQuery object}
+   from a TheiaQuery object. Can also be a list with search terms. In this
+   case, it will create a `TheiaQuery` object from it. See
+   \code{\link{TheiaQuery}} for details on query syntax}
    \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`}
  }
