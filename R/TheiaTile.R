@@ -102,7 +102,16 @@ TheiaTile <-
 {
   # Special method to print
   # TODO: better method to print
-  cat("An Tile from Theia\n")
+  cat("An Tile from Theia\n\n")
+
+  collection <- gsub("(.*)(/[^/]*$)", "\\2", self$file.path)
+  collection <- gsub("(^/)([[:alnum:]]*)(_.*$)", "\\2", collection)
+  cat("Collection:", collection, "\n\n")
+
+  cat("Status:\n")
+  cat("   sownloaded :", self$status$exists, "\n")
+  cat("   checked    :", self$status$checked, "\n")
+  cat("   correct    :", self$status$correct, "\n")
 
   return(invisible(self))
 }
