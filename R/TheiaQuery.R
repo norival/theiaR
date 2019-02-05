@@ -80,6 +80,11 @@ TheiaQuery <-
                    .TheiaQuery_initialize(self, private, query)
                  },
 
+                 print = function(...)
+                 {
+                   .TheiaQuery_print(self)
+                 },
+
                  submit = function()
                  {
                    .TheiaQuery_submit(self, private)
@@ -88,6 +93,30 @@ TheiaQuery <-
 
 
 # Functions definitions --------------------------------------------------------
+
+.TheiaQuery_print <- function(self)
+{
+  # Special method to print
+  cat("A search query to Theia website\n\n")
+
+  cat("Number of tiles:", nrow(self$tiles), "\n\n")
+
+  cat("Search terms:\n")
+
+  lapply(1:length(self$query),
+         function(x) {
+           l <- nchar(names(self$query))[[x]]
+
+           cat("   ", names(self$query)[[x]], rep(" ", 11 - l), ": ",
+               self$query[[x]], "\n",
+               sep = "")
+
+           return(invisible(NULL))
+         })
+
+  return(invisible(self))
+}
+
 
 .TheiaQuery_initialize <- function(self, private, query)
 {
