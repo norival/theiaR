@@ -72,6 +72,11 @@ TheiaCollection <-
                    .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path)
                  },
 
+                 print = function(...)
+                 {
+                   .TheiaCollection_print(self)
+                 },
+
                  check = function()
                  {
                    .TheiaCollection_check(self)
@@ -102,6 +107,24 @@ TheiaCollection <-
 
 
 # Functions definitions --------------------------------------------------------
+
+.TheiaCollection_print <- function(self)
+{
+  # Special method to print
+  cat("An collection of tiles from Theia\n\n")
+
+  cat("Number of tiles:", length(self$tiles), "\n")
+  cat("Directory path :", self$dir.path, "\n")
+
+  if (!is.null(self$query)) {
+    cat("\n")
+
+    cat("Obtained from query\n")
+  }
+
+  return(invisible(self))
+}
+
 
 .TheiaCollection_initialize <- function(self, cart.path, tiles, query, dir.path)
 {
