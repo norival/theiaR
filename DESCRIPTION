@@ -3,9 +3,9 @@ Title: Download and manage data from Theia
 Version: 0.0.1
 Authors@R: person("Xavier", "Laviron", email = "xavier.laviron@gmx.fr", role = c("aut", "cre"))
 Description: Simple interface to search, download and manage data from Theia website.
-Depends: R (>= 3.5), tools, methods, XML (>= 3.86), R6 (>= 2.3), httr (>=
-  1.3), raster (>= 2.6), tiff (>= 0.1)
-License: GPL (>= 3.0)
+Depends: R (>= 3.5), tools, methods, R6 (>= 2.3),
+Imports: XML (>= 3.86), httr (>= 1.3), raster (>= 2.6), tiff (>= 0.1)
+License: GPL (>= 3.0) + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
