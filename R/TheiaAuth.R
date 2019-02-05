@@ -92,7 +92,7 @@ TheiaAuth <-
 .TheiaAuth_auth <- function(self, private)
 {
   # read auth file
-  return(readLines(auth.file))
+  return(readLines(self$auth.file))
 }
 
 
