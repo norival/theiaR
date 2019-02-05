@@ -2,7 +2,10 @@
 title: "Quick start guide to TheiaR package"
 author: "Xavier Laviron"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    highlight: github
+  
 vignette: >
   %\VignetteIndexEntry{"Quick start guide to TheiaR package"}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,28 +23,175 @@ knitr::opts_chunk$set(
 ## TheiaR package
 
 The TheiaR package intends to provide a clean interface to download and manage
-data issued by [Theia](https://theia.cnes.fr/atdistrib/rocket/#/home).
+data issued by [Theia](https://theia.cnes.fr/atdistrib/rocket/#/home) through
+their API. Basic functionnalities are (for now):
+
+- Search available tiles through data catalog
+- Download tiles resulting from a search
+- Download tiles contained in a cart (`.meta4` file) obtained from Theia
+  website.
 
 
-## Create a TheiaAuth object
+## Step-by-step guide
 
-To search and download data fro Theia, you need to register to their
-[website](https://sso.theia-land.fr/theia/register/register.xhtml).
-Once you have credentials, store them in simple text file, let's say `auth.txt`,
-with only two lines: your login and your password.
+First, load the the package.
+
+```{r}
+library(theiaR)
+```
+
+
+### Create a TheiaAuth object
+
+To search and download data from Theia, you first need to [register to their
+website](https://sso.theia-land.fr/theia/register/register.xhtml).
+Once you have your credentials, store them in simple text file, let's say
+`auth.txt`, with only two lines: your login and your password.
 
 Then create a `TheiaAuth` object:
 
 ```{r, eval=F}
-TheiaAuth$new(auth.file = "auth.txt")
+myauth <- TheiaAuth$new(auth.file = "path/to/auth.txt")
 ```
 
 You will use this object as identification for all queries needing
 identification (downloads). It will generate a token during its creation, and
 automatically generate a new token when needed (tokens are only valid for 2
-hours).
+hours). In order to use _Landsat_ or _SpotWorldHeritage_ products, you need to
+make a first manual download to their website to agree to the license and
+validate your account.
 
 
-## Searching Theia database
+### Searching Theia database
 
-You can use the `TheiaQuery` framework to manage searches.
+You can use the `TheiaQuery` framework to manage searches:
+
+```{r , eval=T}
+query <- list(collection  = "SENTINEL2",
+              town        = "Grenoble",
+              start.date  = "2018-07-01",
+              end.date    = "2018-07-06")
+
+myquery <- TheiaQuery$new(query)
+```
+
+This will create a query to Theia database, looking for tiles from Sentinel2
+satellite around Grenoble, between 2018-07-01 and 2018-07-31. `query` is a named
+list of search terms. It accepts the following terms:
+
+* __collection__: The collection to look for. Accepted values are: `SENTINEL2`,
+  `Landsat`, `SpotWorldHeritage`, `Snow`, 'VENUS`.
+
+* __platform__: The platform to look for. Accepted values are: `LANDSAT5`,
+  `LANDSAT7`, `LANDSAT8`, `SPOT1`, `SPOT2`, `SPOT3`, `SPOT4`, `SPOT5`,
+  `SENTINEL2A`, `SENTINEL2B`, `VENUS`.
+
+* __town__: The location to look for. Give not too frequent town name.
+
+* __tile__: The tile identifier to retrieve (_eg_ T31TGK)
+
+* __start.date__: The first date to look for (format: `YYYY-MM-DD`).
+
+* __end.date__: The last date to look for (format: `YYYY-MM-DD`).
+
+* __latitude__: The x coordinate of a point.
+
+* __longitude__: The y coordinate of a point.
+
+* __max.clouds__: The maximum of cloud cover wanted (0-100).
+
+
+To get the corresponding list of tiles, your can read `tiles` field:
+
+```{r}
+myquery$tiles
+```
+
+It is a `data.frame` with 6 columns:
+
+file.name
+  : The file name to download
+
+tile.id
+  : The id of the tile
+
+file.hash
+  : The hash to check downloaded file
+
+cloud.cover
+  : The percentage of clouds
+
+snow.cover
+  : The percentage of snow
+
+url
+  : The url to download the file
+
+__This command will not download your tiles.__ The next step is to create a
+collection of tiles.
+
+
+### Create a collection of tiles
+
+The `TheiaCollection` class allows to download and manage an ensemble of tiles.
+It can be built from queries or cart files.
+
+
+#### From a query
+
+```{r}
+dir.path <- tempdir()
+
+mycollection <- TheiaCollection$new(query = myquery, dir.path = dir.path)
+```
+
+```{r}
+print(mycollection)
+```
+
+This will create a collection of tiles from the previous query. `dir.path` is
+the path to the directory where the tiles will be downloaded. If tiles are
+already downloaded, it will automatically check the files.
+
+
+#### From a cart file
+
+Alternatively, you can download a cart from Theia. To create a cart, login to
+Theia website, make a [search](https://theia.cnes.fr/atdistrib/rocket/#/home)
+for tiles, and add wanted tiles to your cart. Then, download your cart and save
+the resulting `.meta4` file to your disk.
+
+You can then create your collection using this file:
+
+```{r , eval=F}
+dir.path <- tempdir()
+
+mycollection <- TheiaCollection$new(cart.path = "path/to/cart/file.meta4",
+                                    dir.path  = dir.path)
+```
+
+As above, it will check files if they are already present on disk.
+
+
+### Download your tiles
+
+To download all tiles in a collection, simply run:
+
+```{r , eval=FALSE}
+mycollection$download(auth = myauth)
+```
+
+Where `myauth` is the previously created `TheiaAuth` object. This will check if
+files are present, check their hash, and download them if needed (if files do
+not exist or checksums are wrong). To overwrite existing files, run:
+
+```{r , eval=FALSE}
+mycollection$download(auth = myauth, overwrite = TRUE)
+```
+
+
+## Acknowledgement
+
+Thanks to Olivier Hagolle for his work on `theia_download.py`
+([github](https://theia.cnes.fr/atdistrib/rocket/#/home)), which has inspired
+this package.
