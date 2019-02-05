@@ -104,31 +104,25 @@ list of search terms. It accepts the following terms:
 To get the corresponding list of tiles, your can read `tiles` field:
 
 ```{r}
-myquery$tiles
+str(myquery$tiles)
 ```
 
 It is a `data.frame` with 6 columns:
 
-file.name
-  : The file name to download
+* __file.name__: The file name to download
 
-tile.id
-  : The id of the tile
+* __tile.id__: The id of the tile
 
-file.hash
-  : The hash to check downloaded file
+* __file.hash__: The hash to check downloaded file
 
-cloud.cover
-  : The percentage of clouds
+* __cloud.cover__: The percentage of clouds
 
-snow.cover
-  : The percentage of snow
+* __snow.cover__: The percentage of snow
 
-url
-  : The url to download the file
+* __url__: The url to download the file
 
-__This command will not download your tiles.__ The next step is to create a
-collection of tiles.
+NOTE: __This command will not download your tiles.__ You have to create a
+collection of tiles first.
 
 
 ### Create a collection of tiles
