@@ -131,10 +131,11 @@ TheiaCollection <-
 
   } else if (!(is.null(query))) {
     # build collection from a TheiaQuery object --------------------------------
+    self$query <- query$clone()
 
     # create needed TheiaTile objects
     self$tiles <-
-      apply(query$tiles, 1,
+      apply(self$query$tiles, 1,
             function(x) {
               TheiaTile$new(file.path = paste0(dir.path, x[1]),
                             file.hash = as.character(x[3]),
