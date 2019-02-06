@@ -14,7 +14,8 @@ Imports:
     raster (>= 2.6),
     tiff (>= 0.1),
     tools (>= 3.5),
-    XML (>= 3.86)
+    XML (>= 3.86),
+    askpass (>= 1.1)
 License: GPL (>= 3.0) + file LICENSE
 Encoding: UTF-8
 LazyData: true
