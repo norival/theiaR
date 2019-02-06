@@ -98,6 +98,14 @@ list of search terms. It accepts the following terms:
 
 * __longitude__: The y coordinate of a point.
 
+* __latmin__: The minimum latitude to search.
+
+* __latmax__: The maximum latitude to search.
+
+* __lonmin__: The minimum longitude to search.
+
+* __lonmax__: The maximum longitude to search.
+
 * __max.clouds__: The maximum of cloud cover wanted (0-100).
 
 
