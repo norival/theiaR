@@ -37,7 +37,8 @@
 #'
 #'    \code{t$check()} Check the tiles of the collection
 #'    \code{t$get_bands()} List bands available in the tile
-#'    \code{t$read(bands)} Read band(s) from the zip file
+#'    \code{t$read(bands)} Read band(s) from the zip file and returns a list of
+#'    raster objects
 #'
 NULL
 
@@ -264,19 +265,16 @@ TheiaTile <-
          "' are not available!")
   }
 
-  # check if requested bands hae the same ID
-  bands.id <- avail.bands$band.id[avail.bands$band %in% bands]
-  if (length(unique(bands.id)) > 1) {
-    stop("Bands '",
-         paste(bands[!(bands %in% avail.bands)], collapse = ", "),
-         "' are not at the same resolution!")
-  }
-
   # get file names to read from
   files   <- unzip(self$file.path, list = TRUE)$Name
   pattern <- paste(paste0("FRE_", bands, ".tif$"), collapse = "|")
   files   <- files[grepl(pattern, files)]
 
   # read tiles from zip file and create raster::rasterStack object
-  raster::stack(lapply(files, read_tiff_from_zip, zip.file = self$file.path))
+  tiles.list <- lapply(files, read_tiff_from_zip, zip.file = self$file.path)
+
+  # give names to the layers
+  names(tiles.list) <- bands
+
+  return(tiles.list)
 }

@@ -44,6 +44,7 @@ Generate and manage a tile from Theia (download, check, load).
 
    \code{t$check()} Check the tiles of the collection
    \code{t$get_bands()} List bands available in the tile
-   \code{t$read(bands)} Read band(s) from the zip file
+   \code{t$read(bands)} Read band(s) from the zip file and returns a list of
+   raster objects
 }
 
