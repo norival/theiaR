@@ -23,7 +23,8 @@
 #'    \item{file.path:}{The path to the zip file containing the tile}
 #'    \item{url:}{The url to download the tile}
 #'    \item{file.hash:}{The md5sum used to check the zip file}
-#'    \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
+#'    \item{auth:}{A cahracter string giving the file pathto Theia credentials.
+#'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
 #'  }
 #'
@@ -167,6 +168,11 @@ TheiaTile <-
 
 .TheiaTile_download <- function(self, private, auth, overwrite = FALSE)
 {
+  if (is.character(auth)) {
+    # create authentification system if not supplied
+    auth <- TheiaAuth$new(auth.file = auth)
+  }
+
   if (!(self$status$correct) | overwrite == TRUE ) {
     # file does not exist, is not correct, or overwrite is TRUE
 

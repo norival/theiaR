@@ -36,7 +36,8 @@ NULL
 #'    from a TheiaQuery object. Can also be a list with search terms. In this
 #'    case, it will create a `TheiaQuery` object from it. See
 #'    \code{\link{TheiaQuery}} for details on query syntax}
-#'    \item{auth:}{A `TheiaAuth` object, for identication to Theia website}
+#'    \item{auth:}{A cahracter string giving the file pathto Theia credentials.
+#'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`}
 #'  }
 #'
@@ -192,6 +193,11 @@ TheiaCollection <-
 
 .TheiaCollection_download <- function(self, auth, overwrite)
 {
+  if (is.character(auth)) {
+    # create authentification system if not supplied
+    auth <- TheiaAuth$new(auth.file = auth)
+  }
+
   # download needed tiles
   lapply(self$tiles,
          function(x, auth, overwrite) {
