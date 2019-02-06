@@ -55,5 +55,8 @@ from a \code{\link{TheiaQuery}} object or from a list of
    \code{c$get_bands()} List bands available in each tile
 
    \code{c$status} Return the status of each tile of teh collection
+
+   \code{c$read(bands)} Read band(s) from the zip files and returns a list of
+   raster objects
 }
 
