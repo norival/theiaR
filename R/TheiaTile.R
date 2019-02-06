@@ -62,13 +62,15 @@ TheiaTile <-
             list(file.path  = NA,
                  file.hash  = NA,
                  url        = NA,
+                 tile.name  = NA,
                  status     = list(exists  = FALSE,
                                    checked = FALSE,
                                    correct = FALSE),
 
-                 initialize = function(file.path, url, file.hash)
+                 initialize = function(file.path, url, tile.name, file.hash)
                  {
-                   .TheiaTile_initialize(self, private, file.path, url, file.hash)
+                   .TheiaTile_initialize(self, private, file.path, url,
+                                         tile.name, file.hash)
                  },
 
                  print = function(...)
@@ -119,11 +121,12 @@ TheiaTile <-
 }
 
 
-.TheiaTile_initialize <- function(self, private, file.path, url, file.hash)
+.TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash)
 {
   # Fill fiedls of the object
   self$file.path <- file.path
   self$url       <- url
+  self$tile.name <- gsub("\\.tar\\.gz$|\\.zip$", "", tile.name)
   self$file.hash <- file.hash
 
   # check the tile
