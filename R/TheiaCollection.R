@@ -151,11 +151,12 @@ TheiaCollection <-
              function(x) {
                TheiaTile$new(file.path = paste0(dir.path, as.character(x$.attrs)),
                              file.hash = as.character(x$hash),
-                             url       = as.character(x$url$text))
+                             url       = as.character(x$url$text),
+                             tile.name = as.character(x$.attrs))
              })
 
-    # remove useless names of tiles list
-    self$tiles <- unname(self$tiles)
+    # give names to the tiles
+    names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
 
   } else if (!(is.null(tiles))) {
     # TODO: Implement building from a list of tiles
@@ -177,11 +178,12 @@ TheiaCollection <-
             function(x) {
               TheiaTile$new(file.path = paste0(dir.path, x[1]),
                             file.hash = as.character(x[3]),
-                            url       = as.character(x[6]))
+                            url       = as.character(x[6]),
+                            tile.name = as.character(x[1]))
             })
 
-    # remove useless names of tiles list
-    self$tiles <- unname(self$tiles)
+    # give names to the tiles
+    names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
   }
 
   return(invisible(self))
