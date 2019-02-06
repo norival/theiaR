@@ -7,5 +7,5 @@
 NULL
 
 #' @importFrom R6 R6Class
-#' @importFrom utils unzip
+#' @importFrom utils unzip URLencode
 NULL

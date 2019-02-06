@@ -52,6 +52,10 @@ input given by the user.
      \item{end.date:} The last date to look for (format: YYYY-MM-DD).
      \item{latitude:} The x coordinate of a point
      \item{longitude:} The y coordinate of a point
+     \item{latmin:} The minimum latitude to search
+     \item{latmax:} The maximum latitude to search
+     \item{lonmin:} The minimum longitude to search
+     \item{lonmax:} The maximum longitude to search
      \item{max.clouds:} The maximum of cloud cover wanted (0-100)
    }
 }

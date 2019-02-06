@@ -43,6 +43,10 @@
 #'      \item{end.date:} The last date to look for (format: YYYY-MM-DD).
 #'      \item{latitude:} The x coordinate of a point
 #'      \item{longitude:} The y coordinate of a point
+#'      \item{latmin:} The minimum latitude to search
+#'      \item{latmax:} The maximum latitude to search
+#'      \item{lonmin:} The minimum longitude to search
+#'      \item{lonmax:} The maximum longitude to search
 #'      \item{max.clouds:} The maximum of cloud cover wanted (0-100)
 #'    }
 #'
@@ -146,6 +150,16 @@ TheiaQuery <-
   q.link[["lat"]]            <- self$query$latitude
   q.link[["lon"]]            <- self$query$longitude
 
+  # search a rectangle
+  if (all(c("latmin", "latmax", "lonmin", "lonmax") %in% names(self$query))) {
+    q.link[["box"]] <- URLencode(paste(self$query$lonmin,
+                                       self$query$latmin,
+                                       self$query$lonmax,
+                                       self$query$latmax,
+                                       sep = ","),
+                                 reserved = TRUE)
+  }
+
   # build query links
   query.link  <- paste(names(q.link), q.link, sep = "=", collapse = "&")
   private$url <- paste0(private$server.url,
@@ -196,6 +210,20 @@ TheiaQuery <-
          call. = FALSE)
   }
 
+  # check if user has not specified both a point and a rectangle
+  box.names <- c("latmin", "latmax", "lonmin", "lonmax")
+  if (any(box.names %in% names(self$query))) {
+    if (!(all(box.names %in% names(self$query)))) {
+      stop("Specify each of ", box.names, " to have a rectangle",
+           call. = FALSE)
+    }
+
+    bad.names <-
+    if (any(c("latitude", "longitude") %in% names(self$query))) {
+      stop("Specify a point or a rectangle, not both", call. = FALSE)
+    }
+  }
+
   # available choices
   collection.choices <- c('Landsat', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
   platform.choices <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
@@ -215,6 +243,10 @@ TheiaQuery <-
                                        choices = 0:100)
   self$query$latitude   <- parse_query(self$query$latitude, "latitude", "numeric")
   self$query$longitude  <- parse_query(self$query$longitude, "longitude", "numeric")
+  self$query$latmin     <- parse_query(self$query$latmin, "latmin", "numeric")
+  self$query$latmax     <- parse_query(self$query$latmax, "latmax", "numeric")
+  self$query$lonmin     <- parse_query(self$query$lonmin, "lonmin", "numeric")
+  self$query$lonmax     <- parse_query(self$query$lonmax, "lonmax", "numeric")
 
   return(invisible(self))
 }
