@@ -26,7 +26,7 @@ The TheiaR package intends to provide a clean interface to download and manage
 data issued by [Theia](https://theia.cnes.fr/atdistrib/rocket/#/home) through
 their API. Basic functionnalities are (for now):
 
-- Search available tiles through data catalog
+- Search available tiles through Theia API
 - Download tiles resulting from a search
 - Download tiles contained in a cart (`.meta4` file) obtained from Theia
   website.
@@ -40,47 +40,38 @@ First, load the the package.
 library(theiaR)
 ```
 
-
-### Create a TheiaAuth object
-
-To search and download data from Theia, you first need to [register to their
+To search and download data from Theia, you will need to [register to their
 website](https://sso.theia-land.fr/theia/register/register.xhtml).
-Once you have your credentials, store them in simple text file, let's say
-`auth.txt`, with only two lines: your login and your password.
 
-Then create a `TheiaAuth` object:
-
-```{r, eval=F}
-myauth <- TheiaAuth$new(auth.file = "path/to/auth.txt")
-```
-
-You will use this object as identification for all queries needing
-identification (downloads). It will generate a token during its creation, and
-automatically generate a new token when needed (tokens are only valid for 2
-hours). In order to use _Landsat_ or _SpotWorldHeritage_ products, you need to
-make a first manual download to their website to agree to the license and
-validate your account.
+__NOTE:__ In order to use _Landsat_ or _SpotWorldHeritage_ products, you'll need
+to make a first manual download to agree to the license and validate your
+account.
 
 
-### Searching Theia database
+### Create a collection of tiles
 
-You can use the `TheiaQuery` framework to manage searches:
+The first step is to create a collection of tiles. It is achieved by the
+`TheiaCollection` class. Its creation can be done from a query or from a cart
+file.
+
+
+#### Create a collection from a query
+
+A query is simply a named `list` of search terms. For example:
 
 ```{r , eval=T}
-query <- list(collection  = "SENTINEL2",
-              town        = "Grenoble",
-              start.date  = "2018-07-01",
-              end.date    = "2018-07-06")
-
-myquery <- TheiaQuery$new(query)
+myquery <- list(collection  = "SENTINEL2",
+                town        = "Grenoble",
+                start.date  = "2018-07-01",
+                end.date    = "2018-07-06")
 ```
 
-This will create a query to Theia database, looking for tiles from Sentinel2
-satellite around Grenoble, between 2018-07-01 and 2018-07-31. `query` is a named
-list of search terms. It accepts the following terms:
+will create a query to Theia database, looking for tiles from Sentinel2
+satellite around Grenoble, between 2018-07-01 and 2018-07-31.
+It accepts the following terms:
 
 * __collection__: The collection to look for. Accepted values are: `SENTINEL2`,
-  `Landsat`, `SpotWorldHeritage`, `Snow`, 'VENUS`.
+  `Landsat`, `SpotWorldHeritage`, `Snow`, `VENUS`.
 
 * __platform__: The platform to look for. Accepted values are: `LANDSAT5`,
   `LANDSAT7`, `LANDSAT8`, `SPOT1`, `SPOT2`, `SPOT3`, `SPOT4`, `SPOT5`,
@@ -109,37 +100,7 @@ list of search terms. It accepts the following terms:
 * __max.clouds__: The maximum of cloud cover wanted (0-100).
 
 
-To get the corresponding list of tiles, your can read `tiles` field:
-
-```{r}
-str(myquery$tiles)
-```
-
-It is a `data.frame` with 6 columns:
-
-* __file.name__: The file name to download
-
-* __tile.id__: The id of the tile
-
-* __file.hash__: The hash to check downloaded file
-
-* __cloud.cover__: The percentage of clouds
-
-* __snow.cover__: The percentage of snow
-
-* __url__: The url to download the file
-
-NOTE: __This command will not download your tiles.__ You have to create a
-collection of tiles first.
-
-
-### Create a collection of tiles
-
-The `TheiaCollection` class allows to download and manage an ensemble of tiles.
-It can be built from queries or cart files.
-
-
-#### From a query
+You can then create your collection with:
 
 ```{r}
 dir.path <- tempdir()
@@ -147,13 +108,12 @@ dir.path <- tempdir()
 mycollection <- TheiaCollection$new(query = myquery, dir.path = dir.path)
 ```
 
+where `dir.path` is the path you want your tiles to be downloaded. If tiles are
+already downloaded, it will automatically check the files.
+
 ```{r}
 print(mycollection)
 ```
-
-This will create a collection of tiles from the previous query. `dir.path` is
-the path to the directory where the tiles will be downloaded. If tiles are
-already downloaded, it will automatically check the files.
 
 
 #### From a cart file
@@ -177,15 +137,26 @@ As above, it will check files if they are already present on disk.
 
 ### Download your tiles
 
+The next step is to download your collection. You can get the status of your
+collection by running:
+
+```{r , eval=TRUE}
+mycollection$status
+```
+
 To download all tiles in a collection, simply run:
 
 ```{r , eval=FALSE}
 mycollection$download(auth = myauth)
 ```
 
-Where `myauth` is the previously created `TheiaAuth` object. This will check if
-files are present, check their hash, and download them if needed (if files do
-not exist or checksums are wrong). To overwrite existing files, run:
+where myauth is the path to file storing your Theia credentials. If it does not
+exist yet, you will be securely prompted for your login and password, and the
+file will be created.
+
+This will check if files are present, check their hashes, and download them if
+needed (if files do not exist or checksums are wrong). To overwrite existing
+files, run:
 
 ```{r , eval=FALSE}
 mycollection$download(auth = myauth, overwrite = TRUE)
