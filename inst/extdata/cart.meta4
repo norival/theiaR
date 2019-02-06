@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metalink xmlns="urn:ietf:params:xml:ns:metalink">
+ <published>2019-01-30T10:04:26+0100</published>
+ <file name="SENTINEL2B_20190128-104831-308_L2A_T31TGK_D.zip">
+  <version>1.0</version>
+  <language>en</language>
+  <hash type="fe595caf9305c78cda005f60444d5895"></hash>
+  <url priority="1">https://theia.cnes.fr/atdistrib/resto2/collections/SENTINEL2/5239c191-7130-59b1-80d6-11eb28ce8d4a/download?_tk=f016943876e330d57cc9e4d277ba1931ab58c053</url>
+ </file>
+ <file name="SENTINEL2A_20190113-104826-809_L2A_T31TGK_D.zip">
+  <version>1.0</version>
+  <language>en</language>
+  <hash type="10d21e5bded5be6e2e8140be73029269"></hash>
+  <url priority="1">https://theia.cnes.fr/atdistrib/resto2/collections/SENTINEL2/5ea54171-f14b-5781-8d07-9be8e436410b/download?_tk=85c69b3b39718adb839400b6c2c879f68b563fef</url>
+ </file>
+</metalink>

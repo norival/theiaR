@@ -24,7 +24,9 @@ knitr::opts_chunk$set(
 
 The TheiaR package intends to provide a clean interface to download and manage
 data issued by [Theia](https://theia.cnes.fr/atdistrib/rocket/#/home) through
-their API. Basic functionnalities are (for now):
+its API (Application Programming Interface).
+
+The basic functionnalities are (for now):
 
 - Search available tiles through Theia API
 - Download tiles resulting from a search
@@ -34,7 +36,7 @@ their API. Basic functionnalities are (for now):
 
 ## Step-by-step guide
 
-First, load the the package.
+First, load the package.
 
 ```{r}
 library(theiaR)
@@ -50,9 +52,8 @@ account.
 
 ### Create a collection of tiles
 
-The first step is to create a collection of tiles. It is achieved by the
-`TheiaCollection` class. Its creation can be done from a query or from a cart
-file.
+The first step is to create a collection of tile(s). This can be done either
+from a query or from a cart file.
 
 
 #### Create a collection from a query
@@ -68,26 +69,35 @@ myquery <- list(collection  = "SENTINEL2",
 
 will create a query to Theia database, looking for tiles from Sentinel2
 satellite around Grenoble, between 2018-07-01 and 2018-07-31.
-It accepts the following terms:
 
-* __collection__: The collection to look for. Accepted values are: `SENTINEL2`,
+It accepts the following terms. Terms with a `*` are mandatory.
+
+* __collection*__: The collection to look for. Accepted values are: `SENTINEL2`,
   `Landsat`, `SpotWorldHeritage`, `Snow`, `VENUS`.
 
 * __platform__: The platform to look for. Accepted values are: `LANDSAT5`,
   `LANDSAT7`, `LANDSAT8`, `SPOT1`, `SPOT2`, `SPOT3`, `SPOT4`, `SPOT5`,
   `SENTINEL2A`, `SENTINEL2B`, `VENUS`.
 
-* __town__: The location to look for. Give not too frequent town name.
+
+To specify the location of the tiles, several alternatives are available.
+You can specify the town around which you want your data with:
+
+* __town__: The location to look for. Give a not too frequent town name.
+
+
+You can specify directly the tile ID if you know it:
 
 * __tile__: The tile identifier to retrieve (_eg_ T31TGK)
 
-* __start.date__: The first date to look for (format: `YYYY-MM-DD`).
-
-* __end.date__: The last date to look for (format: `YYYY-MM-DD`).
+You can specify a point by giving its x/y coordinates:
 
 * __latitude__: The x coordinate of a point.
 
 * __longitude__: The y coordinate of a point.
+
+
+Or you can specify a rectangle by giving its min/max coordinates:
 
 * __latmin__: The minimum latitude to search.
 
@@ -97,26 +107,35 @@ It accepts the following terms:
 
 * __lonmax__: The maximum longitude to search.
 
+
+Finally, you can filter results by giving the date range and the maximum cloud
+cover:
+
 * __max.clouds__: The maximum of cloud cover wanted (0-100).
+
+* __start.date__: The first date to look for (format: `YYYY-MM-DD`).
+
+* __end.date__: The last date to look for (format: `YYYY-MM-DD`).
 
 
 You can then create your collection with:
 
 ```{r}
-dir.path <- tempdir()
-
-mycollection <- TheiaCollection$new(query = myquery, dir.path = dir.path)
+mycollection <- TheiaCollection$new(query = myquery, dir.path = ".")
 ```
 
 where `dir.path` is the path you want your tiles to be downloaded. If tiles are
-already downloaded, it will automatically check the files.
+already present in `dir.path`, they will be checked by computing a checksum and
+comparing it to the hash provided by Theia (only available for Sentinel2 data,
+no hash is provided for other collections, and files are the nassumed to be
+correct). This ensures that the files have been correctly downloaded.
 
 ```{r}
 print(mycollection)
 ```
 
 
-#### From a cart file
+#### Create a collection from a cart file
 
 Alternatively, you can download a cart from Theia. To create a cart, login to
 Theia website, make a [search](https://theia.cnes.fr/atdistrib/rocket/#/home)
@@ -125,14 +144,17 @@ the resulting `.meta4` file to your disk.
 
 You can then create your collection using this file:
 
-```{r , eval=F}
-dir.path <- tempdir()
+```{r , eval=T}
+cart.path <- system.file("extdata", "cart.meta4", package = "theiaR")
 
-mycollection <- TheiaCollection$new(cart.path = "path/to/cart/file.meta4",
-                                    dir.path  = dir.path)
+mycollection <- TheiaCollection$new(cart.path = cart.path,
+                                    dir.path  = ".")
+
+print(mycollection)
 ```
 
-As above, it will check files if they are already present on disk.
+As above, it will check the hash of files if they are already present in
+`dir.path`.
 
 
 ### Download your tiles
