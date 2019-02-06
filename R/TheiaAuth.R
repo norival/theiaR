@@ -18,8 +18,8 @@
 #'
 #' \describe{
 #'    \item{a:}{A \code{TheiaAuth} object}
-#'    \item{auth.file}{The path to the file containing login and password. See
-#'    `Details` for more informations}
+#'    \item{auth.file}{The path to the file containing login and password. It
+#'    will be created if it does not exist. See `Details` for more informations}
 #'  }
 #'
 #' @section Details:
@@ -37,7 +37,9 @@
 #'    password
 #'    
 #'    File content is read each time authentication is needed (to request a new
-#'    token), so login and password are not stored in R's memory.
+#'    token), so login and password are not stored in R's memory. If this file
+#'    does not exist, R will prompt you to enter your login and password and
+#'    will create the file.
 #'
 NULL
 
@@ -81,6 +83,20 @@ TheiaAuth <-
 {
   # fill auth.file field
   self$auth.file <- auth.file
+
+  # check if password file exists
+  if (!(file.exists(self$auth.file))) {
+    message(self$auth.file, " does not exist. Creating new one...")
+
+    # prompt for login and password
+    login <- readline("Enter login: ")
+    pw    <- askpass::askpass("Enter password: ")
+
+    # write to file
+    writeLines(text = paste(login, pw, sep = "\n"), self$auth.file)
+
+    rm("pw")
+  }
 
   # fill token field
   private$.token <- self$token

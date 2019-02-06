@@ -23,8 +23,8 @@ to download tiles from \link{TheiaTile} and \link{TheiaCollection} objects.
 
 \describe{
    \item{a:}{A \code{TheiaAuth} object}
-   \item{auth.file}{The path to the file containing login and password. See
-   `Details` for more informations}
+   \item{auth.file}{The path to the file containing login and password. It
+   will be created if it does not exist. See `Details` for more informations}
  }
 }
 
@@ -44,6 +44,8 @@ to download tiles from \link{TheiaTile} and \link{TheiaCollection} objects.
    password
    
    File content is read each time authentication is needed (to request a new
-   token), so login and password are not stored in R's memory.
+   token), so login and password are not stored in R's memory. If this file
+   does not exist, R will prompt you to enter your login and password and
+   will create the file.
 }
 
