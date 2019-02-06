@@ -117,12 +117,18 @@ TheiaCollection <-
   cat("An collection of tiles from Theia\n\n")
 
   cat("Number of tiles:", length(self$tiles), "\n")
-  cat("Directory path :", self$dir.path, "\n")
+  cat("Directory path : '", self$dir.path, "'\n", sep = "")
 
   if (!is.null(self$query)) {
     cat("\n")
 
     cat("Obtained from query\n")
+  } 
+
+  if (!is.null(self$cart)) {
+    cat("\n")
+
+    cat("Obtained from cart file\n")
   }
 
   return(invisible(self))
