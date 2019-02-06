@@ -114,7 +114,7 @@ TheiaAuth <-
     httr::stop_for_status(req, task = "retrieve token.")
 
     # store token
-    private$.token <- content(req, as = "text")
+    private$.token <- httr::content(req, as = "text")
 
     # check if token is ok
     if (nchar(private$.token) == 0) {

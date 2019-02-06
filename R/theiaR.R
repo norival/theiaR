@@ -7,4 +7,5 @@
 NULL
 
 #' @importFrom R6 R6Class
+#' @importFrom utils unzip
 NULL

@@ -177,9 +177,9 @@ TheiaTile <-
 
     # HTTP request
     req <- httr::GET(url,
-                     add_headers(Authorization = paste("Bearer", auth$token)),
-                     write_disk(self$file.path, overwrite = TRUE),
-                     progress())
+                     httr::add_headers(Authorization = paste("Bearer", auth$token)),
+                     httr::write_disk(self$file.path, overwrite = TRUE),
+                     httr::progress())
 
     httr::stop_for_status(req, task = paste0("download tile: ", self$file.path))
 
@@ -221,7 +221,7 @@ TheiaTile <-
 
   # extract and parse xml file
   extraction_wrapper(self$file.path, args = list(files = file.name, exdir = tmp.dir))
-  private$meta.data <- xmlToList(xmlParse(paste0(tmp.dir, file.name)))
+  private$meta.data <- XML::xmlToList(XML::xmlParse(paste0(tmp.dir, file.name)))
 
   # remove temporary file
   unlink(paste(tmp.dir, file.name, sep = "/"))
