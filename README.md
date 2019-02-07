@@ -58,11 +58,11 @@ satellite around Grenoble, between 2018-07-01 and 2018-07-31.
 It accepts the following terms. Terms with a `*` are mandatory.
 
 * __collection*__: The collection to look for. Accepted values are: `SENTINEL2`,
-  `Landsat`, `SpotWorldHeritage`, `Snow`, `VENUS`.
+  `Landsat`, `SpotWorldHeritage`, `Snow`.
 
 * __platform__: The platform to look for. Accepted values are: `LANDSAT5`,
   `LANDSAT7`, `LANDSAT8`, `SPOT1`, `SPOT2`, `SPOT3`, `SPOT4`, `SPOT5`,
-  `SENTINEL2A`, `SENTINEL2B`, `VENUS`.
+  `SENTINEL2A`, `SENTINEL2B`.
 
 
 To specify the location of the tiles, several alternatives are available.
