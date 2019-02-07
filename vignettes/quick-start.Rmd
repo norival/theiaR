@@ -2,9 +2,7 @@
 title: "Quick start guide to TheiaR package"
 author: "Xavier Laviron"
 date: "`r Sys.Date()`"
-output:
-  rmarkdown::html_vignette:
-    highlight: github
+output: rmarkdown::html_vignette
   
 vignette: >
   %\VignetteIndexEntry{"Quick start guide to TheiaR package"}
