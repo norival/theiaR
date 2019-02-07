@@ -14,6 +14,7 @@
 #'    t$check()
 #'    t$get_bands()
 #'    t$read(bands)
+#'    t$extract(overwrite = FALSE, dest.dir = NULL)
 #' }
 #'
 #' @section Arguments:
@@ -36,9 +37,14 @@
 #'    and check the resulting files
 #'
 #'    \code{t$check()} Check the tiles of the collection
+#'
 #'    \code{t$get_bands()} List bands available in the tile
+#'
 #'    \code{t$read(bands)} Read band(s) from the zip file and returns a list of
 #'    raster objects
+#'
+#'    \code{t$extract(overwrite = FALSE, dest.dir = NULL)} Extract archive to
+#'    dest.dir if supplied, or to the same directory as the archive otherwise
 #'
 NULL
 
@@ -96,6 +102,11 @@ TheiaTile <-
                  read = function(bands)
                  {
                    .TheiaTile_read(self, private, bands)
+                 },
+
+                 extract = function(overwrite = FALSE, dest.dir = NULL)
+                 {
+                   .TheiaTile_extract(self, private, overwrite, dest.dir)
                  })
           )
 
@@ -280,4 +291,28 @@ TheiaTile <-
   names(tiles.list) <- bands
 
   return(tiles.list)
+}
+
+
+.TheiaTile_extract <- function(self, private, overwrite, dest.dir)
+{
+  if (is.null(dest.dir)) {
+    # create destination directory if not supllied
+    dest.dir <- gsub(self$tile.name, "", self$file.path)
+    dest.dir <- gsub("\\.zip$|\\.tar.\\gz$", "", dest.dir)
+  }
+
+  # get extracted archive name
+  file.path <- extraction_wrapper(self$file.path, args = list(list = TRUE))[1]
+  file.path <- gsub("(^.*/)(.*$)", "\\1", file.path)
+  file.path <- paste0(dest.dir, file.path)
+
+  if (!(dir.exists(file.path)) | overwrite == TRUE) {
+    # check if it exists
+    extraction_wrapper(self$file.path, args = list(exdir = dest.dir))
+  } else {
+    message(file.path, " already exists. Use 'overwrite=TRUE' to overwrite")
+  }
+
+  return(invisible(file.path))
 }
