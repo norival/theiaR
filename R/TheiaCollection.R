@@ -22,6 +22,7 @@ NULL
 #'    c$check()
 #'    c$get_bands()
 #'    c$status
+#'    c$extract(overwrite = FALSE, dest.dir = NULL)
 #' }
 #'
 #' @section Arguments:
@@ -55,6 +56,9 @@ NULL
 #'
 #'    \code{c$read(bands)} Read band(s) from the zip files and returns a list of
 #'    raster objects
+#'
+#'    \code{c$extract(overwrite = FALSE, dest.dir = NULL)} Extract archives to
+#'    dest.dir if supplied, or to the same directory as the archives otherwise
 #'
 NULL
 
@@ -101,6 +105,11 @@ TheiaCollection <-
                  read = function(bands)
                  {
                    .TheiaCollection_read(self, private, bands)
+                 },
+
+                 extract = function(overwrite = FALSE, dest.dir = NULL)
+                 {
+                   .TheiaCollection_extract(self, private, overwrite, dest.dir)
                  }),
 
             # active -----------------------------------------------------------
@@ -282,4 +291,16 @@ TheiaCollection <-
   status$tile <- gsub(".zip$", "", status$tile)
 
   return(status)
+}
+
+
+.TheiaCollection_extract <- function(self, private, overwrite, dest.dir)
+{
+  # extract all tiles
+  file.path <- lapply(self$tiles,
+                      function(x, overwrite, dest.dir) {
+                        x$extract(overwrite = overwrite, dest.dir = dest.dir)
+                      }, overwrite = overwrite, dest.dir = dest.dir)
+
+  return(invisible(unlist(file.path)))
 }
