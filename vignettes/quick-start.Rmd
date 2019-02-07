@@ -34,6 +34,7 @@ The basic functionnalities are (for now):
   website.
 - Read images directly from the downloaded archives (without extracting the
   archives, to save a lot of disk space)
+- Extract archives
 
 
 ## Step-by-step guide
@@ -209,6 +210,16 @@ where `bands` is a vector with bands names.
 It will return a list of `RasterLayer` objects, that you can manipulate with
 functions from the `raster` package.
 
+
+### Extract tiles
+
+If you want to extract full archives, you can run:
+
+```{r , eval=FALSE}
+file.path <- mycollection$extract()
+```
+
+which will extract tiles into the same directory as the archives.
 
 
 ## Acknowledgement
