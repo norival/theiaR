@@ -1,6 +1,6 @@
 Package: theiaR
 Title: Download and manage data from Theia
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: person("Xavier", "Laviron", email = "xavier.laviron@gmx.fr", role = c("aut", "cre"))
 Description: This package provides a simple interface to search availbale data
     provided by Theia (theia.cnes.fr), download it, and manage it. Data can be
