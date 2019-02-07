@@ -202,5 +202,5 @@ devtools::install_github('norival/theiaR')
 ## Acknowledgement
 
 Thanks to Olivier Hagolle for his work on `theia_download.py`
-([github](https://theia.cnes.fr/atdistrib/rocket/#/home)), which has inspired
+([github](https://github.com/olivierhagolle/theia_download)), which has inspired
 this package.
