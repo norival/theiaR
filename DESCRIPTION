@@ -4,10 +4,9 @@ Version: 0.1.0
 Authors@R: person("Xavier", "Laviron", email = "xavier.laviron@gmx.fr",
     role = c("aut", "cre"),
     comment = c(ORCID = "0000-0002-9882-3253"))
-Description: This package provides a simple interface to search available data
-    provided by Theia (theia.cnes.fr), download it, and manage it. Data can be
-    downloaded based on a search result or from a cart file downloaded from
-    Theia website.
+Description: Provides a simple interface to search available data provided by
+    Theia (<https://theia.cnes.fr>), download it, and manage it. Data can be downloaded
+    based on a search result or from a cart file downloaded from Theia website.
 Depends:
     R (>= 3.5)
 Imports:
