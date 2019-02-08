@@ -1,5 +1,5 @@
 Package: theiaR
-Title: Download and manage data from Theia
+Title: Download and Manage Data from Theia
 Version: 0.1.0
 Authors@R: person("Xavier", "Laviron", email = "xavier.laviron@gmx.fr",
     role = c("aut", "cre"),
@@ -18,7 +18,7 @@ Imports:
     tools (>= 3.5),
     XML (>= 3.86),
     askpass (>= 1.1)
-License: GPL (>= 3.0) + file LICENSE
+License: GPL (>= 3.0)
 URL: https://github.com/norival/theiaR
 BugReports: https://github.com/norival/theiaR/issues
 Encoding: UTF-8
