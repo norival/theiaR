@@ -15,8 +15,11 @@ The basic functionnalities are (for now):
 - Download tiles contained in a cart (`.meta4` file) obtained from Theia
   website.
 - Read images directly from the downloaded archives (without extracting the
-  archives, to save a lot of disk space)
+  archives, to save a lot of disk space, Sentinel2 only)
 - Extract archives
+
+
+_NOTE: ongoing development, more functionnalities shall be added in the future_
 
 
 ## Step-by-step guide
