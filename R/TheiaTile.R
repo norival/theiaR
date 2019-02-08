@@ -24,7 +24,7 @@
 #'    \item{file.path:}{The path to the zip file containing the tile}
 #'    \item{url:}{The url to download the tile}
 #'    \item{file.hash:}{The md5sum used to check the zip file}
-#'    \item{auth:}{A cahracter string giving the file pathto Theia credentials.
+#'    \item{auth:}{A character string giving the file path to Theia credentials.
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
 #'  }

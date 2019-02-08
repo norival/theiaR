@@ -2,13 +2,13 @@
 
 # TheiaR: search, download and manage data from Theia
 
-The TheiaR package provides an efficient and clean interface to search, donwload
+The TheiaR package provides an efficient and clean interface to search, download
 and manage products from [Theia website](https://theia.cnes.fr/atdistrib/rocket/#/home).
 
 
 ## Overview
 
-The basic functionnalities are (for now):
+The basic functionalities are (for now):
 
 - Search available tiles through Theia API
 - Download tiles resulting from a search
@@ -19,7 +19,7 @@ The basic functionnalities are (for now):
 - Extract archives
 
 
-_NOTE: ongoing development, more functionnalities shall be added in the future_
+_ NOTE: ongoing development, more functionalities shall be added in the future_
 
 
 ## Step-by-step guide
@@ -76,7 +76,7 @@ You can specify the town around which you want your data with:
 
 You can specify directly the tile ID if you know it:
 
-* __tile__: The tile identifier to retrieve (_eg_ T31TGK)
+* __tile__: The tile identifier to retrieve (_e.g._ T31TGK)
 
 You can specify a point by giving its x/y coordinates:
 
@@ -115,7 +115,7 @@ mycollection <- TheiaCollection$new(query = myquery, dir.path = ".")
 where `dir.path` is the path you want your tiles to be downloaded. If tiles are
 already present in `dir.path`, they will be checked by computing a checksum and
 comparing it to the hash provided by Theia (only available for Sentinel2 data,
-no hash is provided for other collections, and files are the nassumed to be
+no hash is provided for other collections, and files are then assumed to be
 correct). This ensures that the files have been correctly downloaded.
 
 
@@ -197,14 +197,14 @@ which will extract tiles into the same directory as the archives.
 
 ## Installation
 
-You can install the latest developpment version by using:
+You can install the latest development version by using:
 
 ```
 devtools::install_github('norival/theiaR')
 ```
 
 
-## Acknowledgement
+## Acknowledgment
 
 Thanks to Olivier Hagolle for his work on `theia_download.py`
 ([github](https://github.com/olivierhagolle/theia_download)), which has inspired

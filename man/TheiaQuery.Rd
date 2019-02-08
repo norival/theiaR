@@ -32,7 +32,7 @@ input given by the user.
    \code{TheiaQuery$new()} Create a new instance of the class, parse `query`
    list and submit the query to Theia to retrieve files catalog
 
-   \code{q$submit()} Submit the query to Theia and get a list af tiles
+   \code{q$submit()} Submit the query to Theia and get a list of tiles
    corresponding to search criteria
 }
 

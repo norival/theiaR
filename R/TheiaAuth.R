@@ -1,8 +1,8 @@
-#' Authentification system to Theia website
+#' Authentication system to Theia website
 #'
-#' Generate and manage authentification to Theia website from login and
+#' Generate and manage authentication to Theia website from login and
 #' password. It requests a token to download tiles when created and
-#' autmotatically request a new one when it has expired (after 2h). It is used
+#' automatically request a new one when it has expired (after 2h). It is used
 #' to download tiles from \link{TheiaTile} and \link{TheiaCollection} objects.
 #'
 #' @name TheiaAuth
@@ -25,7 +25,7 @@
 #' @section Details:
 #'    \code{TheiaAuth$new(auth.file)} Create a new instance of the class
 #'
-#'    \code{a$token()} Return the current token or generate a nex one if it has
+#'    \code{a$token()} Return the current token or generate a next one if it has
 #'    expired
 #'
 #' @section Details:

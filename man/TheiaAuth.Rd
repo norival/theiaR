@@ -2,11 +2,11 @@
 % Please edit documentation in R/TheiaAuth.R
 \name{TheiaAuth}
 \alias{TheiaAuth}
-\title{Authentification system to Theia website}
+\title{Authentication system to Theia website}
 \description{
-Generate and manage authentification to Theia website from login and
+Generate and manage authentication to Theia website from login and
 password. It requests a token to download tiles when created and
-autmotatically request a new one when it has expired (after 2h). It is used
+automatically request a new one when it has expired (after 2h). It is used
 to download tiles from \link{TheiaTile} and \link{TheiaCollection} objects.
 }
 \section{Usage}{
@@ -32,7 +32,7 @@ to download tiles from \link{TheiaTile} and \link{TheiaCollection} objects.
 
    \code{TheiaAuth$new(auth.file)} Create a new instance of the class
 
-   \code{a$token()} Return the current token or generate a nex one if it has
+   \code{a$token()} Return the current token or generate a next one if it has
    expired
 
 

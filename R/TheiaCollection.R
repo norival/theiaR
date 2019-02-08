@@ -37,7 +37,7 @@ NULL
 #'    from a TheiaQuery object. Can also be a list with search terms. In this
 #'    case, it will create a `TheiaQuery` object from it. See
 #'    \code{\link{TheiaQuery}} for details on query syntax}
-#'    \item{auth:}{A cahracter string giving the file pathto Theia credentials.
+#'    \item{auth:}{A character string giving the file path to Theia credentials.
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`}
 #'  }
@@ -52,7 +52,7 @@ NULL
 #'
 #'    \code{c$get_bands()} List bands available in each tile
 #'
-#'    \code{c$status} Return the status of each tile of teh collection
+#'    \code{c$status} Return the status of each tile of the collection
 #'
 #'    \code{c$read(bands)} Read band(s) from the zip files and returns a list of
 #'    raster objects
