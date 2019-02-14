@@ -62,13 +62,15 @@ TheiaTile <-
 
           # public -------------------------------------------------------------
           public =
-            list(file.path  = NA,
-                 file.hash  = NA,
-                 url        = NA,
-                 tile.name  = NA,
-                 status     = list(exists  = FALSE,
-                                   checked = FALSE,
-                                   correct = FALSE),
+            list(file.path      = NA,
+                 file.hash      = NA,
+                 url            = NA,
+                 tile.name      = NA,
+                 path.extracted = NA,
+                 status         = list(exists    = FALSE,
+                                       checked   = FALSE,
+                                       correct   = FALSE,
+                                       extracted = FALSE),
 
                  initialize = function(file.path, url, tile.name, file.hash)
                  {
@@ -277,7 +279,13 @@ TheiaTile <-
   if (!(dir.exists(file.path)) | overwrite == TRUE) {
     # check if it exists
     extraction_wrapper(self$file.path, args = list(exdir = dest.dir))
+
+    self$status$extracted <- TRUE
+    self$path.extracted   <- file.path
   } else {
+    self$status$extracted <- TRUE
+    self$path.extracted   <- file.path
+
     message(file.path, " already exists. Use 'overwrite=TRUE' to overwrite")
   }
 
