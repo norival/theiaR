@@ -13,7 +13,6 @@
 #'    t$download(overwrite = FALSE)
 #'    t$check()
 #'    t$get_bands()
-#'    t$read(bands)
 #'    t$extract(overwrite = FALSE, dest.dir = NULL)
 #' }
 #'
@@ -39,9 +38,6 @@
 #'    \code{t$check()} Check the tiles of the collection
 #'
 #'    \code{t$get_bands()} List bands available in the tile
-#'
-#'    \code{t$read(bands)} Read band(s) from the zip file and returns a list of
-#'    raster objects
 #'
 #'    \code{t$extract(overwrite = FALSE, dest.dir = NULL)} Extract archive to
 #'    dest.dir if supplied, or to the same directory as the archive otherwise
@@ -118,11 +114,6 @@ TheiaTile <-
                  get_bands = function()
                  {
                    .TheiaTile_get_bands(self, private)
-                 },
-
-                 read = function(bands)
-                 {
-                   .TheiaTile_read(self, private, bands)
                  },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
@@ -287,31 +278,6 @@ TheiaTile <-
   rownames(bands) <- NULL
 
   return(bands)
-}
-
-
-.TheiaTile_read <- function(self, private, bands)
-{
-  # check if requested bands are available
-  avail.bands <- self$get_bands()
-  if (any(!(bands %in% avail.bands$band))) {
-    stop("Bands '",
-         paste(bands[!(bands %in% avail.bands)], collapse = ", "),
-         "' are not available!")
-  }
-
-  # get file names to read from
-  files   <- unzip(self$file.path, list = TRUE)$Name
-  pattern <- paste(paste0("FRE_", bands, ".tif$"), collapse = "|")
-  files   <- files[grepl(pattern, files)]
-
-  # read tiles from zip file and create raster::rasterStack object
-  tiles.list <- lapply(files, read_tiff_from_zip, zip.file = self$file.path)
-
-  # give names to the layers
-  names(tiles.list) <- bands
-
-  return(tiles.list)
 }
 
 

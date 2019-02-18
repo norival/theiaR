@@ -16,7 +16,6 @@ Generate and manage a tile from Theia (download, check, load).
    t$download(overwrite = FALSE)
    t$check()
    t$get_bands()
-   t$read(bands)
    t$extract(overwrite = FALSE, dest.dir = NULL)
 }
 }
@@ -46,9 +45,6 @@ Generate and manage a tile from Theia (download, check, load).
    \code{t$check()} Check the tiles of the collection
 
    \code{t$get_bands()} List bands available in the tile
-
-   \code{t$read(bands)} Read band(s) from the zip file and returns a list of
-   raster objects
 
    \code{t$extract(overwrite = FALSE, dest.dir = NULL)} Extract archive to
    dest.dir if supplied, or to the same directory as the archive otherwise

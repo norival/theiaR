@@ -54,9 +54,6 @@ NULL
 #'
 #'    \code{c$status} Return the status of each tile of the collection
 #'
-#'    \code{c$read(bands)} Read band(s) from the zip files and returns a list of
-#'    raster objects
-#'
 #'    \code{c$extract(overwrite = FALSE, dest.dir = NULL)} Extract archives to
 #'    dest.dir if supplied, or to the same directory as the archives otherwise
 #'
@@ -132,11 +129,6 @@ TheiaCollection <-
                  get_bands = function()
                  {
                    .TheiaCollection_get_bands(self, private)
-                 },
-
-                 read = function(bands)
-                 {
-                   .TheiaCollection_read(self, private, bands)
                  },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
@@ -281,29 +273,6 @@ TheiaCollection <-
   bands$common <- bands$band %in% bands.common
 
   return(bands)
-}
-
-
-.TheiaCollection_read <- function(self, private, bands)
-{
-  # check if requested bands are available
-  avail.bands <- self$get_bands()
-  if (any(!(bands %in% avail.bands$band))) {
-    stop("Bands '",
-         paste(bands[!(bands %in% avail.bands)], collapse = ", "),
-         "' are not available!")
-  }
-
-  # get file names to read from
-  tiles.list <- lapply(self$tiles,
-                       function(x, bands) {
-                         x$read(bands = bands)
-                       }, bands = bands)
-
-  # give names to the layers
-  names(tiles.list) <- lapply(self$tiles, function(x) x$tile.name)
-
-  return(tiles.list)
 }
 
 
