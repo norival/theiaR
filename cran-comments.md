@@ -1,3 +1,10 @@
+## Resubmission
+
+This is a resubmission. In this version, I have:
+
+* Added examples to main functions
+
+
 ## Test environments
 
 * local ubuntu 18.04 install, R 3.5.2
