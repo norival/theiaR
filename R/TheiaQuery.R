@@ -7,7 +7,7 @@
 #'
 #' @section Usage:
 #' \preformatted{
-#'    q <- TheiaQuery$new(query, auth)
+#'    q <- TheiaQuery$new(query)
 #'
 #'    q$update_token()
 #'    q$submit()
