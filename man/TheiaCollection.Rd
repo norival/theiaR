@@ -89,6 +89,11 @@ mycollection <- TheiaCollection$new(cart.path = cart.path,
 print(mycollection)
 
 \dontrun{
+# Download the tiles in the collection
+mycollection$download()
+}
+
+\dontrun{
 # Finally, you can extract zip archives containing the tiles
 mycollection$extract(overwrite = FALSE)
 }

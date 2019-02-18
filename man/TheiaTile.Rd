@@ -50,25 +50,3 @@ Generate and manage a tile from Theia (download, check, load).
    dest.dir if supplied, or to the same directory as the archive otherwise
 }
 
-\examples{
-
-file.path <- system.file("extdata", "dummy_tile.zip", package = "theiaR")
-file.hash <- "7a6688ec0b711859a022cdbfd8b299f9"
-url <-
- paste0("https://theia.cnes.fr/atdistrib/resto2/collections/SENTINEL2/",
-        "5ea54171-f14b-5781-8d07-9be8e436410b/download")
-
-mytile <- TheiaTile$new(file.path = file.path,
-                        url       = url,
-                        file.hash = file.hash,
-                        tile.name = "SENTINEL2A_20190113-104826-809_L2A_T31TGK_D")
-
-# Show status of tile
-print(mytile$status)
-
-\dontrun{
-# Download the tiles
-mytile$download()
-}
-
-}
