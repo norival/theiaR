@@ -49,3 +49,14 @@ to download tiles from \link{TheiaTile} and \link{TheiaCollection} objects.
    will create the file.
 }
 
+\examples{
+
+\dontrun{
+# create an authentication object
+myauth <- TheiaAuth$new("path_to_auth_file.txt")
+
+# show the access token (and request a new one if needed)
+myauth$token
+}
+
+}

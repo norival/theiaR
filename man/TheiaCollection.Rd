@@ -64,3 +64,36 @@ from a \code{\link{TheiaQuery}} object or from a list of
    dest.dir if supplied, or to the same directory as the archives otherwise
 }
 
+\examples{
+
+\donttest{
+# Create a collection from a query
+## Create a query to Theia database, looking for tiles from Sentinel2
+## satellite around Grenoble, between 2018-07-01 and 2018-07-06.
+
+query <- list(collection = "SENTINEL2",
+              town       = "Grenoble",
+              start.date = "2018-07-01",
+              end.date   = "2018-07-06")
+
+## Create a collecion of tiles from this query
+mycollection <- TheiaCollection$new(query = query, dir.path = ".")
+
+print(mycollection)
+}
+
+# Alternatively, you can create a collection from a cart file (that you can
+# download from Theia's website)
+cart.path <- system.file("extdata", "cart.meta4", package = "theiaR")
+
+mycollection <- TheiaCollection$new(cart.path = cart.path,
+                                    dir.path  = ".")
+
+print(mycollection)
+
+\dontrun{
+# Finally, you can extract zip archives containing the tiles
+mycollection$extract(overwrite = FALSE)
+}
+
+}

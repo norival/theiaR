@@ -10,7 +10,7 @@ input given by the user.
 \section{Usage}{
 
 \preformatted{
-   q <- TheiaQuery$new(query, auth)
+   q <- TheiaQuery$new(query)
 
    q$update_token()
    q$submit()
@@ -60,6 +60,23 @@ input given by the user.
    }
 }
 
+\examples{
+
+\donttest{
+# Create a query to Theia database, looking for tiles from Sentinel2
+# satellite around Grenoble, between 2018-07-01 and 2018-07-06.
+
+query <- list(collection = "SENTINEL2",
+              town       = "Grenoble",
+              start.date = "2018-07-01",
+              end.date   = "2018-07-06")
+q <- TheiaQuery$new(query)
+
+# Show informations on found tiles
+print(q$tiles)
+}
+
+}
 \seealso{
 \url{https://github.com/olivierhagolle/theia_download} for an alternative
    download method based on Python. Inspiration for this function.
