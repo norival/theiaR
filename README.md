@@ -14,8 +14,6 @@ The basic functionalities are (for now):
 - Download tiles resulting from a search
 - Download tiles contained in a cart (`.meta4` file) obtained from Theia
   website.
-- Read images directly from the downloaded archives (without extracting the
-  archives, to save a lot of disk space, Sentinel2 only)
 - Extract archives
 
 
@@ -159,29 +157,6 @@ files, run:
 ```
 mycollection$download(auth = myauth, overwrite = TRUE)
 ```
-
-### Read your tiles
-
-Once you have downloaded every tile (as an archive), you can read images
-contained in the archive without extracting it. This allows to save a lot of
-disk space.
-
-First, get a list of bands available in the tiles by running:
-
-```{r , eval=FALSE}
-mycollection$get_bands()
-```
-
-Then you can read bands with:
-
-```{r , eval=FALSE}
-images.list <- mycollection$read(bands = c("B2", "B3")
-```
-
-where `bands` is a vector with bands names.
-
-It will return a list of `RasterLayer` objects, that you can manipulate with
-functions from the `raster` package.
 
 
 ### Extract tiles
