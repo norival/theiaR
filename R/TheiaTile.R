@@ -118,7 +118,7 @@ TheiaTile <-
   cat("Collection:", collection, "\n\n")
 
   cat("Status:\n")
-  cat("   sownloaded :", self$status$exists, "\n")
+  cat("   downloaded :", self$status$exists, "\n")
   cat("   checked    :", self$status$checked, "\n")
   cat("   correct    :", self$status$correct, "\n")
 
