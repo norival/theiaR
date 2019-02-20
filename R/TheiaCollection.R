@@ -179,7 +179,7 @@ TheiaCollection <-
 .TheiaCollection_initialize <- function(self, cart.path, tiles, query, dir.path)
 {
   # fill dir.path field
-  self$dir.path <- dir.path
+  self$dir.path <- check_dir(dir.path)
 
   if (!(is.null(cart.path))) {
     # build collection from cart file ------------------------------------------
@@ -190,7 +190,7 @@ TheiaCollection <-
     self$tiles <-
       lapply(self$cart[-1],
              function(x) {
-               TheiaTile$new(file.path = paste0(dir.path, as.character(x$.attrs)),
+               TheiaTile$new(file.path = paste0(self$dir.path, as.character(x$.attrs)),
                              file.hash = as.character(x$hash),
                              url       = as.character(x$url$text),
                              tile.name = as.character(x$.attrs))
@@ -217,7 +217,7 @@ TheiaCollection <-
     self$tiles <-
       apply(self$query$tiles, 1,
             function(x) {
-              TheiaTile$new(file.path = paste0(dir.path, x[1]),
+              TheiaTile$new(file.path = paste0(self$dir.path, x[1]),
                             file.hash = as.character(x[3]),
                             url       = as.character(x[6]),
                             tile.name = as.character(x[1]))
