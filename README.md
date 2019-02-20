@@ -17,7 +17,16 @@ The basic functionalities are (for now):
 - Extract archives
 
 
-_ NOTE: ongoing development, more functionalities shall be added in the future_
+_NOTE: ongoing development, more functionalities shall be added in the future_
+
+
+## Installation
+
+You can install the latest development version by using:
+
+```
+devtools::install_github('norival/theiaR')
+```
 
 
 ## Step-by-step guide
@@ -110,11 +119,12 @@ You can then create your collection with:
 mycollection <- TheiaCollection$new(query = myquery, dir.path = ".")
 ```
 
-where `dir.path` is the path you want your tiles to be downloaded. If tiles are
-already present in `dir.path`, they will be checked by computing a checksum and
-comparing it to the hash provided by Theia (only available for Sentinel2 data,
-no hash is provided for other collections, and files are then assumed to be
-correct). This ensures that the files have been correctly downloaded.
+where `dir.path` is the path you want your tiles to be further downloaded. If
+tiles are already present in `dir.path`, they will be checked by computing a
+checksum and comparing it to the hash provided by Theia (only available for
+Sentinel2 data, no hash is provided for other collections, and files are then
+assumed to be correct). This ensures that the files have been correctly
+downloaded.
 
 
 #### Create a collection from a cart file
@@ -137,12 +147,30 @@ As above, it will check the hash of files if they are already present in
 `dir.path`.
 
 
+#### Getting information on your collection
+
+You can access the tiles from your collection using:
+
+```
+mycollection$tiles
+```
+
+which returns a `list` of tiles. You can also see the status of your collection
+with:
+
+```
+mycollection$status
+```
+
+
 ### Download your tiles
 
 The next step is to download your collection. To download all tiles in a
 collection, simply run:
 
 ```
+myauth <- "path/to/auth/file.txt"
+
 mycollection$download(auth = myauth)
 ```
 
@@ -168,15 +196,6 @@ file.path <- mycollection$extract()
 ```
 
 which will extract tiles into the same directory as the archives.
-
-
-## Installation
-
-You can install the latest development version by using:
-
-```
-devtools::install_github('norival/theiaR')
-```
 
 
 ## Acknowledgment
