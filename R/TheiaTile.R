@@ -129,7 +129,7 @@ TheiaTile <-
 .TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash)
 {
   # Fill fiedls of the object
-  self$file.path <- check_dir(file.path)
+  self$file.path <- file.path
   self$url       <- url
   self$tile.name <- gsub("\\.tar\\.gz$|\\.zip$", "", tile.name)
   self$file.hash <- file.hash
