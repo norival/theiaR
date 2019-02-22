@@ -1,4 +1,5 @@
 [![Travis-CI Build Status](https://travis-ci.org/norival/theiaR.svg?branch=stable)](https://travis-ci.org/norival/theiaR)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/norival/theiaR?branch=master&svg=true)](https://ci.appveyor.com/project/norival/theiaR)
 
 # TheiaR: search, download and manage data from Theia
 
