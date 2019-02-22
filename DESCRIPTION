@@ -25,7 +25,8 @@ LazyData: true
 RoxygenNote: 6.1.1
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    covr
 Collate:
     'TheiaAuth.R'
     'TheiaTile.R'

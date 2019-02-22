@@ -1,5 +1,6 @@
 [![Travis-CI Build Status](https://travis-ci.org/norival/theiaR.svg?branch=stable)](https://travis-ci.org/norival/theiaR)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/norival/theiaR?branch=master&svg=true)](https://ci.appveyor.com/project/norival/theiaR)
+[![Coverage status](https://codecov.io/gh/norival/theiaR/branch/master/graph/badge.svg)](https://codecov.io/github/norival/theiaR?branch=master)
 [![CRAN status](https://www.r-pkg.org/badges/version/theiaR)](https://cran.r-project.org/package=theiaR)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
