@@ -139,6 +139,7 @@ TheiaTile <-
   self$file.hash  <- file.hash
   self$collection <- gsub("(.*)(/[^/]*$)", "\\2", self$file.path)
   self$collection <- gsub("(^/)([[:alnum:]]*)(_.*$)", "\\2", self$collection)
+  self$collection <- gsub("([[:alnum:]]*)([[:alnum:]]{1}$)", "\\1", self$collection)
 
   # check the tile
   self$check()
@@ -149,7 +150,7 @@ TheiaTile <-
   }
 
   # adds band (Sentinel2 only)
-  if (grepl("SENTINEL", self$collection)) {
+  if (self$collection == "SENTINEL2") {
     self$bands <- private$get_bands()
   }
 
