@@ -149,11 +149,6 @@ TheiaTile <-
     private$add_md()
   }
 
-  # adds band (Sentinel2 only)
-  if (self$collection == "SENTINEL2") {
-    self$bands <- private$get_bands()
-  }
-
   return(invisible(self))
 }
 
@@ -252,6 +247,11 @@ TheiaTile <-
 
   # remove temporary file
   unlink(paste(tmp.dir, file.name, sep = "/"))
+
+  # adds bands information (Sentinel2 only)
+  if (self$collection == "SENTINEL2") {
+    self$bands <- private$get_bands()
+  }
 
   return(invisible(self))
 }
