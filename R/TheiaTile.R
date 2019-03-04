@@ -12,7 +12,6 @@
 #'
 #'    t$download(overwrite = FALSE)
 #'    t$check()
-#'    t$get_bands()
 #'    t$extract(overwrite = FALSE, dest.dir = NULL)
 #' }
 #'
@@ -37,10 +36,10 @@
 #'
 #'    \code{t$check()} Check the tiles of the collection
 #'
-#'    \code{t$get_bands()} List bands available in the tile
-#'
 #'    \code{t$extract(overwrite = FALSE, dest.dir = NULL)} Extract archive to
 #'    dest.dir if supplied, or to the same directory as the archive otherwise
+#'
+#'    \code{t$bands} List bands available in the tile
 #'
 #'
 NULL
