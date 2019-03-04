@@ -58,6 +58,11 @@ TheiaTile <-
                  {
                    # parse and add metadata from the zip archive
                    .TheiaTile_add_md(self, private)
+                 },
+
+                 get_bands = function()
+                 {
+                   .TheiaTile_get_bands(self, private)
                  }),
 
           # public -------------------------------------------------------------
@@ -67,6 +72,8 @@ TheiaTile <-
                  url            = NA,
                  tile.name      = NA,
                  path.extracted = NA,
+                 bands          = NA,
+                 collection     = NA,
                  status         = list(exists    = FALSE,
                                        checked   = FALSE,
                                        correct   = FALSE,
@@ -93,11 +100,6 @@ TheiaTile <-
                    .TheiaTile_download(self, private, auth, overwrite)
                  },
                   
-                 get_bands = function()
-                 {
-                   .TheiaTile_get_bands(self, private)
-                 },
-                  
                  read = function(bands)
                  {
                    .TheiaTile_read(self, private, bands)
@@ -118,9 +120,7 @@ TheiaTile <-
   # TODO: better method to print
   cat("An Tile from Theia\n\n")
 
-  collection <- gsub("(.*)(/[^/]*$)", "\\2", self$file.path)
-  collection <- gsub("(^/)([[:alnum:]]*)(_.*$)", "\\2", collection)
-  cat("Collection:", collection, "\n\n")
+  cat("Collection:", self$collection, "\n\n")
 
   cat("Status:\n")
   cat("   downloaded :", self$status$exists, "\n")
@@ -133,11 +133,13 @@ TheiaTile <-
 
 .TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash)
 {
-  # Fill fiedls of the object
-  self$file.path <- file.path
-  self$url       <- url
-  self$tile.name <- gsub("\\.tar\\.gz$|\\.zip$", "", tile.name)
-  self$file.hash <- file.hash
+  # Fill fields of the object
+  self$file.path  <- file.path
+  self$url        <- url
+  self$tile.name  <- gsub("\\.tar\\.gz$|\\.zip$", "", tile.name)
+  self$file.hash  <- file.hash
+  self$collection <- gsub("(.*)(/[^/]*$)", "\\2", self$file.path)
+  self$collection <- gsub("(^/)([[:alnum:]]*)(_.*$)", "\\2", self$collection)
 
   # check the tile
   self$check()
@@ -145,6 +147,11 @@ TheiaTile <-
   # adds meta data if file is present and correct
   if (self$status$correct == TRUE) {
     private$add_md()
+  }
+
+  # adds band (Sentinel2 only)
+  if (grepl("SENTINEL", self$collection)) {
+    self$bands <- private$get_bands()
   }
 
   return(invisible(self))
@@ -252,13 +259,13 @@ TheiaTile <-
 
 .TheiaTile_get_bands <- function(self, private)
 {
-  # get bands list from 
+  # get bands list from meta data
   bands <- lapply(private$meta.data$Product_Characteristics$Band_Group_List,
                   function(x) {
                     band.list <- unlist(x$Band_List[-(length(x$Band_List))])
                     band.id   <- unname(x$.attrs)
 
-                    data.frame(band = band.list, band.id = band.id)
+                    data.frame(band = band.list, resolution = band.id)
                   })
 
   bands <- do.call(rbind, bands)
@@ -271,7 +278,7 @@ TheiaTile <-
 .TheiaTile_read <- function(self, private, bands)
 {
   # check if requested bands are available
-  avail.bands <- self$get_bands()
+  avail.bands <- self$bands
 
   if (any(!(bands %in% avail.bands$band))) {
     # error if some bands are not available
