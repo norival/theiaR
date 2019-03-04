@@ -16,6 +16,7 @@ Generate and manage a tile from Theia (download, check, load).
    t$download(overwrite = FALSE)
    t$check()
    t$extract(overwrite = FALSE, dest.dir = NULL)
+   t$read(bands)
 }
 }
 
@@ -45,6 +46,9 @@ Generate and manage a tile from Theia (download, check, load).
 
    \code{t$extract(overwrite = FALSE, dest.dir = NULL)} Extract archive to
    dest.dir if supplied, or to the same directory as the archive otherwise
+
+   \code{t$read(bands)} Read requested bands, apply corrections on values
+   (as specified in Theia's product information), and return a RasterStack
 
    \code{t$bands} List bands available in the tile
 }
