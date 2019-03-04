@@ -16,7 +16,6 @@
 #'
 #'    c$download(auth, overwrite = FALSE)
 #'    c$check()
-#'    c$get_bands()
 #'    c$status
 #'    c$extract(overwrite = FALSE, dest.dir = NULL)
 #' }
@@ -45,8 +44,6 @@
 #'    and check the resulting files
 #'
 #'    \code{$ccheck()} Check the tiles of the collection
-#'
-#'    \code{c$get_bands()} List bands available in each tile
 #'
 #'    \code{c$status} Return the status of each tile of the collection
 #'
@@ -103,7 +100,6 @@ TheiaCollection <-
                  tiles      = NULL,
                  query      = NULL,
                  collection = NA,
-                 bands      = NA,
                  dir.path   = NULL,
 
                  initialize = function(cart.path  = NULL,
@@ -127,11 +123,6 @@ TheiaCollection <-
                  download = function(auth, overwrite = FALSE)
                  {
                    .TheiaCollection_download(self, auth, overwrite)
-                 },
-                 
-                 get_bands = function()
-                 {
-                   .TheiaCollection_get_bands(self, private)
                  },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
@@ -256,29 +247,6 @@ TheiaCollection <-
          auth = auth, overwrite = overwrite)
 
   return(invisible(self))
-}
-
-
-.TheiaCollection_get_bands <- function(self, private)
-{
-  # get available bands in each tile
-  bands <- lapply(self$tiles,
-                      function(x)
-                      {
-                        cbind.data.frame(tile = x$file.path, x$get_bands())
-                      })
-
-  bands <- do.call(rbind, bands)
-
-  # format tiles names
-  bands$tile <- gsub(self$dir.path, "", bands$tile)
-  bands$tile <- gsub(".zip$", "", bands$tile)
-
-  # get bands that are present in each tile
-  bands.common <- bands$band[duplicated(bands$band)]
-  bands$common <- bands$band %in% bands.common
-
-  return(bands)
 }
 
 
