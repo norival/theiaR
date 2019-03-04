@@ -99,10 +99,12 @@ TheiaCollection <-
   R6Class("TheiaCollection",
           # public -------------------------------------------------------------
           public =
-            list(cart     = NULL,
-                 tiles    = NULL,
-                 query    = NULL,
-                 dir.path = NULL,
+            list(cart       = NULL,
+                 tiles      = NULL,
+                 query      = NULL,
+                 collection = NA,
+                 bands      = NA,
+                 dir.path   = NULL,
 
                  initialize = function(cart.path  = NULL,
                                        tiles      = NULL,
@@ -222,6 +224,9 @@ TheiaCollection <-
     # give names to the tiles
     names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
   }
+
+  # fill collection field
+  self$collection <- self$tiles[[1]]$collection
 
   return(invisible(self))
 }
