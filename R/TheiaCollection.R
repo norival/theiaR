@@ -1,7 +1,3 @@
-#' @include TheiaTile.R
-NULL
-
-
 #' A collection of tiles from Theia
 #'
 #' Generate and manage collection of tiles from Theia. This collection can be
