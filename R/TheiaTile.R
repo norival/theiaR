@@ -97,6 +97,11 @@ TheiaTile <-
                  {
                    .TheiaTile_get_bands(self, private)
                  },
+                  
+                 read = function(bands)
+                 {
+                   .TheiaTile_read(self, private, bands)
+                 },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
                  {
@@ -260,6 +265,36 @@ TheiaTile <-
   rownames(bands) <- NULL
 
   return(bands)
+}
+
+
+.TheiaTile_read <- function(self, private, bands)
+{
+  # check if requested bands are available
+  avail.bands <- self$get_bands()
+
+  if (any(!(bands %in% avail.bands$band))) {
+    # error if some bands are not available
+    bad.bands <- paste(bands[!(bands %in% avail.bands)], collapse = ", ")
+    stop("Bands '", bad.bands, "' are not available!")
+  }
+
+  # get file names to read from
+  files   <- unzip(self$file.path, list = TRUE)$Name
+  pattern <- paste(paste0("FRE_", bands, ".tif$"), collapse = "|")
+  files   <- files[grepl(pattern, files)]
+
+  # read tiles from zip file and create raster::rasterStack object
+  tiles.list <- lapply(files, read_tiff_from_zip, zip.file = self$file.path)
+
+  # correct values
+  tiles.stack <- raster::stack(lapply(tiles.list, correct_values))
+
+  # give names to the layers
+  bands.names <- gsub("(^.*_)([[:alnum:]]*$)", "\\2", names(tiles.stack))
+  names(tiles.stack) <- bands.names
+
+  return(tiles.stack)
 }
 
 

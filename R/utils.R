@@ -125,3 +125,13 @@ parse_query <- function(q, q.name, type, help = NULL, choices = NULL)
 
   return(q)
 }
+
+
+# correction to sentinel tiles
+correct_values <- function(ras)
+{
+  ras[ras == -10000] <- NA
+  ras <- ras / 10000
+
+  return(ras)
+}
