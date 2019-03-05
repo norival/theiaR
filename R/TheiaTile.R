@@ -26,6 +26,7 @@
 #'    \item{auth:}{A character string giving the file path to Theia credentials.
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
+#'    \item{bands:}{A character vector of bands to load from tiles}
 #'  }
 #'
 #' @section Details:
