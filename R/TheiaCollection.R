@@ -196,9 +196,6 @@ TheiaCollection <-
                              tile.name = as.character(x$.attrs))
              })
 
-    # give names to the tiles
-    names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
-
   } else if (!(is.null(tiles))) {
     # TODO: Implement building from a list of tiles
     # build from list of tiles
@@ -223,9 +220,10 @@ TheiaCollection <-
                             tile.name = as.character(x[1]))
             })
 
-    # give names to the tiles
-    names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
   }
+
+  # give names to the tiles
+  names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
 
   # fill collection field
   self$collection <- self$tiles[[1]]$collection
