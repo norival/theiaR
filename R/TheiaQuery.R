@@ -143,17 +143,6 @@ TheiaQuery <-
 
 .TheiaQuery_initialize <- function(self, private, query)
 {
-  # TODO: verification of request
-  private$server.url <-
-    ifelse(query$collection %in% c("Landsat", "SpotWorldHeritage"),
-           "https://theia-landsat.cnes.fr/",
-           "https://theia.cnes.fr/atdistrib/")
-  private$resto <-
-    ifelse(query$collection %in% c("Landsat", "SpotWorldHeritage"),
-           "resto/",
-           "resto2/")
-
-  # fill query fields
   self$query <- query
 
   # check query list
@@ -180,6 +169,17 @@ TheiaQuery <-
                                  reserved = TRUE)
   }
 
+  # get fixed parts of links
+  private$server.url <-
+    ifelse(self$query$collection %in% c("Landsat", "SpotWorldHeritage"),
+           "https://theia-landsat.cnes.fr/",
+           "https://theia.cnes.fr/atdistrib/")
+  private$resto <-
+    ifelse(self$query$collection %in% c("Landsat", "SpotWorldHeritage"),
+           "resto/",
+           "resto2/")
+
+  # fill query fields
   # build query links
   query.link  <- paste(names(q.link), q.link, sep = "=", collapse = "&")
   private$url <- paste0(private$server.url,
@@ -224,25 +224,6 @@ TheiaQuery <-
 
 .TheiaQuery_check <- function(self, private)
 {
-  # check for incompatible queries
-  if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
-    stop("'Tile' is only available for SENTINEL2 collection",
-         call. = FALSE)
-  }
-
-  # check if user has not specified both a point and a rectangle
-  box.names <- c("latmin", "latmax", "lonmin", "lonmax")
-  if (any(box.names %in% names(self$query))) {
-    if (!(all(box.names %in% names(self$query)))) {
-      stop("Specify each of ", box.names, " to have a rectangle",
-           call. = FALSE)
-    }
-
-    if (any(c("latitude", "longitude") %in% names(self$query))) {
-      stop("Specify a point or a rectangle, not both", call. = FALSE)
-    }
-  }
-
   # available choices
   collection.choices <- c('Landsat', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
   platform.choices   <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
@@ -271,6 +252,25 @@ TheiaQuery <-
   self$query$latmax     <- parse_query(self$query$latmax, "latmax", "numeric")
   self$query$lonmin     <- parse_query(self$query$lonmin, "lonmin", "numeric")
   self$query$lonmax     <- parse_query(self$query$lonmax, "lonmax", "numeric")
+
+  # check for incompatible queries
+  if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
+    stop("'Tile' is only available for SENTINEL2 collection",
+         call. = FALSE)
+  }
+
+  # check if user has not specified both a point and a rectangle
+  box.names <- c("latmin", "latmax", "lonmin", "lonmax")
+  if (any(box.names %in% names(self$query))) {
+    if (!(all(box.names %in% names(self$query)))) {
+      stop("Specify each of ", box.names, " to have a rectangle",
+           call. = FALSE)
+    }
+
+    if (any(c("latitude", "longitude") %in% names(self$query))) {
+      stop("Specify a point or a rectangle, not both", call. = FALSE)
+    }
+  }
 
   return(invisible(self))
 }
