@@ -111,7 +111,7 @@ extraction_wrapper <- function(path, args)
 }
 
 
-parse_query <- function(q, q.name, type, help = NULL, choices = NULL)
+parse_query <- function(q, q.name, type, choices = NULL)
 {
   # if NULL, exit function
   if (is.null(q)) {
