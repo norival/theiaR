@@ -158,13 +158,14 @@ TheiaQuery <-
 
   q.link <- list()
 
-  q.link[["q"]]              <- self$query$town
-  q.link[["location"]]       <- self$query$tile
-  q.link[["platform"]]       <- self$query$platform
-  q.link[["startDate"]]      <- self$query$start.date
-  q.link[["completionDate"]] <- self$query$end.date
-  q.link[["lat"]]            <- self$query$latitude
-  q.link[["lon"]]            <- self$query$longitude
+  q.link[["q"]]               <- self$query$town
+  q.link[["location"]]        <- self$query$tile
+  q.link[["platform"]]        <- self$query$platform
+  q.link[["processingLevel"]] <- self$query$level
+  q.link[["startDate"]]       <- self$query$start.date
+  q.link[["completionDate"]]  <- self$query$end.date
+  q.link[["lat"]]             <- self$query$latitude
+  q.link[["lon"]]             <- self$query$longitude
 
   # search a rectangle
   if (all(c("latmin", "latmax", "lonmin", "lonmax") %in% names(self$query))) {
@@ -242,9 +243,10 @@ TheiaQuery <-
 
   # available choices
   collection.choices <- c('Landsat', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
-  platform.choices <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
-                        'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
-                        'VENUS')
+  platform.choices   <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
+                          'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
+                          'VENUS')
+  level.choices      <- c('LEVEL1C', 'LEVEL2A', 'LEVEL3A')
 
   # check queries
   self$query$tile       <- parse_query(self$query$tile, "tile", "character")
@@ -253,6 +255,8 @@ TheiaQuery <-
                                        choices = collection.choices)
   self$query$platform   <- parse_query(self$query$platform, "platform", "character",
                                        choices = platform.choices)
+  self$query$level      <- parse_query(self$query$level, "level", "character",
+                                       choices = level.choices)
   self$query$start.date <- parse_query(self$query$start.date, "date", "character")
   self$query$end.date   <- parse_query(self$query$end.date, "date", "character")
   self$query$max.clouds <- parse_query(self$query$max.clouds, "max.clouds", "numeric",
