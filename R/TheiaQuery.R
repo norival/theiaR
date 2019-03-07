@@ -237,7 +237,6 @@ TheiaQuery <-
            call. = FALSE)
     }
 
-    bad.names <-
     if (any(c("latitude", "longitude") %in% names(self$query))) {
       stop("Specify a point or a rectangle, not both", call. = FALSE)
     }
