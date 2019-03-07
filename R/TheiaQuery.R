@@ -254,11 +254,13 @@ TheiaQuery <-
   self$query$tile       <- parse_query(self$query$tile, "tile", "character")
   self$query$town       <- parse_query(self$query$town, "town", "character")
   self$query$collection <- parse_query(self$query$collection, "collection", "character",
-                                       choices = collection.choices)
+                                       choices = collection.choices,
+                                       default = "SENTINEL2")
   self$query$platform   <- parse_query(self$query$platform, "platform", "character",
                                        choices = platform.choices)
   self$query$level      <- parse_query(self$query$level, "level", "character",
-                                       choices = level.choices)
+                                       choices = level.choices,
+                                       default = "LEVEL2A")
   self$query$start.date <- parse_query(self$query$start.date, "date", "character")
   self$query$end.date   <- parse_query(self$query$end.date, "date", "character")
   self$query$max.clouds <- parse_query(self$query$max.clouds, "max.clouds", "numeric",
