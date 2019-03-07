@@ -46,6 +46,8 @@ input given by the user.
      \item{platform:} The platform to look for. Accepted values are:
        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B'
+     \item{level:} Processing level. Accepted velues are: 'LEVEL1C',
+       'LEVEL2A', LEVEL3A'
      \item{town:} The location to look for. Give a common town name.
      \item{tile:} The tile identifier to retrieve.
      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
