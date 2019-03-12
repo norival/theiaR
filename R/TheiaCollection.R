@@ -290,7 +290,7 @@ TheiaCollection <-
                    })
   status <- do.call(rbind, status)
   status <- as.data.frame(status)
-  colnames(status) <- c("tile", "exists", "checked", "correct")
+  colnames(status) <- c("tile", "exists", "checked", "correct", "extracted")
 
   # format tiles names
   status$tile <- gsub(self$dir.path, "", status$tile)
