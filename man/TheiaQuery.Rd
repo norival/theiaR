@@ -42,10 +42,13 @@ input given by the user.
    Search criteria are given with a `list` accepting these fields:
    \itemize{
      \item{collection:} The collection to look for. Accepted values are:
-       'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'
+       'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'. DEfaults to
+       'SENTINEL2'
      \item{platform:} The platform to look for. Accepted values are:
        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B'
+     \item{level:} Processing level. Accepted velues are: 'LEVEL1C',
+       'LEVEL2A', LEVEL3A'. Defaults to 'LEVEL2A'
      \item{town:} The location to look for. Give a common town name.
      \item{tile:} The tile identifier to retrieve.
      \item{start.date:} The first date to look for (format: YYYY-MM-DD).

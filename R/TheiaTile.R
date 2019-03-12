@@ -244,7 +244,7 @@ TheiaTile <-
 
   # get file name to extract
   file.name <- extraction_wrapper(self$file.path, args = list(list = TRUE))
-  file.name <- file.name[grepl("xml$", file.name)]
+  file.name <- file.name[grepl("MTD_ALL\\.xml$", file.name)]
 
   # extract and parse xml file
   extraction_wrapper(self$file.path, args = list(files = file.name, exdir = tmp.dir))

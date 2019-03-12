@@ -80,11 +80,17 @@ extraction_wrapper <- function(path, args)
 }
 
 
-parse_query <- function(q, q.name, type, help = NULL, choices = NULL)
+parse_query <- function(q, q.name, type, default = NULL, choices = NULL)
 {
-  # if NULL, exit function
+  # if NULL, exit function or return default value
   if (is.null(q)) {
-    return(NULL)
+    if (!(is.null(default))) {
+      # return default value
+      mode(default) <- type
+      return(default)
+    } else {
+      return(NULL)
+    }
   }
 
   # if date, try to convert to a date

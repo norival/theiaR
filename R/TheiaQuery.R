@@ -33,10 +33,13 @@
 #'    Search criteria are given with a `list` accepting these fields:
 #'    \itemize{
 #'      \item{collection:} The collection to look for. Accepted values are:
-#'        'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'
+#'        'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'. DEfaults to
+#'        'SENTINEL2'
 #'      \item{platform:} The platform to look for. Accepted values are:
 #'        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
 #'        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B'
+#'      \item{level:} Processing level. Accepted velues are: 'LEVEL1C',
+#'        'LEVEL2A', LEVEL3A'. Defaults to 'LEVEL2A'
 #'      \item{town:} The location to look for. Give a common town name.
 #'      \item{tile:} The tile identifier to retrieve.
 #'      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
@@ -140,17 +143,6 @@ TheiaQuery <-
 
 .TheiaQuery_initialize <- function(self, private, query)
 {
-  # TODO: verification of request
-  private$server.url <-
-    ifelse(query$collection %in% c("Landsat", "SpotWorldHeritage"),
-           "https://theia-landsat.cnes.fr/",
-           "https://theia.cnes.fr/atdistrib/")
-  private$resto <-
-    ifelse(query$collection %in% c("Landsat", "SpotWorldHeritage"),
-           "resto/",
-           "resto2/")
-
-  # fill query fields
   self$query <- query
 
   # check query list
@@ -158,13 +150,14 @@ TheiaQuery <-
 
   q.link <- list()
 
-  q.link[["q"]]              <- self$query$town
-  q.link[["location"]]       <- self$query$tile
-  q.link[["platform"]]       <- self$query$platform
-  q.link[["startDate"]]      <- self$query$start.date
-  q.link[["completionDate"]] <- self$query$end.date
-  q.link[["lat"]]            <- self$query$latitude
-  q.link[["lon"]]            <- self$query$longitude
+  q.link[["q"]]               <- self$query$town
+  q.link[["location"]]        <- self$query$tile
+  q.link[["platform"]]        <- self$query$platform
+  q.link[["processingLevel"]] <- self$query$level
+  q.link[["startDate"]]       <- self$query$start.date
+  q.link[["completionDate"]]  <- self$query$end.date
+  q.link[["lat"]]             <- self$query$latitude
+  q.link[["lon"]]             <- self$query$longitude
 
   # search a rectangle
   if (all(c("latmin", "latmax", "lonmin", "lonmax") %in% names(self$query))) {
@@ -176,6 +169,17 @@ TheiaQuery <-
                                  reserved = TRUE)
   }
 
+  # get fixed parts of links
+  private$server.url <-
+    ifelse(self$query$collection %in% c("Landsat", "SpotWorldHeritage"),
+           "https://theia-landsat.cnes.fr/",
+           "https://theia.cnes.fr/atdistrib/")
+  private$resto <-
+    ifelse(self$query$collection %in% c("Landsat", "SpotWorldHeritage"),
+           "resto/",
+           "resto2/")
+
+  # fill query fields
   # build query links
   query.link  <- paste(names(q.link), q.link, sep = "=", collapse = "&")
   private$url <- paste0(private$server.url,
@@ -220,6 +224,35 @@ TheiaQuery <-
 
 .TheiaQuery_check <- function(self, private)
 {
+  # available choices
+  collection.choices <- c('Landsat', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
+  platform.choices   <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
+                          'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
+                          'VENUS')
+  level.choices      <- c('LEVEL1C', 'LEVEL2A', 'LEVEL3A')
+
+  # check queries
+  self$query$tile       <- parse_query(self$query$tile, "tile", "character")
+  self$query$town       <- parse_query(self$query$town, "town", "character")
+  self$query$collection <- parse_query(self$query$collection, "collection", "character",
+                                       choices = collection.choices,
+                                       default = "SENTINEL2")
+  self$query$platform   <- parse_query(self$query$platform, "platform", "character",
+                                       choices = platform.choices)
+  self$query$level      <- parse_query(self$query$level, "level", "character",
+                                       choices = level.choices,
+                                       default = "LEVEL2A")
+  self$query$start.date <- parse_query(self$query$start.date, "date", "character")
+  self$query$end.date   <- parse_query(self$query$end.date, "date", "character")
+  self$query$max.clouds <- parse_query(self$query$max.clouds, "max.clouds", "numeric",
+                                       choices = 0:100)
+  self$query$latitude   <- parse_query(self$query$latitude, "latitude", "numeric")
+  self$query$longitude  <- parse_query(self$query$longitude, "longitude", "numeric")
+  self$query$latmin     <- parse_query(self$query$latmin, "latmin", "numeric")
+  self$query$latmax     <- parse_query(self$query$latmax, "latmax", "numeric")
+  self$query$lonmin     <- parse_query(self$query$lonmin, "lonmin", "numeric")
+  self$query$lonmax     <- parse_query(self$query$lonmax, "lonmax", "numeric")
+
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
     stop("'Tile' is only available for SENTINEL2 collection",
@@ -234,35 +267,10 @@ TheiaQuery <-
            call. = FALSE)
     }
 
-    bad.names <-
     if (any(c("latitude", "longitude") %in% names(self$query))) {
       stop("Specify a point or a rectangle, not both", call. = FALSE)
     }
   }
-
-  # available choices
-  collection.choices <- c('Landsat', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
-  platform.choices <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
-                        'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
-                        'VENUS')
-
-  # check queries
-  self$query$tile       <- parse_query(self$query$tile, "tile", "character")
-  self$query$town       <- parse_query(self$query$town, "town", "character")
-  self$query$collection <- parse_query(self$query$collection, "collection", "character",
-                                       choices = collection.choices)
-  self$query$platform   <- parse_query(self$query$platform, "platform", "character",
-                                       choices = platform.choices)
-  self$query$start.date <- parse_query(self$query$start.date, "date", "character")
-  self$query$end.date   <- parse_query(self$query$end.date, "date", "character")
-  self$query$max.clouds <- parse_query(self$query$max.clouds, "max.clouds", "numeric",
-                                       choices = 0:100)
-  self$query$latitude   <- parse_query(self$query$latitude, "latitude", "numeric")
-  self$query$longitude  <- parse_query(self$query$longitude, "longitude", "numeric")
-  self$query$latmin     <- parse_query(self$query$latmin, "latmin", "numeric")
-  self$query$latmax     <- parse_query(self$query$latmax, "latmax", "numeric")
-  self$query$lonmin     <- parse_query(self$query$lonmin, "lonmin", "numeric")
-  self$query$lonmax     <- parse_query(self$query$lonmax, "lonmax", "numeric")
 
   return(invisible(self))
 }

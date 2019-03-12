@@ -72,14 +72,17 @@ myquery <- list(collection  = "SENTINEL2",
 will create a query to Theia database, looking for tiles from Sentinel2
 satellite around Grenoble, between 2018-07-01 and 2018-07-06.
 
-It accepts the following terms. Terms with a `*` are mandatory.
+It accepts the following terms.
 
-* __collection*__: The collection to look for. Accepted values are: `SENTINEL2`,
-  `Landsat`, `SpotWorldHeritage`, `Snow`.
+* __collection__: The collection to look for. Accepted values are: `SENTINEL2`,
+  `Landsat`, `SpotWorldHeritage`, `Snow`. Defaults to `SENTINEL2`.
 
 * __platform__: The platform to look for. Accepted values are: `LANDSAT5`,
   `LANDSAT7`, `LANDSAT8`, `SPOT1`, `SPOT2`, `SPOT3`, `SPOT4`, `SPOT5`,
   `SENTINEL2A`, `SENTINEL2B`.
+
+* __level__: Processing level of products. Accepted values are: `LEVEL1C`,
+  `LEVEL2A` and `LEVEL3A`. Defaults to `'LEVEL2A`.
 
 
 To specify the location of the tiles, several alternatives are available.
