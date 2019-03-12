@@ -1,3 +1,10 @@
+# theiaR 0.1.2
+
+## Bug fixes
+
+- Fix status dataframe for TheiaCollection objects
+
+
 # theiaR 0.1.1
 
 ## Minor changes
