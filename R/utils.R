@@ -27,16 +27,11 @@ check_dir <- function(dir.name)
 
 read_tiff_from_zip <- function(file.name, zip.file)
 {
-  # extract a single file from zip archive
-  tmp.dir <- paste0(tempdir(), "/")
-  unzip(zip.file, files = file.name, exdir = tmp.dir, unzip = getOption("unzip"))
+  # generate filename uzing vsizip interface provided by GDAL
+  file.name <- paste0("/vsizip/", zip.file, "/", file.name)
 
-  # load the raster into memory
-  ras <- raster::raster(paste0(tmp.dir, file.name))
-  ras <- raster::readAll(ras)
-
-  # remove temporary file
-  unlink(paste0(tmp.dir, file.name))
+  # load the raster
+  ras <- raster::raster(file.name)
 
   return(ras)
 }
