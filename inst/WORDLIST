@@ -1,3 +1,4 @@
+AppVeyor
 checksums
 cnes
 dest
@@ -7,14 +8,18 @@ Hagolle
 https
 latmax
 latmin
+lifecycle
 lonmax
 lonmin
 md
 myauth
+RasterStack
 SpotWorldHeritage
 TGK
 theia
 Theia
+Theia's
+TheiaCollection
 TheiaQuery
 TheiaR
 TheiaTile
