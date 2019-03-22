@@ -259,10 +259,10 @@ TheiaQuery <-
   self$query$lonmin     <- parse_query(self$query$lonmin, "lonmin", "numeric")
   self$query$lonmax     <- parse_query(self$query$lonmax, "lonmax", "numeric")
 
-  self$query$orbitNumber         <- parse_query(self$query$orbitNumber, "orbit.number", "numeric")
-  self$query$relativeOrbitNumber <- parse_query(self$query$relativeOrbitNumber, "rel.orbit.number", "numeric")
-  self$query$max.records         <- parse_query(self$query$max.records, "max.records", "numeric",
-                                                default = 500)
+  self$query$orbit.number     <- parse_query(self$query$orbit.number, "orbit.number", "numeric")
+  self$query$rel.orbit.number <- parse_query(self$query$rel.orbit.number, "rel.orbit.number", "numeric")
+  self$query$max.records      <- parse_query(self$query$max.records, "max.records", "numeric",
+                                             default = 500)
 
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
