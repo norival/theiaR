@@ -1,3 +1,9 @@
+# theiaR NEXT
+
+- Implement orbit number and relative orbit number to queries
+- Implement max records to queries
+
+
 # theiaR 0.1.2
 
 ## Bug fixes
