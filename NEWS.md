@@ -2,6 +2,7 @@
 
 - Implement orbit number and relative orbit number to queries
 - Implement max records to queries
+- Implement reading of bands from zip files
 
 
 # theiaR 0.1.2
