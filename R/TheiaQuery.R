@@ -152,15 +152,15 @@ TheiaQuery <-
 
   q.link <- list()
 
-  q.link[["q"]]               <- self$query$town
-  q.link[["location"]]        <- self$query$tile
-  q.link[["platform"]]        <- self$query$platform
-  q.link[["processingLevel"]] <- self$query$level
-  q.link[["startDate"]]       <- self$query$start.date
-  q.link[["completionDate"]]  <- self$query$end.date
-  q.link[["lat"]]             <- self$query$latitude
-  q.link[["lon"]]             <- self$query$longitude
-  q.link[["orbitNumber"]]     <- self$query$orbit.number
+  q.link[["q"]]                   <- self$query$town
+  q.link[["location"]]            <- self$query$tile
+  q.link[["platform"]]            <- self$query$platform
+  q.link[["processingLevel"]]     <- self$query$level
+  q.link[["startDate"]]           <- self$query$start.date
+  q.link[["completionDate"]]      <- self$query$end.date
+  q.link[["lat"]]                 <- self$query$latitude
+  q.link[["lon"]]                 <- self$query$longitude
+  q.link[["orbitNumber"]]         <- self$query$orbit.number
   q.link[["relativeOrbitNumber"]] <- self$query$rel.orbit.number
 
   # search a rectangle
@@ -257,7 +257,7 @@ TheiaQuery <-
   self$query$lonmin     <- parse_query(self$query$lonmin, "lonmin", "numeric")
   self$query$lonmax     <- parse_query(self$query$lonmax, "lonmax", "numeric")
 
-  self$query$orbitNumber <- parse_query(self$query$orbitNumber, "orbit.number", "numeric")
+  self$query$orbitNumber         <- parse_query(self$query$orbitNumber, "orbit.number", "numeric")
   self$query$relativeOrbitNumber <- parse_query(self$query$relativeOrbitNumber, "rel.orbit.number", "numeric")
 
   # check for incompatible queries
