@@ -50,6 +50,8 @@
 #'      \item{latmax:} The maximum latitude to search
 #'      \item{lonmin:} The minimum longitude to search
 #'      \item{lonmax:} The maximum longitude to search
+#'      \item{orbit.number:} The orbit number
+#'      \item{rel.orbit.number:} The relative orbit number
 #'      \item{max.clouds:} The maximum of cloud cover wanted (0-100)
 #'    }
 #'
@@ -150,14 +152,16 @@ TheiaQuery <-
 
   q.link <- list()
 
-  q.link[["q"]]               <- self$query$town
-  q.link[["location"]]        <- self$query$tile
-  q.link[["platform"]]        <- self$query$platform
-  q.link[["processingLevel"]] <- self$query$level
-  q.link[["startDate"]]       <- self$query$start.date
-  q.link[["completionDate"]]  <- self$query$end.date
-  q.link[["lat"]]             <- self$query$latitude
-  q.link[["lon"]]             <- self$query$longitude
+  q.link[["q"]]                   <- self$query$town
+  q.link[["location"]]            <- self$query$tile
+  q.link[["platform"]]            <- self$query$platform
+  q.link[["processingLevel"]]     <- self$query$level
+  q.link[["startDate"]]           <- self$query$start.date
+  q.link[["completionDate"]]      <- self$query$end.date
+  q.link[["lat"]]                 <- self$query$latitude
+  q.link[["lon"]]                 <- self$query$longitude
+  q.link[["orbitNumber"]]         <- self$query$orbit.number
+  q.link[["relativeOrbitNumber"]] <- self$query$rel.orbit.number
 
   # search a rectangle
   if (all(c("latmin", "latmax", "lonmin", "lonmax") %in% names(self$query))) {
@@ -252,6 +256,9 @@ TheiaQuery <-
   self$query$latmax     <- parse_query(self$query$latmax, "latmax", "numeric")
   self$query$lonmin     <- parse_query(self$query$lonmin, "lonmin", "numeric")
   self$query$lonmax     <- parse_query(self$query$lonmax, "lonmax", "numeric")
+
+  self$query$orbitNumber         <- parse_query(self$query$orbitNumber, "orbit.number", "numeric")
+  self$query$relativeOrbitNumber <- parse_query(self$query$relativeOrbitNumber, "rel.orbit.number", "numeric")
 
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
