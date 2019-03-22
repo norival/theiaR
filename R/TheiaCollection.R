@@ -1,7 +1,3 @@
-#' @include TheiaTile.R
-NULL
-
-
 #' A collection of tiles from Theia
 #'
 #' Generate and manage collection of tiles from Theia. This collection can be
@@ -20,9 +16,9 @@ NULL
 #'
 #'    c$download(auth, overwrite = FALSE)
 #'    c$check()
-#'    c$get_bands()
 #'    c$status
 #'    c$extract(overwrite = FALSE, dest.dir = NULL)
+#'    c$read(bands)
 #' }
 #'
 #' @section Arguments:
@@ -39,7 +35,8 @@ NULL
 #'    \code{\link{TheiaQuery}} for details on query syntax}
 #'    \item{auth:}{A character string giving the file path to Theia credentials.
 #'    Or a \code{\link{TheiaAuth}} object}
-#'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`}
+#'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
+#'    \item{bands:}{A character vector of bands to load from tiles}
 #'  }
 #'
 #' @section Details:
@@ -50,12 +47,14 @@ NULL
 #'
 #'    \code{$ccheck()} Check the tiles of the collection
 #'
-#'    \code{c$get_bands()} List bands available in each tile
-#'
 #'    \code{c$status} Return the status of each tile of the collection
 #'
 #'    \code{c$extract(overwrite = FALSE, dest.dir = NULL)} Extract archives to
 #'    dest.dir if supplied, or to the same directory as the archives otherwise
+#'
+#'    \code{c$read(bands)} Read requested bands, apply corrections on values
+#'    (as specified in Theia's product information), and return a list of
+#'    RasterStack objects (one stack per tile)
 #'
 #' @examples
 #'
@@ -103,10 +102,11 @@ TheiaCollection <-
   R6Class("TheiaCollection",
           # public -------------------------------------------------------------
           public =
-            list(cart     = NULL,
-                 tiles    = NULL,
-                 query    = NULL,
-                 dir.path = NULL,
+            list(cart       = NULL,
+                 tiles      = NULL,
+                 query      = NULL,
+                 collection = NA,
+                 dir.path   = NULL,
 
                  initialize = function(cart.path  = NULL,
                                        tiles      = NULL,
@@ -130,15 +130,15 @@ TheiaCollection <-
                  {
                    .TheiaCollection_download(self, auth, overwrite)
                  },
-                 
-                 get_bands = function()
-                 {
-                   .TheiaCollection_get_bands(self, private)
-                 },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
                  {
                    .TheiaCollection_extract(self, private, overwrite, dest.dir)
+                 },
+                  
+                 read = function(bands)
+                 {
+                   .TheiaCollection_read(self, private, bands)
                  }),
 
             # active -----------------------------------------------------------
@@ -196,9 +196,6 @@ TheiaCollection <-
                              tile.name = as.character(x$.attrs))
              })
 
-    # give names to the tiles
-    names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
-
   } else if (!(is.null(tiles))) {
     # TODO: Implement building from a list of tiles
     # build from list of tiles
@@ -223,9 +220,13 @@ TheiaCollection <-
                             tile.name = as.character(x[1]))
             })
 
-    # give names to the tiles
-    names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
   }
+
+  # give names to the tiles
+  names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
+
+  # fill collection field
+  self$collection <- self$tiles[[1]]$collection
 
   return(invisible(self))
 }
@@ -258,29 +259,6 @@ TheiaCollection <-
 }
 
 
-.TheiaCollection_get_bands <- function(self, private)
-{
-  # get available bands in each tile
-  bands <- lapply(self$tiles,
-                      function(x)
-                      {
-                        cbind.data.frame(tile = x$file.path, x$get_bands())
-                      })
-
-  bands <- do.call(rbind, bands)
-
-  # format tiles names
-  bands$tile <- gsub(self$dir.path, "", bands$tile)
-  bands$tile <- gsub(".zip$", "", bands$tile)
-
-  # get bands that are present in each tile
-  bands.common <- bands$band[duplicated(bands$band)]
-  bands$common <- bands$band %in% bands.common
-
-  return(bands)
-}
-
-
 .TheiaCollection_status <- function(self)
 {
   status <- lapply(self$tiles,
@@ -309,4 +287,13 @@ TheiaCollection <-
                       }, overwrite = overwrite, dest.dir = dest.dir)
 
   return(invisible(unlist(file.path)))
+}
+
+
+.TheiaCollection_read <- function(self, private, bands)
+{
+  # read bands from tiles and return a list of RasterStack objects
+  tiles.list <- lapply(self$tiles, function(x) x$read(bands))
+
+  return(tiles.list)
 }

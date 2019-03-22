@@ -27,49 +27,13 @@ check_dir <- function(dir.name)
 
 read_tiff_from_zip <- function(file.name, zip.file)
 {
-  # Code encapsulated in a tryCatch because it might fail for some tiles due to
-  # zip files seen as corrupted. It is bypassed by using system's 'unzip'
-  # program to unzip file. But it cannot be specified in the 'unz' function.
+  # generate filename uzing vsizip interface provided by GDAL
+  file.name <- paste0("/vsizip/", zip.file, "/", file.name)
 
-  tile.tiff <-
-    tryCatch({
-      # open zip connection
-      con <- unz(zip.file, file.name, open = "rb")
+  # load the raster
+  ras <- raster::raster(file.name)
 
-      # read connection into a raw vector
-      file.raw <- readBin(con, "raw", n = 1e10)
-
-      # read raw vector with readTIFF()
-      tiff.tmp <- tiff::readTIFF(file.raw, as.is = TRUE)
-
-      # close connection
-      close(con)
-
-      tiff.tmp
-    },
-    error = function(e) {
-      # Executed if code has failed: the file is extracted in a temporary
-      # directory and then read from it
-      tmp.dir <- paste0(tempdir(), "/")
-      unzip(zip.file, files = file.name, exdir = tmp.dir, unzip = getOption("unzip"))
-
-      # read tiff file
-      tiff.tmp <- tiff::readTIFF(paste0(tmp.dir, file.name), as.is = TRUE)
-
-      # remove temporary file
-      unlink(paste0(tmp.dir, file.name))
-
-      tiff.tmp
-    })
-
-  # remove NA values: -10000
-  tile.tiff[tile.tiff == -10000] <- NA
-
-  # get reflectance value: divide by 10000
-  tile.tiff <- tile.tiff / 10000
-
-  # convert to raster::raster object
-  return(raster::raster(tile.tiff))
+  return(ras)
 }
 
 
@@ -161,4 +125,14 @@ parse_query <- function(q, q.name, type, default = NULL, choices = NULL)
   }
 
   return(q)
+}
+
+
+# correction to sentinel tiles
+correct_values <- function(ras)
+{
+  ras[ras == -10000] <- NA
+  ras <- ras / 10000
+
+  return(ras)
 }
