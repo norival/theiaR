@@ -62,6 +62,7 @@ input given by the user.
      \item{orbit.number:} The orbit number
      \item{rel.orbit.number:} The relative orbit number
      \item{max.clouds:} The maximum of cloud cover wanted (0-100)
+     \item{max.records:} The maximum of tiles to search
    }
 }
 

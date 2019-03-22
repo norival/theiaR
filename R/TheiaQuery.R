@@ -53,6 +53,7 @@
 #'      \item{orbit.number:} The orbit number
 #'      \item{rel.orbit.number:} The relative orbit number
 #'      \item{max.clouds:} The maximum of cloud cover wanted (0-100)
+#'      \item{max.records:} The maximum of tiles to search
 #'    }
 #'
 #' @seealso
@@ -162,6 +163,7 @@ TheiaQuery <-
   q.link[["lon"]]                 <- self$query$longitude
   q.link[["orbitNumber"]]         <- self$query$orbit.number
   q.link[["relativeOrbitNumber"]] <- self$query$rel.orbit.number
+  q.link[["maxRecords"]]          <- self$query$max.records
 
   # search a rectangle
   if (all(c("latmin", "latmax", "lonmin", "lonmax") %in% names(self$query))) {
@@ -259,6 +261,8 @@ TheiaQuery <-
 
   self$query$orbitNumber         <- parse_query(self$query$orbitNumber, "orbit.number", "numeric")
   self$query$relativeOrbitNumber <- parse_query(self$query$relativeOrbitNumber, "rel.orbit.number", "numeric")
+  self$query$max.records         <- parse_query(self$query$max.records, "max.records", "numeric",
+                                                default = 500)
 
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
