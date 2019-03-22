@@ -110,14 +110,23 @@ Or you can specify a rectangle by giving its min/max coordinates:
 * __lonmax__: The maximum longitude to search.
 
 
-Finally, you can filter results by giving the date range and the maximum cloud
-cover:
+You can also look for a specific orbit number or relative orbit number:
+
+* __orbit.number__: The orbit number
+
+* __rel.orbit.number__: The relative orbit number
+
+
+Finally, you can filter results by giving the date range, the maximum cloud
+cover and the maximum of records:
 
 * __max.clouds__: The maximum of cloud cover wanted (0-100).
 
 * __start.date__: The first date to look for (format: `YYYY-MM-DD`).
 
 * __end.date__: The last date to look for (format: `YYYY-MM-DD`).
+
+* __max.records__: The maximum of tiles to search
 
 
 You can then create your collection with:
