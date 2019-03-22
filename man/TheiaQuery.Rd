@@ -60,6 +60,7 @@ input given by the user.
      \item{lonmin:} The minimum longitude to search
      \item{lonmax:} The maximum longitude to search
      \item{orbit.number:} The orbit number
+     \item{rel.orbit.number:} The relative orbit number
      \item{max.clouds:} The maximum of cloud cover wanted (0-100)
    }
 }
