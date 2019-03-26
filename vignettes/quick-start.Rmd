@@ -113,6 +113,13 @@ Or you can specify a rectangle by giving its min/max coordinates:
 * __lonmax__: The maximum longitude to search.
 
 
+You can also look for a specific orbit number or relative orbit number:
+
+* __orbit.number__: The orbit number
+
+* __rel.orbit.number__: The relative orbit number
+
+
 Finally, you can filter results by giving the date range and the maximum cloud
 cover:
 
