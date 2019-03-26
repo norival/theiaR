@@ -42,12 +42,12 @@ input given by the user.
    Search criteria are given with a `list` accepting these fields:
    \itemize{
      \item{collection:} The collection to look for. Accepted values are:
-       'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'. DEfaults to
+       'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'. Defaults to
        'SENTINEL2'
      \item{platform:} The platform to look for. Accepted values are:
        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B'
-     \item{level:} Processing level. Accepted velues are: 'LEVEL1C',
+     \item{level:} Processing level. Accepted values are: 'LEVEL1C',
        'LEVEL2A', LEVEL3A'. Defaults to 'LEVEL2A'
      \item{town:} The location to look for. Give a common town name.
      \item{tile:} The tile identifier to retrieve.
@@ -59,7 +59,10 @@ input given by the user.
      \item{latmax:} The maximum latitude to search
      \item{lonmin:} The minimum longitude to search
      \item{lonmax:} The maximum longitude to search
+     \item{orbit.number:} The orbit number
+     \item{rel.orbit.number:} The relative orbit number
      \item{max.clouds:} The maximum of cloud cover wanted (0-100)
+     \item{max.records:} The maximum of tiles to search
    }
 }
 

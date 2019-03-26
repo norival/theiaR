@@ -110,8 +110,15 @@ Or you can specify a rectangle by giving its min/max coordinates:
 * __lonmax__: The maximum longitude to search.
 
 
-Finally, you can filter results by giving the date range and the maximum cloud
-cover:
+You can also look for a specific orbit number or relative orbit number:
+
+* __orbit.number__: The orbit number
+
+* __rel.orbit.number__: The relative orbit number
+
+
+Finally, you can filter results by giving the date range, the maximum cloud
+cover and the maximum of records:
 
 * __max.clouds__: The maximum of cloud cover wanted (0-100).
 
@@ -119,11 +126,13 @@ cover:
 
 * __end.date__: The last date to look for (format: `YYYY-MM-DD`).
 
+* __max.records__: The maximum of tiles to search
+
 
 You can then create your collection with:
 
 ```
-mycollection <- TheiaCollection$new(query = myquery, dir.path = ".")
+mycollection <- TheiaCollection$new(query = myquery, dir.path = ".", check = TRUE)
 ```
 
 where `dir.path` is the path you want your tiles to be further downloaded. If
@@ -131,7 +140,7 @@ tiles are already present in `dir.path`, they will be checked by computing a
 checksum and comparing it to the hash provided by Theia (only available for
 Sentinel2 data, no hash is provided for other collections, and files are then
 assumed to be correct). This ensures that the files have been correctly
-downloaded.
+downloaded. Set `check = FALSE` to skip file's check.
 
 
 #### Create a collection from a cart file
@@ -147,7 +156,8 @@ You can then create your collection using this file:
 cart.path <- system.file("extdata", "cart.meta4", package = "theiaR")
 
 mycollection <- TheiaCollection$new(cart.path = cart.path,
-                                    dir.path  = ".")
+                                    dir.path  = ".",
+                                    check     = TRUE)
 ```
 
 As above, it will check the hash of files if they are already present in
@@ -203,6 +213,35 @@ file.path <- mycollection$extract()
 ```
 
 which will extract tiles into the same directory as the archives.
+
+
+### Read bands from zip files
+
+Alternatively, you can read bands directly from the zip archives (by using the
+`vsizip` interface provided by GDAL). Use:
+
+```
+mytile$bands
+```
+
+to get a list of available bands. Then:
+
+```
+mybands <- mytile$read(bands = c("B5", "B6"))
+```
+
+to load the bands into memory (returns a `RasterStack` object). It performs the
+necessary corrections on the values.
+
+You can also read bands from a collection by running:
+
+```
+mybands <- mycollection$read(bands = c("B5", "B6"))
+```
+
+which returns a `list` of `RasterStack` objects.
+
+_NOTE: loading several tiles needs a lot of memory (~900MB/tile)_
 
 
 ## Acknowledgment

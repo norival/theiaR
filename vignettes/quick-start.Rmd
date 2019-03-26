@@ -31,6 +31,7 @@ The basic functionalities are (for now):
 - Download tiles contained in a cart (`.meta4` file) obtained from Theia
   website.
 - Extract archives
+- Read tiles from zip files
 
 
 _NOTE: ongoing development, more functionalities shall be added in the future_
@@ -113,6 +114,13 @@ Or you can specify a rectangle by giving its min/max coordinates:
 * __lonmax__: The maximum longitude to search.
 
 
+You can also look for a specific orbit number or relative orbit number:
+
+* __orbit.number__: The orbit number
+
+* __rel.orbit.number__: The relative orbit number
+
+
 Finally, you can filter results by giving the date range and the maximum cloud
 cover:
 
@@ -126,7 +134,7 @@ cover:
 You can then create your collection with:
 
 ```{r}
-mycollection <- TheiaCollection$new(query = myquery, dir.path = ".")
+mycollection <- TheiaCollection$new(query = myquery, dir.path = ".", check = TRUE)
 ```
 
 where `dir.path` is the path you want your tiles to be downloaded. If tiles are
@@ -134,6 +142,7 @@ already present in `dir.path`, they will be checked by computing a checksum and
 comparing it to the hash provided by Theia (only available for Sentinel2 data,
 no hash is provided for other collections, and files are then assumed to be
 correct). This ensures that the files have been correctly downloaded.
+downloaded. Set `check = FALSE` to skip file's check.
 
 ```{r}
 print(mycollection)
@@ -153,7 +162,8 @@ You can then create your collection using this file:
 cart.path <- system.file("extdata", "cart.meta4", package = "theiaR")
 
 mycollection <- TheiaCollection$new(cart.path = cart.path,
-                                    dir.path  = ".")
+                                    dir.path  = ".",
+                                    check     = TRUE)
 
 print(mycollection)
 ```
@@ -199,6 +209,35 @@ file.path <- mycollection$extract()
 ```
 
 which will extract tiles into the same directory as the archives.
+
+
+### Read bands from zip files
+
+Alternatively, you can read bands directly from the zip archives (by using the
+`vsizip` interface provided by GDAL). Use:
+
+```{r , eval=FALSE}
+mytile$bands
+```
+
+to get a list of available bands. Then:
+
+```{r , eval=FALSE}
+mybands <- mytile$read(bands = c("B5", "B6"))
+```
+
+to load the bands into memory (returns a `RasterStack` object). It performs the
+necessary corrections on the values.
+
+You can also read bands from a collection by running:
+
+```{r , eval=FALSE}
+mybands <- mycollection$read(bands = c("B5", "B6"))
+```
+
+which returns a `list` of `RasterStack` objects.
+
+_NOTE: loading several tiles needs a lot of memory (~900MB/tile)_
 
 
 ## Acknowledgment

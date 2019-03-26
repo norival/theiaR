@@ -15,13 +15,14 @@ from a \code{\link{TheiaQuery}} object or from a list of
    c <- TheiaCollection$new(cart.path = NULL,
                             tiles     = NULL,
                             query     = NULL,
-                            dir.path  = NULL)
+                            dir.path  = NULL,
+                            check     = TRUE)
 
    c$download(auth, overwrite = FALSE)
    c$check()
-   c$get_bands()
    c$status
    c$extract(overwrite = FALSE, dest.dir = NULL)
+   c$read(bands)
 }
 }
 
@@ -31,6 +32,7 @@ from a \code{\link{TheiaQuery}} object or from a list of
 \describe{
    \item{c:}{A \code{TheiaCollection} object}
    \item{dir.path:}{The path to the directory containing zip files}
+   \item{check:}{Whether or not to check existing files on collection's creation}
    \item{tiles:}{A list of TheiaTile objects}
    \item{cart:}{An XML cart parsed from a 'meta4' file downloaded from Theia}
    website. Used only if Collection is created from a cart
@@ -40,7 +42,8 @@ from a \code{\link{TheiaQuery}} object or from a list of
    \code{\link{TheiaQuery}} for details on query syntax}
    \item{auth:}{A character string giving the file path to Theia credentials.
    Or a \code{\link{TheiaAuth}} object}
-   \item{overwrite:}{Overwrite existing tiles (default to `FALSE`}
+   \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
+   \item{bands:}{A character vector of bands to load from tiles}
  }
 }
 
@@ -53,12 +56,14 @@ from a \code{\link{TheiaQuery}} object or from a list of
 
    \code{$ccheck()} Check the tiles of the collection
 
-   \code{c$get_bands()} List bands available in each tile
-
    \code{c$status} Return the status of each tile of the collection
 
    \code{c$extract(overwrite = FALSE, dest.dir = NULL)} Extract archives to
    dest.dir if supplied, or to the same directory as the archives otherwise
+
+   \code{c$read(bands)} Read requested bands, apply corrections on values
+   (as specified in Theia's product information), and return a list of
+   RasterStack objects (one stack per tile)
 }
 
 \examples{

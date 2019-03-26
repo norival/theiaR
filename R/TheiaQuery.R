@@ -33,12 +33,12 @@
 #'    Search criteria are given with a `list` accepting these fields:
 #'    \itemize{
 #'      \item{collection:} The collection to look for. Accepted values are:
-#'        'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'. DEfaults to
+#'        'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'. Defaults to
 #'        'SENTINEL2'
 #'      \item{platform:} The platform to look for. Accepted values are:
 #'        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
 #'        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B'
-#'      \item{level:} Processing level. Accepted velues are: 'LEVEL1C',
+#'      \item{level:} Processing level. Accepted values are: 'LEVEL1C',
 #'        'LEVEL2A', LEVEL3A'. Defaults to 'LEVEL2A'
 #'      \item{town:} The location to look for. Give a common town name.
 #'      \item{tile:} The tile identifier to retrieve.
@@ -50,7 +50,10 @@
 #'      \item{latmax:} The maximum latitude to search
 #'      \item{lonmin:} The minimum longitude to search
 #'      \item{lonmax:} The maximum longitude to search
+#'      \item{orbit.number:} The orbit number
+#'      \item{rel.orbit.number:} The relative orbit number
 #'      \item{max.clouds:} The maximum of cloud cover wanted (0-100)
+#'      \item{max.records:} The maximum of tiles to search
 #'    }
 #'
 #' @seealso
@@ -150,14 +153,17 @@ TheiaQuery <-
 
   q.link <- list()
 
-  q.link[["q"]]               <- self$query$town
-  q.link[["location"]]        <- self$query$tile
-  q.link[["platform"]]        <- self$query$platform
-  q.link[["processingLevel"]] <- self$query$level
-  q.link[["startDate"]]       <- self$query$start.date
-  q.link[["completionDate"]]  <- self$query$end.date
-  q.link[["lat"]]             <- self$query$latitude
-  q.link[["lon"]]             <- self$query$longitude
+  q.link[["q"]]                   <- self$query$town
+  q.link[["location"]]            <- self$query$tile
+  q.link[["platform"]]            <- self$query$platform
+  q.link[["processingLevel"]]     <- self$query$level
+  q.link[["startDate"]]           <- self$query$start.date
+  q.link[["completionDate"]]      <- self$query$end.date
+  q.link[["lat"]]                 <- self$query$latitude
+  q.link[["lon"]]                 <- self$query$longitude
+  q.link[["orbitNumber"]]         <- self$query$orbit.number
+  q.link[["relativeOrbitNumber"]] <- self$query$rel.orbit.number
+  q.link[["maxRecords"]]          <- self$query$max.records
 
   # search a rectangle
   if (all(c("latmin", "latmax", "lonmin", "lonmax") %in% names(self$query))) {
@@ -252,6 +258,11 @@ TheiaQuery <-
   self$query$latmax     <- parse_query(self$query$latmax, "latmax", "numeric")
   self$query$lonmin     <- parse_query(self$query$lonmin, "lonmin", "numeric")
   self$query$lonmax     <- parse_query(self$query$lonmax, "lonmax", "numeric")
+
+  self$query$orbit.number     <- parse_query(self$query$orbit.number, "orbit.number", "numeric")
+  self$query$rel.orbit.number <- parse_query(self$query$rel.orbit.number, "rel.orbit.number", "numeric")
+  self$query$max.records      <- parse_query(self$query$max.records, "max.records", "numeric",
+                                             default = 500)
 
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {

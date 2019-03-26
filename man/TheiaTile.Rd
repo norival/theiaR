@@ -11,12 +11,13 @@ Generate and manage a tile from Theia (download, check, load).
 \preformatted{
    t <- TheiaTile$new(file.path,
                       url,
-                      file.hash)
+                      file.hash,
+                      check = TRUE)
 
    t$download(overwrite = FALSE)
    t$check()
-   t$get_bands()
    t$extract(overwrite = FALSE, dest.dir = NULL)
+   t$read(bands)
 }
 }
 
@@ -28,9 +29,11 @@ Generate and manage a tile from Theia (download, check, load).
    \item{file.path:}{The path to the zip file containing the tile}
    \item{url:}{The url to download the tile}
    \item{file.hash:}{The md5sum used to check the zip file}
+   \item{check:}{Whether or not to check existing files on tile's creation}
    \item{auth:}{A character string giving the file path to Theia credentials.
    Or a \code{\link{TheiaAuth}} object}
    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
+   \item{bands:}{A character vector of bands to load from tiles}
  }
 }
 
@@ -44,9 +47,12 @@ Generate and manage a tile from Theia (download, check, load).
 
    \code{t$check()} Check the tiles of the collection
 
-   \code{t$get_bands()} List bands available in the tile
-
    \code{t$extract(overwrite = FALSE, dest.dir = NULL)} Extract archive to
    dest.dir if supplied, or to the same directory as the archive otherwise
+
+   \code{t$read(bands)} Read requested bands, apply corrections on values
+   (as specified in Theia's product information), and return a RasterStack
+
+   \code{t$bands} List bands available in the tile
 }
 

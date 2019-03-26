@@ -1,3 +1,13 @@
+# theiaR 0.2.0
+
+## New features
+
+- Adds orbit number and relative orbit number to queries
+- Adds max records to queries
+- Adds reading of bands from zip files
+- Adds no check option for creation of Tiles
+
+
 # theiaR 0.1.2
 
 ## Bug fixes

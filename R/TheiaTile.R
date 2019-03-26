@@ -8,12 +8,13 @@
 #' \preformatted{
 #'    t <- TheiaTile$new(file.path,
 #'                       url,
-#'                       file.hash)
+#'                       file.hash,
+#'                       check = TRUE)
 #'
 #'    t$download(overwrite = FALSE)
 #'    t$check()
-#'    t$get_bands()
 #'    t$extract(overwrite = FALSE, dest.dir = NULL)
+#'    t$read(bands)
 #' }
 #'
 #' @section Arguments:
@@ -23,9 +24,11 @@
 #'    \item{file.path:}{The path to the zip file containing the tile}
 #'    \item{url:}{The url to download the tile}
 #'    \item{file.hash:}{The md5sum used to check the zip file}
+#'    \item{check:}{Whether or not to check existing files on tile's creation}
 #'    \item{auth:}{A character string giving the file path to Theia credentials.
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
+#'    \item{bands:}{A character vector of bands to load from tiles}
 #'  }
 #'
 #' @section Details:
@@ -37,10 +40,13 @@
 #'
 #'    \code{t$check()} Check the tiles of the collection
 #'
-#'    \code{t$get_bands()} List bands available in the tile
-#'
 #'    \code{t$extract(overwrite = FALSE, dest.dir = NULL)} Extract archive to
 #'    dest.dir if supplied, or to the same directory as the archive otherwise
+#'
+#'    \code{t$read(bands)} Read requested bands, apply corrections on values
+#'    (as specified in Theia's product information), and return a RasterStack
+#'
+#'    \code{t$bands} List bands available in the tile
 #'
 #'
 NULL
@@ -58,6 +64,11 @@ TheiaTile <-
                  {
                    # parse and add metadata from the zip archive
                    .TheiaTile_add_md(self, private)
+                 },
+
+                 get_bands = function()
+                 {
+                   .TheiaTile_get_bands(self, private)
                  }),
 
           # public -------------------------------------------------------------
@@ -67,15 +78,17 @@ TheiaTile <-
                  url            = NA,
                  tile.name      = NA,
                  path.extracted = NA,
+                 bands          = NA,
+                 collection     = NA,
                  status         = list(exists    = FALSE,
                                        checked   = FALSE,
                                        correct   = FALSE,
                                        extracted = FALSE),
 
-                 initialize = function(file.path, url, tile.name, file.hash)
+                 initialize = function(file.path, url, tile.name, file.hash, check = TRUE)
                  {
                    .TheiaTile_initialize(self, private, file.path, url,
-                                         tile.name, file.hash)
+                                         tile.name, file.hash, check)
                  },
 
                  print = function(...)
@@ -83,9 +96,9 @@ TheiaTile <-
                    .TheiaTile_print(self)
                  },
 
-                 check = function()
+                 check = function(check = TRUE)
                  {
-                   .TheiaTile_check(self)
+                   .TheiaTile_check(self, check)
                  },
 
                  download = function(auth, overwrite = FALSE)
@@ -93,9 +106,9 @@ TheiaTile <-
                    .TheiaTile_download(self, private, auth, overwrite)
                  },
                   
-                 get_bands = function()
+                 read = function(bands)
                  {
-                   .TheiaTile_get_bands(self, private)
+                   .TheiaTile_read(self, private, bands)
                  },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
@@ -113,9 +126,7 @@ TheiaTile <-
   # TODO: better method to print
   cat("An Tile from Theia\n\n")
 
-  collection <- gsub("(.*)(/[^/]*$)", "\\2", self$file.path)
-  collection <- gsub("(^/)([[:alnum:]]*)(_.*$)", "\\2", collection)
-  cat("Collection:", collection, "\n\n")
+  cat("Collection:", self$collection, "\n\n")
 
   cat("Status:\n")
   cat("   downloaded :", self$status$exists, "\n")
@@ -126,31 +137,48 @@ TheiaTile <-
 }
 
 
-.TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash)
+.TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash, check)
 {
-  # Fill fiedls of the object
-  self$file.path <- file.path
-  self$url       <- url
-  self$tile.name <- gsub("\\.tar\\.gz$|\\.zip$", "", tile.name)
-  self$file.hash <- file.hash
+  # Fill fields of the object
+  self$file.path  <- file.path
+  self$url        <- url
+  self$tile.name  <- gsub("\\.tar\\.gz$|\\.zip$", "", tile.name)
+  self$file.hash  <- file.hash
+  self$collection <- gsub("(.*)(/[^/]*$)", "\\2", self$file.path)
+  self$collection <- gsub("(^/)([[:alnum:]]*)(_.*$)", "\\2", self$collection)
+  self$collection <- gsub("([[:alnum:]]*)([[:alnum:]]{1}$)", "\\1", self$collection)
 
   # check the tile
-  self$check()
+  self$check(check)
 
   # adds meta data if file is present and correct
   if (self$status$correct == TRUE) {
-    private$add_md()
+    tryCatch(private$add_md(),
+             error = function(e) {
+               message("Could not retrieve meta data from archive")
+             })
   }
 
   return(invisible(self))
 }
 
 
-.TheiaTile_check <- function(self)
+.TheiaTile_check <- function(self, check)
 {
   # check the tile
   if (file.exists(self$file.path)) {
     # if the file exists, check it
+
+    if (check == FALSE) {
+      message("Assuming file is correctly downloaded. Set 'check=TRUE' to check file's hash")
+
+      self$status$exists  <- TRUE
+      self$status$checked <- FALSE
+      self$status$correct <- TRUE
+
+      return(invisible(self))
+    }
+
     message("Checking downloaded file...")
 
     self$status$exists  <- TRUE
@@ -241,25 +269,60 @@ TheiaTile <-
   # remove temporary file
   unlink(paste(tmp.dir, file.name, sep = "/"))
 
+  # adds bands information (Sentinel2 only)
+  if (self$collection == "SENTINEL2") {
+    self$bands <- private$get_bands()
+  }
+
   return(invisible(self))
 }
 
 
 .TheiaTile_get_bands <- function(self, private)
 {
-  # get bands list from 
+  # get bands list from meta data
   bands <- lapply(private$meta.data$Product_Characteristics$Band_Group_List,
                   function(x) {
                     band.list <- unlist(x$Band_List[-(length(x$Band_List))])
                     band.id   <- unname(x$.attrs)
 
-                    data.frame(band = band.list, band.id = band.id)
+                    data.frame(band = band.list, resolution = band.id)
                   })
 
   bands <- do.call(rbind, bands)
   rownames(bands) <- NULL
 
   return(bands)
+}
+
+
+.TheiaTile_read <- function(self, private, bands)
+{
+  # check if requested bands are available
+  avail.bands <- self$bands
+
+  if (any(!(bands %in% avail.bands$band))) {
+    # error if some bands are not available
+    bad.bands <- paste(bands[!(bands %in% avail.bands)], collapse = ", ")
+    stop("Bands '", bad.bands, "' are not available!")
+  }
+
+  # get file names to read from
+  files   <- unzip(self$file.path, list = TRUE)$Name
+  pattern <- paste(paste0("FRE_", bands, ".tif$"), collapse = "|")
+  files   <- files[grepl(pattern, files)]
+
+  # read tiles from zip file and create raster::rasterStack object
+  tiles.list <- lapply(files, read_tiff_from_zip, zip.file = self$file.path)
+
+  # correct values
+  tiles.stack <- raster::stack(lapply(tiles.list, correct_values))
+
+  # give names to the layers
+  bands.names <- gsub("(^.*_)([[:alnum:]]*$)", "\\2", names(tiles.stack))
+  names(tiles.stack) <- bands.names
+
+  return(tiles.stack)
 }
 
 
