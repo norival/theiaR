@@ -83,10 +83,10 @@ TheiaTile <-
                                        correct   = FALSE,
                                        extracted = FALSE),
 
-                 initialize = function(file.path, url, tile.name, file.hash)
+                 initialize = function(file.path, url, tile.name, file.hash, check = TRUE)
                  {
                    .TheiaTile_initialize(self, private, file.path, url,
-                                         tile.name, file.hash)
+                                         tile.name, file.hash, check)
                  },
 
                  print = function(...)
@@ -94,9 +94,9 @@ TheiaTile <-
                    .TheiaTile_print(self)
                  },
 
-                 check = function()
+                 check = function(check = TRUE)
                  {
-                   .TheiaTile_check(self)
+                   .TheiaTile_check(self, check)
                  },
 
                  download = function(auth, overwrite = FALSE)
@@ -135,7 +135,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash)
+.TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash, check)
 {
   # Fill fields of the object
   self$file.path  <- file.path
@@ -147,7 +147,7 @@ TheiaTile <-
   self$collection <- gsub("([[:alnum:]]*)([[:alnum:]]{1}$)", "\\1", self$collection)
 
   # check the tile
-  self$check()
+  self$check(check)
 
   # adds meta data if file is present and correct
   if (self$status$correct == TRUE) {
@@ -158,11 +158,22 @@ TheiaTile <-
 }
 
 
-.TheiaTile_check <- function(self)
+.TheiaTile_check <- function(self, check)
 {
   # check the tile
   if (file.exists(self$file.path)) {
     # if the file exists, check it
+
+    if (check == FALSE) {
+      message("Assuming file is correctly downloaded. Set 'check=TRUE' to check file's hash")
+
+      self$status$exists  <- TRUE
+      self$status$checked <- FALSE
+      self$status$correct <- TRUE
+
+      return(invisible(self))
+    }
+
     message("Checking downloaded file...")
 
     self$status$exists  <- TRUE
