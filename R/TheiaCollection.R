@@ -12,7 +12,8 @@
 #'    c <- TheiaCollection$new(cart.path = NULL,
 #'                             tiles     = NULL,
 #'                             query     = NULL,
-#'                             dir.path  = NULL)
+#'                             dir.path  = NULL,
+#'                             check     = TRUE)
 #'
 #'    c$download(auth, overwrite = FALSE)
 #'    c$check()
@@ -26,6 +27,7 @@
 #' \describe{
 #'    \item{c:}{A \code{TheiaCollection} object}
 #'    \item{dir.path:}{The path to the directory containing zip files}
+#'    \item{check:}{Whether or not to check existing files on collection's creation}
 #'    \item{tiles:}{A list of TheiaTile objects}
 #'    \item{cart:}{An XML cart parsed from a 'meta4' file downloaded from Theia}
 #'    website. Used only if Collection is created from a cart
@@ -111,9 +113,10 @@ TheiaCollection <-
                  initialize = function(cart.path  = NULL,
                                        tiles      = NULL,
                                        query      = NULL,
-                                       dir.path   = NULL)
+                                       dir.path   = NULL,
+                                       check      = TRUE)
                  {
-                   .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path)
+                   .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path, check)
                  },
 
                  print = function(...)
@@ -176,7 +179,7 @@ TheiaCollection <-
 }
 
 
-.TheiaCollection_initialize <- function(self, cart.path, tiles, query, dir.path)
+.TheiaCollection_initialize <- function(self, cart.path, tiles, query, dir.path, check)
 {
   # fill dir.path field
   self$dir.path <- check_dir(dir.path)
@@ -193,7 +196,8 @@ TheiaCollection <-
                TheiaTile$new(file.path = paste0(self$dir.path, as.character(x$.attrs)),
                              file.hash = as.character(x$hash),
                              url       = as.character(x$url$text),
-                             tile.name = as.character(x$.attrs))
+                             tile.name = as.character(x$.attrs),
+                             check)
              })
 
   } else if (!(is.null(tiles))) {
@@ -217,7 +221,8 @@ TheiaCollection <-
               TheiaTile$new(file.path = paste0(self$dir.path, x[1]),
                             file.hash = as.character(x[3]),
                             url       = as.character(x[6]),
-                            tile.name = as.character(x[1]))
+                            tile.name = as.character(x[1]),
+                            check)
             })
 
   }

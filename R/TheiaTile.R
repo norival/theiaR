@@ -8,7 +8,8 @@
 #' \preformatted{
 #'    t <- TheiaTile$new(file.path,
 #'                       url,
-#'                       file.hash)
+#'                       file.hash,
+#'                       check = TRUE)
 #'
 #'    t$download(overwrite = FALSE)
 #'    t$check()
@@ -23,6 +24,7 @@
 #'    \item{file.path:}{The path to the zip file containing the tile}
 #'    \item{url:}{The url to download the tile}
 #'    \item{file.hash:}{The md5sum used to check the zip file}
+#'    \item{check:}{Whether or not to check existing files on tile's creation}
 #'    \item{auth:}{A character string giving the file path to Theia credentials.
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
@@ -83,10 +85,10 @@ TheiaTile <-
                                        correct   = FALSE,
                                        extracted = FALSE),
 
-                 initialize = function(file.path, url, tile.name, file.hash)
+                 initialize = function(file.path, url, tile.name, file.hash, check = TRUE)
                  {
                    .TheiaTile_initialize(self, private, file.path, url,
-                                         tile.name, file.hash)
+                                         tile.name, file.hash, check)
                  },
 
                  print = function(...)
@@ -94,9 +96,9 @@ TheiaTile <-
                    .TheiaTile_print(self)
                  },
 
-                 check = function()
+                 check = function(check = TRUE)
                  {
-                   .TheiaTile_check(self)
+                   .TheiaTile_check(self, check)
                  },
 
                  download = function(auth, overwrite = FALSE)
@@ -135,7 +137,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash)
+.TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash, check)
 {
   # Fill fields of the object
   self$file.path  <- file.path
@@ -147,22 +149,36 @@ TheiaTile <-
   self$collection <- gsub("([[:alnum:]]*)([[:alnum:]]{1}$)", "\\1", self$collection)
 
   # check the tile
-  self$check()
+  self$check(check)
 
   # adds meta data if file is present and correct
   if (self$status$correct == TRUE) {
-    private$add_md()
+    tryCatch(private$add_md(),
+             error = function(e) {
+               message("Could not retrieve meta data from archive")
+             })
   }
 
   return(invisible(self))
 }
 
 
-.TheiaTile_check <- function(self)
+.TheiaTile_check <- function(self, check)
 {
   # check the tile
   if (file.exists(self$file.path)) {
     # if the file exists, check it
+
+    if (check == FALSE) {
+      message("Assuming file is correctly downloaded. Set 'check=TRUE' to check file's hash")
+
+      self$status$exists  <- TRUE
+      self$status$checked <- FALSE
+      self$status$correct <- TRUE
+
+      return(invisible(self))
+    }
+
     message("Checking downloaded file...")
 
     self$status$exists  <- TRUE

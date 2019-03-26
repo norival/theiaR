@@ -132,7 +132,7 @@ cover and the maximum of records:
 You can then create your collection with:
 
 ```
-mycollection <- TheiaCollection$new(query = myquery, dir.path = ".")
+mycollection <- TheiaCollection$new(query = myquery, dir.path = ".", check = TRUE)
 ```
 
 where `dir.path` is the path you want your tiles to be further downloaded. If
@@ -140,7 +140,7 @@ tiles are already present in `dir.path`, they will be checked by computing a
 checksum and comparing it to the hash provided by Theia (only available for
 Sentinel2 data, no hash is provided for other collections, and files are then
 assumed to be correct). This ensures that the files have been correctly
-downloaded.
+downloaded. Set `check = FALSE` to skip file's check.
 
 
 #### Create a collection from a cart file
@@ -156,7 +156,8 @@ You can then create your collection using this file:
 cart.path <- system.file("extdata", "cart.meta4", package = "theiaR")
 
 mycollection <- TheiaCollection$new(cart.path = cart.path,
-                                    dir.path  = ".")
+                                    dir.path  = ".",
+                                    check     = TRUE)
 ```
 
 As above, it will check the hash of files if they are already present in
