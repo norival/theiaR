@@ -217,7 +217,7 @@ which will extract tiles into the same directory as the archives.
 
 ### Read bands from zip files
 
-Alternatilvely, you can read bands directly from the zip archives (by using the
+Alternatively, you can read bands directly from the zip archives (by using the
 `vsizip` interface provided by GDAL). Use:
 
 ```
@@ -233,7 +233,7 @@ mybands <- mytile$read(bands = c("B5", "B6"))
 to load the bands into memory (returns a `RasterStack` object). It performs the
 necessary corrections on the values.
 
-You can also read bands from a collectionb y running:
+You can also read bands from a collection by running:
 
 ```
 mybands <- mycollection$read(bands = c("B5", "B6"))
