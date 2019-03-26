@@ -151,7 +151,10 @@ TheiaTile <-
 
   # adds meta data if file is present and correct
   if (self$status$correct == TRUE) {
-    private$add_md()
+    tryCatch(private$add_md(),
+             error = function(e) {
+               message("Could not retrieve meta data from archive")
+             })
   }
 
   return(invisible(self))
