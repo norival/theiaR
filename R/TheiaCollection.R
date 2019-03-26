@@ -12,7 +12,8 @@
 #'    c <- TheiaCollection$new(cart.path = NULL,
 #'                             tiles     = NULL,
 #'                             query     = NULL,
-#'                             dir.path  = NULL)
+#'                             dir.path  = NULL,
+#'                             check     = TRUE)
 #'
 #'    c$download(auth, overwrite = FALSE)
 #'    c$check()
@@ -26,6 +27,7 @@
 #' \describe{
 #'    \item{c:}{A \code{TheiaCollection} object}
 #'    \item{dir.path:}{The path to the directory containing zip files}
+#'    \item{check:}{Whether or not to check existing files on collection's creation}
 #'    \item{tiles:}{A list of TheiaTile objects}
 #'    \item{cart:}{An XML cart parsed from a 'meta4' file downloaded from Theia}
 #'    website. Used only if Collection is created from a cart
