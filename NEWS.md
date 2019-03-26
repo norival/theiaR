@@ -1,9 +1,11 @@
-# theiaR NEXT
+# theiaR 0.2.0
 
-- Implement orbit number and relative orbit number to queries
-- Implement max records to queries
-- Implement reading of bands from zip files
-- Implement no check option for creation of Tiles
+## New features
+
+- Adds orbit number and relative orbit number to queries
+- Adds max records to queries
+- Adds reading of bands from zip files
+- Adds no check option for creation of Tiles
 
 
 # theiaR 0.1.2
