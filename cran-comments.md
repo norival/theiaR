@@ -1,16 +1,11 @@
-## Resubmission
-
-This is a resubmission. In this version, I have:
-
-* Added examples to main functions
-
-
 ## Test environments
 
-* local ubuntu 18.04 install, R 3.5.2
-* local ubuntu 18.04 install, R devel (2019-02-06 r76066)
-* ubuntu 14.04 (on travis-ci), R 3.5.2
-* win-builder (devel and release)
+* local Ubuntu 18.04 install, R 3.5.3
+* Ubuntu 14.04 (on travis-ci), R 3.5.2
+* Windows Server 2012 R2 x64 (AppVeyor)
+* Ubuntu Linux 16.04 LTS, R 3.5.3 (R-hub)
+* Windows Server 2008 R2 SP1, R-devel (R-hub)
+* Fedora Linux, R-devel (R-hub)
 
 
 ## R CMD check results
