@@ -1,3 +1,10 @@
+# theiaR 0.2.2
+
+## Bug fixes
+
+- Fix printing of TheiaQuery objects
+
+
 # theiaR 0.2.0
 
 ## New features
