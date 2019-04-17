@@ -39,7 +39,7 @@ Generate and manage a tile from Theia (download, check, load).
 
 \section{Details}{
 
-   \code{TheiaTile$new(file.path, url, file.hash)} Create a new instance of
+   \code{TheiaTile$new(file.path, url, file.hash, check)} Create a new instance of
    the class
 
    \code{t$download(auth, overwrite = FALSE)} Download the tiles of the collection
