@@ -1,3 +1,5 @@
+- Do not parse meta.data on tile creation, but do it on the fly
+
 # theiaR 0.2.2
 
 ## Bug fixes
