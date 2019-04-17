@@ -58,15 +58,7 @@ TheiaTile <-
   R6Class("TheiaTile",
           # public -------------------------------------------------------------
           private =
-            list(meta.data = NULL,
-
-                 add_md = function()
-                 {
-                   # parse and add metadata from the zip archive
-                   .TheiaTile_add_md(self, private)
-                 },
-
-                 get_bands = function()
+            list(get_bands = function()
                  {
                    .TheiaTile_get_bands(self, private)
                  }),
@@ -114,7 +106,13 @@ TheiaTile <-
                  extract = function(overwrite = FALSE, dest.dir = NULL)
                  {
                    .TheiaTile_extract(self, private, overwrite, dest.dir)
-                 })
+                 }),
+
+          active =
+            list(meta.data = function()
+                 {
+                   .TheiaTile_read_md(self, private)
+                 }
           )
 
 
@@ -251,7 +249,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_add_md <- function(self, private)
+.TheiaTile_read_md <- function(self, private)
 {
   message("Parsing meta data...")
 
@@ -264,24 +262,19 @@ TheiaTile <-
 
   # extract and parse xml file
   extraction_wrapper(self$file.path, args = list(files = file.name, exdir = tmp.dir))
-  private$meta.data <- XML::xmlToList(XML::xmlParse(paste0(tmp.dir, file.name)))
+  meta.data <- XML::xmlToList(XML::xmlParse(paste0(tmp.dir, file.name)))
 
   # remove temporary file
   unlink(paste(tmp.dir, file.name, sep = "/"))
 
-  # adds bands information (Sentinel2 only)
-  if (self$collection == "SENTINEL2") {
-    self$bands <- private$get_bands()
-  }
-
-  return(invisible(self))
+  return(meta.data)
 }
 
 
 .TheiaTile_get_bands <- function(self, private)
 {
   # get bands list from meta data
-  bands <- lapply(private$meta.data$Product_Characteristics$Band_Group_List,
+  bands <- lapply(self$meta.data$Product_Characteristics$Band_Group_List,
                   function(x) {
                     band.list <- unlist(x$Band_List[-(length(x$Band_List))])
                     band.id   <- unname(x$.attrs)
