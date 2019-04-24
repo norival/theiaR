@@ -1,6 +1,7 @@
+- Adds export to gdalcubes' image collection
 - Do not parse meta.data on tile creation, but do it on the fly
 
-# theiaR 0.2.2
+# theiaR 0.2.1
 
 ## Bug fixes
 

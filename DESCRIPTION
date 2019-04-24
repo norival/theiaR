@@ -25,7 +25,8 @@ RoxygenNote: 6.1.1
 Suggests:
     knitr,
     rmarkdown,
-    covr
+    covr,
+    gdalcubes
 Collate:
     'TheiaAuth.R'
     'TheiaTile.R'

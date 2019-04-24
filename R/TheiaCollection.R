@@ -20,6 +20,7 @@
 #'    c$status
 #'    c$extract(overwrite = FALSE, dest.dir = NULL)
 #'    c$read(bands)
+#'    c$as_gdalcube(out.file = "gdalcube_collection.sqlite")
 #' }
 #'
 #' @section Arguments:
@@ -39,6 +40,7 @@
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
 #'    \item{bands:}{A character vector of bands to load from tiles}
+#'    \item{out.file:}{Filename to store gdalcubes' image collection}
 #'  }
 #'
 #' @section Details:
@@ -57,6 +59,10 @@
 #'    \code{c$read(bands)} Read requested bands, apply corrections on values
 #'    (as specified in Theia's product information), and return a list of
 #'    RasterStack objects (one stack per tile)
+#'
+#'    \code{c$as_gdalcube(out.file)} Create a `gdalcubes` image collection from
+#'    downloaded tiles. See \url{https://github.com/appelmar/gdalcubes_R} for
+#'    more details.
 #'
 #' @examples
 #'
@@ -142,6 +148,11 @@ TheiaCollection <-
                  read = function(bands)
                  {
                    .TheiaCollection_read(self, private, bands)
+                 },
+                  
+                 as_gdalcube = function(out.file)
+                 {
+                   .TheiaCollection_as_gdalcube(self, private, out.file)
                  }),
 
             # active -----------------------------------------------------------
@@ -302,4 +313,34 @@ TheiaCollection <-
   tiles.list <- lapply(self$tiles, function(x) x$read(bands))
 
   return(tiles.list)
+}
+
+
+.TheiaCollection_as_gdalcube <- function(self, private, out.file = "gdalcube_collection.sqlite")
+{
+  # export collection as a gdalcube image collection
+  if (!(requireNamespace("gdalcubes", quietly = TRUE))) {
+    # check if package 'gdalcubes' is installed
+    stop("Package 'gdalcubes' needed for this function. Please install it.",
+         call. = FALSE)
+  }
+
+  if (!(all(as.logical(self$status$exists)))) {
+    # check if all files are downloaded
+    stop("Some files in the collection are not downloaded. Please check `mycollection$status()`",
+         call. = FALSE)
+  }
+
+  # extract file paths to collection
+  files <- unname(sapply(self$tiles, function(x) x$file.path))
+
+  # create gdalcubes image collection
+  gdalcubes.col <-
+    gdalcubes::create_image_collection(files    = files,
+                                       format   = system.file("templates",
+                                                              "gdalcubes_theia.json",
+                                                              package = "theiaR"),
+                                       out_file = out.file)
+
+  return(gdalcubes.col)
 }
