@@ -20,6 +20,7 @@
 #'    c$status
 #'    c$extract(overwrite = FALSE, dest.dir = NULL)
 #'    c$read(bands)
+#'    c$as_gdalcube(out.file = "gdalcube_collection.sqlite")
 #' }
 #'
 #' @section Arguments:
@@ -39,6 +40,7 @@
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
 #'    \item{bands:}{A character vector of bands to load from tiles}
+#'    \item{out.file:}{Filename to store gdalcubes' image collection}
 #'  }
 #'
 #' @section Details:
@@ -57,6 +59,10 @@
 #'    \code{c$read(bands)} Read requested bands, apply corrections on values
 #'    (as specified in Theia's product information), and return a list of
 #'    RasterStack objects (one stack per tile)
+#'
+#'    \code{c$as_gdalcube(out.file)} Create a `gdalcubes` image collection from
+#'    downloaded tiles. See \url{https://github.com/appelmar/gdalcubes_R} for
+#'    more details.
 #'
 #' @examples
 #'
