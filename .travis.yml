@@ -11,3 +11,6 @@ branches:
 
 after_success:
   - Rscript -e 'covr::codecov()'
+
+r_github_packages:
+  - appelmar/gdalcubes_R
