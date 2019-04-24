@@ -320,12 +320,19 @@ TheiaCollection <-
 {
   # export collection as a gdalcube image collection
   if (!(requireNamespace("gdalcubes", quietly = TRUE))) {
-    stop("Package \"gdalcubes\" needed for this function. Please install it.",
+    # check if package 'gdalcubes' is installed
+    stop("Package 'gdalcubes' needed for this function. Please install it.",
+         call. = FALSE)
+  }
+
+  if (!(all(as.logical(self$status$exists)))) {
+    # check if all files are downloaded
+    stop("Some files in the collection are not downloaded. Please check `mycollection$status()`",
          call. = FALSE)
   }
 
   # extract file paths to collection
-  files  <- unname(sapply(self$tiles, function(x) x$file.path))
+  files <- unname(sapply(self$tiles, function(x) x$file.path))
 
   # create gdalcubes image collection
   gdalcubes.col <-
