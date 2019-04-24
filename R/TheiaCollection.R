@@ -142,6 +142,11 @@ TheiaCollection <-
                  read = function(bands)
                  {
                    .TheiaCollection_read(self, private, bands)
+                 },
+                  
+                 as_gdalcube = function(out.file)
+                 {
+                   .TheiaCollection_as_gdalcube(self, private, out.file)
                  }),
 
             # active -----------------------------------------------------------
@@ -302,4 +307,27 @@ TheiaCollection <-
   tiles.list <- lapply(self$tiles, function(x) x$read(bands))
 
   return(tiles.list)
+}
+
+
+.TheiaCollection_as_gdalcube <- function(self, private, out.file = "gdalcube_collection.sqlite")
+{
+  # export collection as a gdalcube image collection
+  if (!(requireNamespace("gdalcubes", quietly = TRUE))) {
+    stop("Package \"gdalcubes\" needed for this function. Please install it.",
+         call. = FALSE)
+  }
+
+  # extract file paths to collection
+  files  <- unname(sapply(self$tiles, function(x) x$file.path))
+
+  # create gdalcubes image collection
+  gdalcubes.col <-
+    gdalcubes::create_image_collection(files    = files,
+                                       format   = system.file("templates",
+                                                              "gdalcubes_theia.json",
+                                                              package = "theiaR"),
+                                       out_file = out.file)
+
+  return(gdalcubes.col)
 }
