@@ -135,9 +135,9 @@ TheiaCollection <-
                    .TheiaCollection_check(self)
                  },
 
-                 download = function(auth, overwrite = FALSE)
+                 download = function(auth, overwrite = FALSE, check = TRUE)
                  {
-                   .TheiaCollection_download(self, auth, overwrite)
+                   .TheiaCollection_download(self, auth, overwrite, check)
                  },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
@@ -257,7 +257,7 @@ TheiaCollection <-
 }
 
 
-.TheiaCollection_download <- function(self, auth, overwrite)
+.TheiaCollection_download <- function(self, auth, overwrite, check)
 {
   if (is.character(auth)) {
     # create authentification system if not supplied
@@ -266,10 +266,10 @@ TheiaCollection <-
 
   # download needed tiles
   lapply(self$tiles,
-         function(x, auth, overwrite) {
-           x$download(auth, overwrite = overwrite)
+         function(x, auth, overwrite, check) {
+           x$download(auth, overwrite = overwrite, check = check)
          },
-         auth = auth, overwrite = overwrite)
+         auth = auth, overwrite = overwrite, check = check)
 
   return(invisible(self))
 }
