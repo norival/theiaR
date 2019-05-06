@@ -85,9 +85,9 @@ TheiaTile <-
                    .TheiaTile_check(self, check)
                  },
 
-                 download = function(auth, overwrite = FALSE)
+                 download = function(auth, overwrite = FALSE, check = TRUE)
                  {
-                   .TheiaTile_download(self, auth, overwrite)
+                   .TheiaTile_download(self, auth, overwrite, check)
                  },
                   
                  read = function(bands)
@@ -189,7 +189,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_download <- function(self, auth, overwrite = FALSE)
+.TheiaTile_download <- function(self, auth, overwrite, check)
 {
   if (is.character(auth)) {
     # create authentification system if not supplied
@@ -225,8 +225,17 @@ TheiaTile <-
             " already exists. Use 'overwrite=TRUE' to ovewrite.")
   }
 
-  # check the tile
-  self$check()
+  if (check == TRUE) {
+    # check the tile
+    self$check()
+  } else {
+    # do not check file
+    message("Assuming file is correctly downloaded. Set 'check=TRUE' to check file's hash")
+
+    self$status$exists  <- TRUE
+    self$status$checked <- FALSE
+    self$status$correct <- TRUE
+  }
 
   return(invisible(self))
 }
