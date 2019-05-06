@@ -15,7 +15,7 @@
 #'                             dir.path  = NULL,
 #'                             check     = TRUE)
 #'
-#'    c$download(auth, overwrite = FALSE)
+#'    c$download(auth, overwrite = FALSE, check = TRUE)
 #'    c$check()
 #'    c$status
 #'    c$extract(overwrite = FALSE, dest.dir = NULL)
@@ -46,7 +46,7 @@
 #' @section Details:
 #'    \code{TheiaCollection$new()} Create a new instance of the class
 #'
-#'    \code{c$download(overwrite = FALSE)} Download the tiles of the collection
+#'    \code{c$download(overwrite = FALSE, check = TRUE)} Download the tiles of the collection
 #'    and check the resulting files
 #'
 #'    \code{$ccheck()} Check the tiles of the collection
