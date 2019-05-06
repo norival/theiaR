@@ -15,7 +15,7 @@
 #'                             dir.path  = NULL,
 #'                             check     = TRUE)
 #'
-#'    c$download(auth, overwrite = FALSE)
+#'    c$download(auth, overwrite = FALSE, check = TRUE)
 #'    c$check()
 #'    c$status
 #'    c$extract(overwrite = FALSE, dest.dir = NULL)
@@ -46,7 +46,7 @@
 #' @section Details:
 #'    \code{TheiaCollection$new()} Create a new instance of the class
 #'
-#'    \code{c$download(overwrite = FALSE)} Download the tiles of the collection
+#'    \code{c$download(overwrite = FALSE, check = TRUE)} Download the tiles of the collection
 #'    and check the resulting files
 #'
 #'    \code{$ccheck()} Check the tiles of the collection
@@ -135,9 +135,9 @@ TheiaCollection <-
                    .TheiaCollection_check(self)
                  },
 
-                 download = function(auth, overwrite = FALSE)
+                 download = function(auth, overwrite = FALSE, check = TRUE)
                  {
-                   .TheiaCollection_download(self, auth, overwrite)
+                   .TheiaCollection_download(self, auth, overwrite, check)
                  },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
@@ -257,7 +257,7 @@ TheiaCollection <-
 }
 
 
-.TheiaCollection_download <- function(self, auth, overwrite)
+.TheiaCollection_download <- function(self, auth, overwrite, check)
 {
   if (is.character(auth)) {
     # create authentification system if not supplied
@@ -266,10 +266,10 @@ TheiaCollection <-
 
   # download needed tiles
   lapply(self$tiles,
-         function(x, auth, overwrite) {
-           x$download(auth, overwrite = overwrite)
+         function(x, auth, overwrite, check) {
+           x$download(auth, overwrite = overwrite, check = check)
          },
-         auth = auth, overwrite = overwrite)
+         auth = auth, overwrite = overwrite, check = check)
 
   return(invisible(self))
 }
