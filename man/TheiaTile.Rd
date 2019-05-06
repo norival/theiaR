@@ -14,7 +14,7 @@ Generate and manage a tile from Theia (download, check, load).
                       file.hash,
                       check = TRUE)
 
-   t$download(overwrite = FALSE)
+   t$download(overwrite = FALSE, check = TRUE)
    t$check()
    t$extract(overwrite = FALSE, dest.dir = NULL)
    t$read(bands)
@@ -42,8 +42,8 @@ Generate and manage a tile from Theia (download, check, load).
    \code{TheiaTile$new(file.path, url, file.hash, check)} Create a new instance of
    the class
 
-   \code{t$download(auth, overwrite = FALSE)} Download the tiles of the collection
-   and check the resulting files
+   \code{t$download(auth, overwrite = FALSE, check = TRUE)} Download the
+   tiles of the collection and check the resulting files
 
    \code{t$check()} Check the tiles of the collection
 
