@@ -120,9 +120,16 @@ TheiaCollection <-
                                        tiles      = NULL,
                                        query      = NULL,
                                        dir.path   = NULL,
-                                       check      = TRUE)
+                                       check      = TRUE,
+                                       quiet      = TRUE)
                  {
-                   .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path, check)
+                   if (quiet == TRUE) {
+                     suppressMessages({
+                       .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path, check)
+                     })
+                   } else {
+                     .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path, check)
+                   }
                  },
 
                  print = function(...)
@@ -135,9 +142,9 @@ TheiaCollection <-
                    .TheiaCollection_check(self)
                  },
 
-                 download = function(auth, overwrite = FALSE, check = TRUE)
+                 download = function(auth, overwrite = FALSE, check = TRUE, quiet = TRUE)
                  {
-                   .TheiaCollection_download(self, auth, overwrite, check)
+                   .TheiaCollection_download(self, auth, overwrite, check, quiet)
                  },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
@@ -257,7 +264,7 @@ TheiaCollection <-
 }
 
 
-.TheiaCollection_download <- function(self, auth, overwrite, check)
+.TheiaCollection_download <- function(self, auth, overwrite, check, quiet)
 {
   if (is.character(auth)) {
     # create authentification system if not supplied
@@ -266,10 +273,10 @@ TheiaCollection <-
 
   # download needed tiles
   lapply(self$tiles,
-         function(x, auth, overwrite, check) {
-           x$download(auth, overwrite = overwrite, check = check)
+         function(x, auth, overwrite, check, quiet) {
+           x$download(auth, overwrite = overwrite, check = check, quiet)
          },
-         auth = auth, overwrite = overwrite, check = check)
+         auth = auth, overwrite = overwrite, check = check, quiet = quiet)
 
   return(invisible(self))
 }
