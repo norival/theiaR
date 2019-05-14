@@ -9,7 +9,8 @@
 #'    t <- TheiaTile$new(file.path,
 #'                       url,
 #'                       file.hash,
-#'                       check = TRUE)
+#'                       check = TRUE,
+#'                       quiet = TRUE)
 #'
 #'    t$download(overwrite = FALSE, check = TRUE)
 #'    t$check()
@@ -25,6 +26,7 @@
 #'    \item{url:}{The url to download the tile}
 #'    \item{file.hash:}{The md5sum used to check the zip file}
 #'    \item{check:}{Whether or not to check existing files on tile's creation}
+#'    \item{quiet:}{Control verbose output}
 #'    \item{auth:}{A character string giving the file path to Theia credentials.
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
@@ -69,10 +71,15 @@ TheiaTile <-
                                        correct   = FALSE,
                                        extracted = FALSE),
 
-                 initialize = function(file.path, url, tile.name, file.hash, check = TRUE)
+                 initialize = function(file.path, url, tile.name, file.hash, check = TRUE, quiet = TRUE)
                  {
-                   .TheiaTile_initialize(self, file.path, url,
-                                         tile.name, file.hash, check)
+                   if (quiet == TRUE) {
+                     suppressMessages({
+                       .TheiaTile_initialize(self, file.path, url, tile.name, file.hash, check)
+                     })
+                   } else {
+                     .TheiaTile_initialize(self, file.path, url, tile.name, file.hash, check)
+                   }
                  },
 
                  print = function(...)
@@ -85,9 +92,15 @@ TheiaTile <-
                    .TheiaTile_check(self, check)
                  },
 
-                 download = function(auth, overwrite = FALSE, check = TRUE)
+                 download = function(auth, overwrite = FALSE, check = TRUE, quiet = TRUE)
                  {
-                   .TheiaTile_download(self, auth, overwrite, check)
+                   if (quiet == TRUE) {
+                     suppressMessages({
+                       .TheiaTile_download(self, auth, overwrite, check)
+                     })
+                   } else {
+                     .TheiaTile_download(self, auth, overwrite, check)
+                   }
                  },
                   
                  read = function(bands)
