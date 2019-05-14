@@ -195,6 +195,7 @@ TheiaTile <-
       self$status$correct <- TRUE
     } else {
       self$status$correct <- FALSE
+      warning(self$file.path, "incorrectly downloaded")
     }
   }
 
