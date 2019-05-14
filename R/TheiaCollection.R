@@ -14,8 +14,9 @@
 #'                             query     = NULL,
 #'                             dir.path  = NULL,
 #'                             check     = TRUE)
+#'                             quiet     = TRUE)
 #'
-#'    c$download(auth, overwrite = FALSE, check = TRUE)
+#'    c$download(auth, overwrite = FALSE, check = TRUE, quiet = TRUE)
 #'    c$check()
 #'    c$status
 #'    c$extract(overwrite = FALSE, dest.dir = NULL)
@@ -29,6 +30,7 @@
 #'    \item{c:}{A \code{TheiaCollection} object}
 #'    \item{dir.path:}{The path to the directory containing zip files}
 #'    \item{check:}{Whether or not to check existing files on collection's creation}
+#'    \item{quiet:}{Control verbose output}
 #'    \item{tiles:}{A list of TheiaTile objects}
 #'    \item{cart:}{An XML cart parsed from a 'meta4' file downloaded from Theia}
 #'    website. Used only if Collection is created from a cart

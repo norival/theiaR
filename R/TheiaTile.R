@@ -12,7 +12,7 @@
 #'                       check = TRUE,
 #'                       quiet = TRUE)
 #'
-#'    t$download(overwrite = FALSE, check = TRUE)
+#'    t$download(overwrite = FALSE, check = TRUE, quiet = TRUE)
 #'    t$check()
 #'    t$extract(overwrite = FALSE, dest.dir = NULL)
 #'    t$read(bands)
