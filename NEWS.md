@@ -1,3 +1,4 @@
+- Adds quiet arguments to control verbose output
 - Adds 'check' argument to 'TheiaTile' and 'TheiaCollection' download methods
 - Adds export to gdalcubes' image collection
 - Do not parse meta.data on tile creation, but do it on the fly
