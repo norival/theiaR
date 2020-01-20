@@ -4,6 +4,7 @@ cnes
 dest
 dir
 GDAL
+gdalcubes
 github
 Hagolle
 https
