@@ -1,9 +1,8 @@
 ## Test environments
 
-* local Ubuntu 18.04 install, R 3.5.3
-* Ubuntu 14.04 (on travis-ci), R 3.5.2
-* Windows Server 2012 R2 x64 (AppVeyor)
-* Ubuntu Linux 16.04 LTS, R 3.5.3 (R-hub)
+* local ArchLinux install, R 3.6.2
+* Ubuntu 16.04 (on travis-ci), R 3.6.2
+* Windows Server 2012 R2 x64, R 3.6.2 (AppVeyor)
 * Windows Server 2008 R2 SP1, R-devel (R-hub)
 * Fedora Linux, R-devel (R-hub)
 
