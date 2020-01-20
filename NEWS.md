@@ -1,3 +1,27 @@
+# theiaR 0.3.0
+
+## New features
+
+- Adds export to gdalcubes' image collection
+
+## Bug fixes
+
+- Fix error due to bad file path on Windows
+
+## Minor changes
+
+- Adds quiet arguments to control verbose output
+- Adds 'check' argument to 'TheiaTile' and 'TheiaCollection' download methods
+- Do not parse meta.data on tile creation, but do it on the fly
+
+
+# theiaR 0.2.1
+
+## Bug fixes
+
+- Fix printing of TheiaQuery objects
+
+
 # theiaR 0.2.0
 
 ## New features

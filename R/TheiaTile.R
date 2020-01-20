@@ -9,9 +9,10 @@
 #'    t <- TheiaTile$new(file.path,
 #'                       url,
 #'                       file.hash,
-#'                       check = TRUE)
+#'                       check = TRUE,
+#'                       quiet = TRUE)
 #'
-#'    t$download(overwrite = FALSE)
+#'    t$download(overwrite = FALSE, check = TRUE, quiet = TRUE)
 #'    t$check()
 #'    t$extract(overwrite = FALSE, dest.dir = NULL)
 #'    t$read(bands)
@@ -25,6 +26,7 @@
 #'    \item{url:}{The url to download the tile}
 #'    \item{file.hash:}{The md5sum used to check the zip file}
 #'    \item{check:}{Whether or not to check existing files on tile's creation}
+#'    \item{quiet:}{Control verbose output}
 #'    \item{auth:}{A character string giving the file path to Theia credentials.
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
@@ -32,11 +34,11 @@
 #'  }
 #'
 #' @section Details:
-#'    \code{TheiaTile$new(file.path, url, file.hash)} Create a new instance of
+#'    \code{TheiaTile$new(file.path, url, file.hash, check)} Create a new instance of
 #'    the class
 #'
-#'    \code{t$download(auth, overwrite = FALSE)} Download the tiles of the collection
-#'    and check the resulting files
+#'    \code{t$download(auth, overwrite = FALSE, check = TRUE)} Download the
+#'    tiles of the collection and check the resulting files
 #'
 #'    \code{t$check()} Check the tiles of the collection
 #'
@@ -57,38 +59,27 @@ NULL
 TheiaTile <-
   R6Class("TheiaTile",
           # public -------------------------------------------------------------
-          private =
-            list(meta.data = NULL,
-
-                 add_md = function()
-                 {
-                   # parse and add metadata from the zip archive
-                   .TheiaTile_add_md(self, private)
-                 },
-
-                 get_bands = function()
-                 {
-                   .TheiaTile_get_bands(self, private)
-                 }),
-
-          # public -------------------------------------------------------------
           public =
             list(file.path      = NA,
                  file.hash      = NA,
                  url            = NA,
                  tile.name      = NA,
                  path.extracted = NA,
-                 bands          = NA,
                  collection     = NA,
                  status         = list(exists    = FALSE,
                                        checked   = FALSE,
                                        correct   = FALSE,
                                        extracted = FALSE),
 
-                 initialize = function(file.path, url, tile.name, file.hash, check = TRUE)
+                 initialize = function(file.path, url, tile.name, file.hash, check = TRUE, quiet = TRUE)
                  {
-                   .TheiaTile_initialize(self, private, file.path, url,
-                                         tile.name, file.hash, check)
+                   if (quiet == TRUE) {
+                     suppressMessages({
+                       .TheiaTile_initialize(self, file.path, url, tile.name, file.hash, check)
+                     })
+                   } else {
+                     .TheiaTile_initialize(self, file.path, url, tile.name, file.hash, check)
+                   }
                  },
 
                  print = function(...)
@@ -101,19 +92,36 @@ TheiaTile <-
                    .TheiaTile_check(self, check)
                  },
 
-                 download = function(auth, overwrite = FALSE)
+                 download = function(auth, overwrite = FALSE, check = TRUE, quiet = TRUE)
                  {
-                   .TheiaTile_download(self, private, auth, overwrite)
+                   if (quiet == TRUE) {
+                     suppressMessages({
+                       .TheiaTile_download(self, auth, overwrite, check)
+                     })
+                   } else {
+                     .TheiaTile_download(self, auth, overwrite, check)
+                   }
                  },
                   
                  read = function(bands)
                  {
-                   .TheiaTile_read(self, private, bands)
+                   .TheiaTile_read(self, bands)
                  },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
                  {
-                   .TheiaTile_extract(self, private, overwrite, dest.dir)
+                   .TheiaTile_extract(self, overwrite, dest.dir)
+                 }),
+
+          active =
+            list(meta.data = function()
+                 {
+                   .TheiaTile_read_md(self)
+                 },
+
+                 bands = function()
+                 {
+                   .TheiaTile_get_bands(self)
                  })
           )
 
@@ -123,7 +131,6 @@ TheiaTile <-
 .TheiaTile_print <- function(self)
 {
   # Special method to print
-  # TODO: better method to print
   cat("An Tile from Theia\n\n")
 
   cat("Collection:", self$collection, "\n\n")
@@ -137,7 +144,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_initialize <- function(self, private, file.path, url, tile.name, file.hash, check)
+.TheiaTile_initialize <- function(self, file.path, url, tile.name, file.hash, check)
 {
   # Fill fields of the object
   self$file.path  <- file.path
@@ -150,14 +157,6 @@ TheiaTile <-
 
   # check the tile
   self$check(check)
-
-  # adds meta data if file is present and correct
-  if (self$status$correct == TRUE) {
-    tryCatch(private$add_md(),
-             error = function(e) {
-               message("Could not retrieve meta data from archive")
-             })
-  }
 
   return(invisible(self))
 }
@@ -196,6 +195,7 @@ TheiaTile <-
       self$status$correct <- TRUE
     } else {
       self$status$correct <- FALSE
+      warning(self$file.path, "incorrectly downloaded")
     }
   }
 
@@ -203,7 +203,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_download <- function(self, private, auth, overwrite = FALSE)
+.TheiaTile_download <- function(self, auth, overwrite, check)
 {
   if (is.character(auth)) {
     # create authentification system if not supplied
@@ -239,24 +239,28 @@ TheiaTile <-
             " already exists. Use 'overwrite=TRUE' to ovewrite.")
   }
 
-  # check the tile
-  self$check()
+  if (check == TRUE) {
+    # check the tile
+    self$check()
+  } else {
+    # do not check file
+    message("Assuming file is correctly downloaded. Set 'check=TRUE' to check file's hash")
 
-  # adds meta data if file is present and correct
-  if (self$status$correct == TRUE) {
-    private$add_md()
+    self$status$exists  <- TRUE
+    self$status$checked <- FALSE
+    self$status$correct <- TRUE
   }
 
   return(invisible(self))
 }
 
 
-.TheiaTile_add_md <- function(self, private)
+.TheiaTile_read_md <- function(self)
 {
   message("Parsing meta data...")
 
   # create temporary directory
-  tmp.dir <- paste0(tempdir(), "/")
+  tmp.dir <- file.path(tempdir(), "/")
 
   # get file name to extract
   file.name <- extraction_wrapper(self$file.path, args = list(list = TRUE))
@@ -264,24 +268,19 @@ TheiaTile <-
 
   # extract and parse xml file
   extraction_wrapper(self$file.path, args = list(files = file.name, exdir = tmp.dir))
-  private$meta.data <- XML::xmlToList(XML::xmlParse(paste0(tmp.dir, file.name)))
+  meta.data <- XML::xmlToList(XML::xmlParse(file.path(tmp.dir, file.name)))
 
   # remove temporary file
-  unlink(paste(tmp.dir, file.name, sep = "/"))
+  unlink(file.path(tmp.dir, file.name))
 
-  # adds bands information (Sentinel2 only)
-  if (self$collection == "SENTINEL2") {
-    self$bands <- private$get_bands()
-  }
-
-  return(invisible(self))
+  return(meta.data)
 }
 
 
-.TheiaTile_get_bands <- function(self, private)
+.TheiaTile_get_bands <- function(self)
 {
   # get bands list from meta data
-  bands <- lapply(private$meta.data$Product_Characteristics$Band_Group_List,
+  bands <- lapply(self$meta.data$Product_Characteristics$Band_Group_List,
                   function(x) {
                     band.list <- unlist(x$Band_List[-(length(x$Band_List))])
                     band.id   <- unname(x$.attrs)
@@ -296,7 +295,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_read <- function(self, private, bands)
+.TheiaTile_read <- function(self, bands)
 {
   # check if requested bands are available
   avail.bands <- self$bands
@@ -326,7 +325,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_extract <- function(self, private, overwrite, dest.dir)
+.TheiaTile_extract <- function(self, overwrite, dest.dir)
 {
   if (is.null(dest.dir)) {
     # create destination directory if not supllied
@@ -337,7 +336,7 @@ TheiaTile <-
   # get extracted archive name
   file.path <- extraction_wrapper(self$file.path, args = list(list = TRUE))[1]
   file.path <- gsub("(^.*/)(.*$)", "\\1", file.path)
-  file.path <- paste0(dest.dir, file.path)
+  file.path <- file.path(dest.dir, file.path)
 
   if (!(dir.exists(file.path)) | overwrite == TRUE) {
     # check if it exists

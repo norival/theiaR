@@ -14,12 +14,14 @@
 #'                             query     = NULL,
 #'                             dir.path  = NULL,
 #'                             check     = TRUE)
+#'                             quiet     = TRUE)
 #'
-#'    c$download(auth, overwrite = FALSE)
+#'    c$download(auth, overwrite = FALSE, check = TRUE, quiet = TRUE)
 #'    c$check()
 #'    c$status
 #'    c$extract(overwrite = FALSE, dest.dir = NULL)
 #'    c$read(bands)
+#'    c$as_gdalcube(out.file = "gdalcube_collection.sqlite")
 #' }
 #'
 #' @section Arguments:
@@ -28,6 +30,7 @@
 #'    \item{c:}{A \code{TheiaCollection} object}
 #'    \item{dir.path:}{The path to the directory containing zip files}
 #'    \item{check:}{Whether or not to check existing files on collection's creation}
+#'    \item{quiet:}{Control verbose output}
 #'    \item{tiles:}{A list of TheiaTile objects}
 #'    \item{cart:}{An XML cart parsed from a 'meta4' file downloaded from Theia}
 #'    website. Used only if Collection is created from a cart
@@ -39,12 +42,13 @@
 #'    Or a \code{\link{TheiaAuth}} object}
 #'    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
 #'    \item{bands:}{A character vector of bands to load from tiles}
+#'    \item{out.file:}{Filename to store gdalcubes' image collection}
 #'  }
 #'
 #' @section Details:
 #'    \code{TheiaCollection$new()} Create a new instance of the class
 #'
-#'    \code{c$download(overwrite = FALSE)} Download the tiles of the collection
+#'    \code{c$download(overwrite = FALSE, check = TRUE)} Download the tiles of the collection
 #'    and check the resulting files
 #'
 #'    \code{$ccheck()} Check the tiles of the collection
@@ -57,6 +61,10 @@
 #'    \code{c$read(bands)} Read requested bands, apply corrections on values
 #'    (as specified in Theia's product information), and return a list of
 #'    RasterStack objects (one stack per tile)
+#'
+#'    \code{c$as_gdalcube(out.file)} Create a `gdalcubes` image collection from
+#'    downloaded tiles. See \url{https://github.com/appelmar/gdalcubes_R} for
+#'    more details.
 #'
 #' @examples
 #'
@@ -114,9 +122,16 @@ TheiaCollection <-
                                        tiles      = NULL,
                                        query      = NULL,
                                        dir.path   = NULL,
-                                       check      = TRUE)
+                                       check      = TRUE,
+                                       quiet      = TRUE)
                  {
-                   .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path, check)
+                   if (quiet == TRUE) {
+                     suppressMessages({
+                       .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path, check)
+                     })
+                   } else {
+                     .TheiaCollection_initialize(self, cart.path, tiles, query, dir.path, check)
+                   }
                  },
 
                  print = function(...)
@@ -129,9 +144,9 @@ TheiaCollection <-
                    .TheiaCollection_check(self)
                  },
 
-                 download = function(auth, overwrite = FALSE)
+                 download = function(auth, overwrite = FALSE, check = TRUE, quiet = TRUE)
                  {
-                   .TheiaCollection_download(self, auth, overwrite)
+                   .TheiaCollection_download(self, auth, overwrite, check, quiet)
                  },
 
                  extract = function(overwrite = FALSE, dest.dir = NULL)
@@ -142,6 +157,11 @@ TheiaCollection <-
                  read = function(bands)
                  {
                    .TheiaCollection_read(self, private, bands)
+                 },
+                  
+                 as_gdalcube = function(out.file)
+                 {
+                   .TheiaCollection_as_gdalcube(self, private, out.file)
                  }),
 
             # active -----------------------------------------------------------
@@ -246,7 +266,7 @@ TheiaCollection <-
 }
 
 
-.TheiaCollection_download <- function(self, auth, overwrite)
+.TheiaCollection_download <- function(self, auth, overwrite, check, quiet)
 {
   if (is.character(auth)) {
     # create authentification system if not supplied
@@ -255,10 +275,10 @@ TheiaCollection <-
 
   # download needed tiles
   lapply(self$tiles,
-         function(x, auth, overwrite) {
-           x$download(auth, overwrite = overwrite)
+         function(x, auth, overwrite, check, quiet) {
+           x$download(auth, overwrite = overwrite, check = check, quiet)
          },
-         auth = auth, overwrite = overwrite)
+         auth = auth, overwrite = overwrite, check = check, quiet = quiet)
 
   return(invisible(self))
 }
@@ -302,4 +322,34 @@ TheiaCollection <-
   tiles.list <- lapply(self$tiles, function(x) x$read(bands))
 
   return(tiles.list)
+}
+
+
+.TheiaCollection_as_gdalcube <- function(self, private, out.file = "gdalcube_collection.sqlite")
+{
+  # export collection as a gdalcube image collection
+  if (!(requireNamespace("gdalcubes", quietly = TRUE))) {
+    # check if package 'gdalcubes' is installed
+    stop("Package 'gdalcubes' needed for this function. Please install it.",
+         call. = FALSE)
+  }
+
+  if (!(all(as.logical(self$status$exists)))) {
+    # check if all files are downloaded
+    stop("Some files in the collection are not downloaded. Please check `mycollection$status()`",
+         call. = FALSE)
+  }
+
+  # extract file paths to collection
+  files <- unname(sapply(self$tiles, function(x) x$file.path))
+
+  # create gdalcubes image collection
+  gdalcubes.col <-
+    gdalcubes::create_image_collection(files    = files,
+                                       format   = system.file("templates",
+                                                              "gdalcubes_theia.json",
+                                                              package = "theiaR"),
+                                       out_file = out.file)
+
+  return(gdalcubes.col)
 }

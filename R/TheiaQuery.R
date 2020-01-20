@@ -129,11 +129,15 @@ TheiaQuery <-
 
   cat("Search terms:\n")
 
+  # get maximum length of search terms to format printing
+  max.chars <- max(nchar(names(self$query))) + 1
+
+  # print search terms
   lapply(1:length(self$query),
          function(x) {
            l <- nchar(names(self$query))[[x]]
 
-           cat("   ", names(self$query)[[x]], rep(" ", 11 - l), ": ",
+           cat("   ", names(self$query)[[x]], rep(" ", max.chars - l), ": ",
                self$query[[x]], "\n",
                sep = "")
 

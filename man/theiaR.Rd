@@ -3,7 +3,6 @@
 \docType{package}
 \name{theiaR}
 \alias{theiaR}
-\alias{theiaR-package}
 \title{theiaR: search, download and manage theia data}
 \description{
 Search, manage and download data from Theia website

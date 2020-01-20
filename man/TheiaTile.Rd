@@ -12,9 +12,10 @@ Generate and manage a tile from Theia (download, check, load).
    t <- TheiaTile$new(file.path,
                       url,
                       file.hash,
-                      check = TRUE)
+                      check = TRUE,
+                      quiet = TRUE)
 
-   t$download(overwrite = FALSE)
+   t$download(overwrite = FALSE, check = TRUE, quiet = TRUE)
    t$check()
    t$extract(overwrite = FALSE, dest.dir = NULL)
    t$read(bands)
@@ -30,6 +31,7 @@ Generate and manage a tile from Theia (download, check, load).
    \item{url:}{The url to download the tile}
    \item{file.hash:}{The md5sum used to check the zip file}
    \item{check:}{Whether or not to check existing files on tile's creation}
+   \item{quiet:}{Control verbose output}
    \item{auth:}{A character string giving the file path to Theia credentials.
    Or a \code{\link{TheiaAuth}} object}
    \item{overwrite:}{Overwrite existing tiles (default to `FALSE`)}
@@ -39,11 +41,11 @@ Generate and manage a tile from Theia (download, check, load).
 
 \section{Details}{
 
-   \code{TheiaTile$new(file.path, url, file.hash)} Create a new instance of
+   \code{TheiaTile$new(file.path, url, file.hash, check)} Create a new instance of
    the class
 
-   \code{t$download(auth, overwrite = FALSE)} Download the tiles of the collection
-   and check the resulting files
+   \code{t$download(auth, overwrite = FALSE, check = TRUE)} Download the
+   tiles of the collection and check the resulting files
 
    \code{t$check()} Check the tiles of the collection
 
