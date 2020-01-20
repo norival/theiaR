@@ -260,7 +260,7 @@ TheiaTile <-
   message("Parsing meta data...")
 
   # create temporary directory
-  tmp.dir <- paste0(tempdir(), "/")
+  tmp.dir <- file.path(tempdir(), "/")
 
   # get file name to extract
   file.name <- extraction_wrapper(self$file.path, args = list(list = TRUE))
@@ -268,10 +268,10 @@ TheiaTile <-
 
   # extract and parse xml file
   extraction_wrapper(self$file.path, args = list(files = file.name, exdir = tmp.dir))
-  meta.data <- XML::xmlToList(XML::xmlParse(paste0(tmp.dir, file.name)))
+  meta.data <- XML::xmlToList(XML::xmlParse(file.path(tmp.dir, file.name)))
 
   # remove temporary file
-  unlink(paste(tmp.dir, file.name, sep = "/"))
+  unlink(file.path(tmp.dir, file.name))
 
   return(meta.data)
 }
@@ -336,7 +336,7 @@ TheiaTile <-
   # get extracted archive name
   file.path <- extraction_wrapper(self$file.path, args = list(list = TRUE))[1]
   file.path <- gsub("(^.*/)(.*$)", "\\1", file.path)
-  file.path <- paste0(dest.dir, file.path)
+  file.path <- file.path(dest.dir, file.path)
 
   if (!(dir.exists(file.path)) | overwrite == TRUE) {
     # check if it exists
