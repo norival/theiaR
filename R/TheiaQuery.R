@@ -33,7 +33,7 @@
 #'    Search criteria are given with a `list` accepting these fields:
 #'    \itemize{
 #'      \item{collection:} The collection to look for. Accepted values are:
-#'        'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'. Defaults to
+#'        'SENTINEL2', 'LANDSAT', 'SpotWorldHeritage', 'Snow'. Defaults to
 #'        'SENTINEL2'
 #'      \item{platform:} The platform to look for. Accepted values are:
 #'        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
@@ -180,14 +180,8 @@ TheiaQuery <-
   }
 
   # get fixed parts of links
-  private$server.url <-
-    ifelse(self$query$collection %in% c("Landsat", "SpotWorldHeritage"),
-           "https://theia-landsat.cnes.fr/",
-           "https://theia.cnes.fr/atdistrib/")
-  private$resto <-
-    ifelse(self$query$collection %in% c("Landsat", "SpotWorldHeritage"),
-           "resto/",
-           "resto2/")
+  private$server.url <- "https://theia.cnes.fr/atdistrib/"
+  private$resto      <- "resto2/"
 
   # fill query fields
   # build query links
@@ -195,7 +189,7 @@ TheiaQuery <-
   private$url <- paste0(private$server.url,
                         private$resto,
                         "api/collections/",
-                        query$collection,
+                        self$query$collection,
                         "/search.json?",
                         query.link)
 
@@ -234,8 +228,13 @@ TheiaQuery <-
 
 .TheiaQuery_check <- function(self, private)
 {
+  # TODO: update response parsing to fit with old muscate format if collection == 'Landsat'
+  if (self$query$collection == 'Landsat') {
+    self$query$collection <- 'LANDSAT'
+  }
+
   # available choices
-  collection.choices <- c('Landsat', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
+  collection.choices <- c('LANDSAT', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
   platform.choices   <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
                           'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
                           'VENUS')
