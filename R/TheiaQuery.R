@@ -44,7 +44,7 @@
 #'      \item{tile:} The tile identifier to retrieve.
 #'      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
 #'      \item{end.date:} The last date to look for (format: YYYY-MM-DD). Must be
-#'        after start.date.
+#'        after start.date. Defaults to today's date.
 #'      \item{latitude:} The x coordinate of a point
 #'      \item{longitude:} The y coordinate of a point
 #'      \item{latmin:} The minimum latitude to search
@@ -248,7 +248,9 @@ TheiaQuery <-
                                        choices = level.choices,
                                        default = "LEVEL2A")
   self$query$start.date <- parse_query(self$query$start.date, "date", "character")
-  self$query$end.date   <- parse_query(self$query$end.date, "date", "character")
+  self$query$end.date   <- parse_query(self$query$end.date, "date", "character",
+                                       default = format(Sys.time(), "%Y-%m-%d")
+                                      )
   self$query$max.clouds <- parse_query(self$query$max.clouds, "max.clouds", "numeric",
                                        choices = 0:100)
   self$query$latitude   <- parse_query(self$query$latitude, "latitude", "numeric")
