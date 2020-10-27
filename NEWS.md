@@ -1,3 +1,6 @@
+- Adds error when end.date is lower or equal to start.date
+- Fix error for nmew landsat metadata format
+
 # theiaR 0.3.0
 
 ## New features
