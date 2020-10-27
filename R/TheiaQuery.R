@@ -43,7 +43,8 @@
 #'      \item{town:} The location to look for. Give a common town name.
 #'      \item{tile:} The tile identifier to retrieve.
 #'      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
-#'      \item{end.date:} The last date to look for (format: YYYY-MM-DD).
+#'      \item{end.date:} The last date to look for (format: YYYY-MM-DD). Must be
+#'        after start.date.
 #'      \item{latitude:} The x coordinate of a point
 #'      \item{longitude:} The y coordinate of a point
 #'      \item{latmin:} The minimum latitude to search
@@ -271,6 +272,11 @@ TheiaQuery <-
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
     stop("'Tile' is only available for SENTINEL2 collection",
          call. = FALSE)
+  }
+
+  # check that start date is lower than end date
+  if (as.Date(self$query$end.date) - as.Date(self$query$start.date) <= 0) {
+    stop("Invalid query: date. Start date must be lower than end date")
   }
 
   # check if user has not specified both a point and a rectangle
