@@ -228,11 +228,6 @@ TheiaQuery <-
 
 .TheiaQuery_check <- function(self, private)
 {
-  # TODO: update response parsing to fit with old muscate format if collection == 'Landsat'
-  if (self$query$collection == 'Landsat') {
-    self$query$collection <- 'LANDSAT'
-  }
-
   # available choices
   collection.choices <- c('LANDSAT', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
   platform.choices   <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
@@ -266,6 +261,11 @@ TheiaQuery <-
   self$query$rel.orbit.number <- parse_query(self$query$rel.orbit.number, "rel.orbit.number", "numeric")
   self$query$max.records      <- parse_query(self$query$max.records, "max.records", "numeric",
                                              default = 500)
+
+  # TODO: update response parsing to fit with old muscate format if collection == 'Landsat'
+  if (self$query$collection == 'Landsat') {
+    self$query$collection <- 'LANDSAT'
+  }
 
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
