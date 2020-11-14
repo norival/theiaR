@@ -287,6 +287,16 @@ TheiaTile <-
 .TheiaTile_get_bands <- function(self)
 {
   # get bands list from meta data
+  if (self$collection == 'Landsat57') {
+    # Read the bands from the old format
+    bands = data.frame(
+      band       = unlist(strsplit(self$meta.data$RADIOMETRY$BANDS, ';')),
+      resolution = 'R1'
+    )
+
+    return(bands)
+  }
+
   bands <- lapply(self$meta.data$Product_Characteristics$Band_Group_List,
                   function(x) {
                     band.list <- unlist(x$Band_List[-(length(x$Band_List))])
