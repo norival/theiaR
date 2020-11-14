@@ -1,6 +1,5 @@
 [![Travis-CI Build Status](https://travis-ci.org/norival/theiaR.svg?branch=master)](https://travis-ci.org/norival/theiaR)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/norival/theiaR?branch=master&svg=true)](https://ci.appveyor.com/project/norival/theiaR)
-[![Coverage status](https://codecov.io/gh/norival/theiaR/branch/master/graph/badge.svg)](https://codecov.io/github/norival/theiaR?branch=master)
 [![CRAN status](https://www.r-pkg.org/badges/version/theiaR)](https://cran.r-project.org/package=theiaR)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
@@ -18,124 +17,92 @@ The basic functionalities are (for now):
 - Download tiles resulting from a search
 - Download tiles contained in a cart (`.meta4` file) obtained from Theia
   website.
-- Extract archives
+- Read band into `RasterStack` objects (with the `raster` library)
+- Read band into `gdalcubes` objects (with the `gdalcubes` library)
+- Extract archives (not recommended)
 
-
-_NOTE: ongoing development, more functionalities shall be added in the future_
-
-
-## Installation
-
-You can install the latest development version by using:
-
-```
-devtools::install_github('norival/theiaR')
-```
-
-
-## Step-by-step guide
-
-First, load the package.
-
-```
-library(theiaR)
-```
-
-To search and download data from Theia, you will need to [register to their
-website](https://sso.theia-land.fr/theia/register/register.xhtml).
+__NOTE:__ To search and download data from Theia, you will need to [register to
+their website](https://sso.theia-land.fr/theia/register/register.xhtml).
 
 __NOTE:__ In order to use _Landsat_ or _SpotWorldHeritage_ products, you'll need
 to make a first manual download to agree to the license and validate your
 account.
 
 
+## Installation
+
+You can install the latest development version by using:
+
+``` r
+devtools::install_github('norival/theiaR')
+```
+
+Or, you can install it from CRAN:
+
+``` r
+isntall.packages('theiaR')
+```
+
+
+## Complete example
+
+A workflow to search and download tiles would be something like:
+
+``` r
+library(theiaR)
+
+# create a list containing the query
+myquery <- list(collection = "SENTINEL2",
+                town       = "Grenoble",
+                start.date = "2018-07-01",
+                end.date   = "2018-07-06")
+
+# create a collection from the query
+mycollection <- TheiaCollection$new(query = myquery, dir.path = ".", check = TRUE)
+
+# check available tiles fro the query
+mycollection$status
+
+# download the tiles into 'dir.path'
+mycollection$download(auth = "path/to/auth/file.txt")
+
+
+```
+
+
+## Step-by-step guide
+
+
 ### Create a collection of tiles
 
 The first step is to create a collection of tile(s). This can be done either
-from a query or from a cart file.
+from a query or from a cart file (downloaded from Theia's website).
 
 
 #### Create a collection from a query
 
 A query is simply a named `list` of search terms. For example:
 
-```
-myquery <- list(collection  = "SENTINEL2",
-                town        = "Grenoble",
-                start.date  = "2018-07-01",
-                end.date    = "2018-07-06")
+``` r
+myquery <- list(collection = "SENTINEL2",
+                town       = "Grenoble",
+                start.date = "2018-07-01",
+                end.date   = "2018-07-06")
 ```
 
 will create a query to Theia database, looking for tiles from Sentinel2
 satellite around Grenoble, between 2018-07-01 and 2018-07-31.
 
-It accepts the following terms.
-
-* __collection__: The collection to look for. Accepted values are: `SENTINEL2`,
-  `Landsat`, `SpotWorldHeritage`, `Snow`. Defaults to `SENTINEL2`.
-
-* __platform__: The platform to look for. Accepted values are: `LANDSAT5`,
-  `LANDSAT7`, `LANDSAT8`, `SPOT1`, `SPOT2`, `SPOT3`, `SPOT4`, `SPOT5`,
-  `SENTINEL2A`, `SENTINEL2B`.
-
-* __level__: Processing level of products. Accepted values are: `LEVEL1C`,
-  `LEVEL2A` and `LEVEL3A`. Defaults to `'LEVEL2A`.
-
-
-To specify the location of the tiles, several alternatives are available.
-You can specify the town around which you want your data with:
-
-* __town__: The location to look for. Give a not too frequent town name.
-
-
-You can specify directly the tile ID if you know it:
-
-* __tile__: The tile identifier to retrieve (_e.g._ T31TGK)
-
-You can specify a point by giving its x/y coordinates:
-
-* __latitude__: The x coordinate of a point.
-
-* __longitude__: The y coordinate of a point.
-
-
-Or you can specify a rectangle by giving its min/max coordinates:
-
-* __latmin__: The minimum latitude to search.
-
-* __latmax__: The maximum latitude to search.
-
-* __lonmin__: The minimum longitude to search.
-
-* __lonmax__: The maximum longitude to search.
-
-
-You can also look for a specific orbit number or relative orbit number:
-
-* __orbit.number__: The orbit number
-
-* __rel.orbit.number__: The relative orbit number
-
-
-Finally, you can filter results by giving the date range, the maximum cloud
-cover and the maximum of records:
-
-* __max.clouds__: The maximum of cloud cover wanted (0-100).
-
-* __start.date__: The first date to look for (format: `YYYY-MM-DD`).
-
-* __end.date__: The last date to look for (format: `YYYY-MM-DD`).
-
-* __max.records__: The maximum of tiles to search
-
+See the [vignette](https://norival.dev/) for all the available options.
 
 You can then create your collection with:
 
-```
+``` r
 mycollection <- TheiaCollection$new(query = myquery, dir.path = ".", check = TRUE)
 ```
 
-where `dir.path` is the path you want your tiles to be further downloaded. If
+where `dir.path` is the path you want your tiles to be further downloaded (This
+only queries Theia's catalog for available tiles, nothing is downloaded). If
 tiles are already present in `dir.path`, they will be checked by computing a
 checksum and comparing it to the hash provided by Theia (only available for
 Sentinel2 data, no hash is provided for other collections, and files are then
@@ -152,10 +119,8 @@ the resulting `.meta4` file to your disk.
 
 You can then create your collection using this file:
 
-```
-cart.path <- system.file("extdata", "cart.meta4", package = "theiaR")
-
-mycollection <- TheiaCollection$new(cart.path = cart.path,
+``` r
+mycollection <- TheiaCollection$new(cart.path = "path/to/cart/file.meta4",
                                     dir.path  = ".",
                                     check     = TRUE)
 ```
@@ -164,7 +129,7 @@ As above, it will check the hash of files if they are already present in
 `dir.path`.
 
 
-#### Getting information on your collection
+### Getting information on your collection
 
 You can access the tiles from your collection using:
 
@@ -175,7 +140,7 @@ mycollection$tiles
 which returns a `list` of tiles. You can also see the status of your collection
 with:
 
-```
+``` r
 mycollection$status
 ```
 
@@ -185,48 +150,43 @@ mycollection$status
 The next step is to download your collection. To download all tiles in a
 collection, simply run:
 
-```
-myauth <- "path/to/auth/file.txt"
-
-mycollection$download(auth = myauth)
+``` r
+mycollection$download(auth = "path/to/auth/file.txt")
 ```
 
-where myauth is the path to file storing your Theia credentials. If it does not
-exist yet, you will be securely prompted for your login and password, and the
-file will be created.
+where `path/to/auth/file.txt` is the path to a file storing your Theia
+credentials. It is a simple text file with the Theia's account email on the
+first line and the account's password on the second line:
 
-This will check if files are present, check their hashes, and download them if
-needed (if files do not exist or checksums are wrong). To overwrite existing
-files, run:
-
-```
-mycollection$download(auth = myauth, overwrite = TRUE)
+``` txt
+user@example.com
+MyTheiaPassword
 ```
 
+If it does not exist yet, you will be securely prompted for your login and
+password, and the file will be created.
 
-### Extract tiles
+The `download()` memthod will check if files are present, check their hashes,
+and download them if needed (if files do not exist or checksums are wrong). To
+overwrite existing files, run:
 
-If you want to extract full archives, you can run:
-
+``` r
+mycollection$download(auth = "path/to/auth/file.txt", overwrite = TRUE)
 ```
-file.path <- mycollection$extract()
-```
-
-which will extract tiles into the same directory as the archives.
 
 
 ### Read bands from zip files
 
-Alternatively, you can read bands directly from the zip archives (by using the
-`vsizip` interface provided by GDAL). Use:
+You can then read bands directly from the zip archives (by using the `vsizip`
+interface provided by GDAL). Use:
 
-```
+``` r
 mytile$bands
 ```
 
 to get a list of available bands. Then:
 
-```
+``` r
 mybands <- mytile$read(bands = c("B5", "B6"))
 ```
 
@@ -235,16 +195,43 @@ necessary corrections on the values.
 
 You can also read bands from a collection by running:
 
-```
+``` r
 mybands <- mycollection$read(bands = c("B5", "B6"))
 ```
 
 which returns a `list` of `RasterStack` objects.
 
-_NOTE: loading several tiles needs a lot of memory (~900MB/tile)_
+_NOTE: Be careful when loading several tiles as it needs a lot of memory (~900MB/tile)_
 
 
-## Acknowledgment
+### Create a `gdalcubes` collection
+
+Alternatively, you can use the great [gdalcubes](https://github.com/appelmar/gdalcubes_R)
+package to create a three dimensional representation of the tiles. Simply run:
+
+``` r
+library(gdalcubes)
+
+gdalcubes <- mycollection$as_gdalcube("path/to/gdalcubes.sqlite")
+```
+
+where `path/to/gdalcubes.sqlite` is the path to store the gdalcubes object data.
+
+
+### Extract tiles
+
+If you want to extract full archives, you can run:
+
+``` r
+file.path <- mycollection$extract()
+```
+
+which will extract tiles into the same directory as the archives.
+
+**This is not recommended, as this will take a large amount of disk space**
+
+
+## Acknowledgments
 
 Thanks to Olivier Hagolle for his work on `theia_download.py`
 ([github](https://github.com/olivierhagolle/theia_download)), which has inspired
