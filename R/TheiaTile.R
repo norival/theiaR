@@ -71,14 +71,14 @@ TheiaTile <-
                                        correct   = FALSE,
                                        extracted = FALSE),
 
-                 initialize = function(file.path, url, tile.name, file.hash, check = TRUE, quiet = TRUE)
+                 initialize = function(file.path, url, tile.name, file.hash, collection = NULL, check = TRUE, quiet = TRUE)
                  {
                    if (quiet == TRUE) {
                      suppressMessages({
-                       .TheiaTile_initialize(self, file.path, url, tile.name, file.hash, check)
+                       .TheiaTile_initialize(self, file.path, url, tile.name, file.hash, collection, check)
                      })
                    } else {
-                     .TheiaTile_initialize(self, file.path, url, tile.name, file.hash, check)
+                     .TheiaTile_initialize(self, file.path, url, tile.name, file.hash, collection, check)
                    }
                  },
 
@@ -144,16 +144,23 @@ TheiaTile <-
 }
 
 
-.TheiaTile_initialize <- function(self, file.path, url, tile.name, file.hash, check)
+.TheiaTile_initialize <- function(self, file.path, url, tile.name, file.hash, collection = NULL, check)
 {
   # Fill fields of the object
   self$file.path  <- file.path
   self$url        <- url
   self$tile.name  <- gsub("\\.tar\\.gz$|\\.zip$", "", tile.name)
   self$file.hash  <- file.hash
-  self$collection <- gsub("(.*)(/[^/]*$)", "\\2", self$file.path)
-  self$collection <- gsub("(^/)([[:alnum:]]*)(_.*$)", "\\2", self$collection)
-  self$collection <- gsub("([[:alnum:]]*)([[:alnum:]]{1}$)", "\\1", self$collection)
+
+  if (is.null(collection)) {
+    # try to guess the collection based on the file name (should be used only if
+    # the collection has been created from a cart file)
+    self$collection <- gsub("(.*)(/[^/]*$)", "\\2", self$file.path)
+    self$collection <- gsub("(^/)([[:alnum:]]*)(_.*$)", "\\2", self$collection)
+    self$collection <- gsub("([[:alnum:]]*)([[:alnum:]]{1}$)", "\\1", self$collection)
+  } else {
+    self$collection <- collection
+  }
 
   # check the tile
   self$check(check)
@@ -264,7 +271,7 @@ TheiaTile <-
 
   # get file name to extract
   file.name <- extraction_wrapper(self$file.path, args = list(list = TRUE))
-  file.name <- file.name[grepl("MTD_ALL\\.xml$", file.name)]
+  file.name <- file.name[grepl("\\.xml$", file.name)]
 
   # extract and parse xml file
   extraction_wrapper(self$file.path, args = list(files = file.name, exdir = tmp.dir))

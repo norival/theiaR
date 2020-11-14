@@ -320,6 +320,7 @@ TheiaQuery <-
 
     return(invisible(self))
   }
+  # print(private$catalog$features[[1]]$properties)
 
   # extract tiles
   cart <-
@@ -332,12 +333,23 @@ TheiaQuery <-
 
              # return important information
              data.frame(file.name   = paste0(x$properties$productIdentifier, file.ext),
-                        tile.id     = x$id,
-                        file.hash   = ifelse(is.null(x$properties$services$download$checksum),
-                                             NA,
-                                             x$properties$services$download$checksum),
-                        cloud.cover = as.numeric(as.character(x$properties$cloudCover)),
-                        snow.cover  = as.numeric(as.character(x$properties$snowCover)))
+                        tile.id     = ifelse(is.null(x$id), NA, x$id),
+                        file.hash   = ifelse(
+                          is.null(x$properties$services$download$checksum),
+                          NA,
+                          x$properties$services$download$checksum
+                        ),
+                        cloud.cover =
+                        ifelse(
+                          is.null(x$properties$cloudCover),
+                          NA,
+                          as.numeric(as.character(x$properties$cloudCover))
+                          ),
+                        snow.cover  = ifelse(
+                          is.null(x$properties$snowCover),
+                          NA,
+                          as.numeric(as.character(x$properties$snowCover))
+                        ))
            })
   self$tiles <- do.call(rbind, cart)
 

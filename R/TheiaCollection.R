@@ -220,6 +220,8 @@ TheiaCollection <-
                              check)
              })
 
+    # get the collection from the tiles
+    self$collection <- self$tiles[[1]]$collection
   } else if (!(is.null(tiles))) {
     # TODO: Implement building from a list of tiles
     # build from list of tiles
@@ -234,24 +236,24 @@ TheiaCollection <-
       self$query <- query$clone()
     }
 
+    # fill collection field
+    self$collection <- self$query$query$collection
+
     # create needed TheiaTile objects
     self$tiles <-
       apply(self$query$tiles, 1,
             function(x) {
-              TheiaTile$new(file.path = paste0(self$dir.path, x[1]),
-                            file.hash = as.character(x[3]),
-                            url       = as.character(x[6]),
-                            tile.name = as.character(x[1]),
+              TheiaTile$new(file.path  = paste0(self$dir.path, x[1]),
+                            file.hash  = as.character(x[3]),
+                            url        = as.character(x[6]),
+                            tile.name  = as.character(x[1]),
+                            collection = self$collection,
                             check)
             })
-
   }
 
   # give names to the tiles
   names(self$tiles) <- lapply(self$tiles, function(x) x$tile.name)
-
-  # fill collection field
-  self$collection <- self$tiles[[1]]$collection
 
   return(invisible(self))
 }
