@@ -4,10 +4,11 @@ language: R
 sudo: false
 cache: packages
 
+addons:
+  apt:
+    - r-cran-ncdf4
+
 branches:
   only:
     - devel
     - master
-
-after_success:
-  - Rscript -e 'covr::codecov()'
