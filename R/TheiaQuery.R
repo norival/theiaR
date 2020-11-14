@@ -33,7 +33,7 @@
 #'    Search criteria are given with a `list` accepting these fields:
 #'    \itemize{
 #'      \item{collection:} The collection to look for. Accepted values are:
-#'        'SENTINEL2', 'Landsat', 'SpotWorldHeritage', 'Snow'. Defaults to
+#'        'SENTINEL2', 'LANDSAT', 'SpotWorldHeritage', 'Snow'. Defaults to
 #'        'SENTINEL2'
 #'      \item{platform:} The platform to look for. Accepted values are:
 #'        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
@@ -43,7 +43,8 @@
 #'      \item{town:} The location to look for. Give a common town name.
 #'      \item{tile:} The tile identifier to retrieve.
 #'      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
-#'      \item{end.date:} The last date to look for (format: YYYY-MM-DD).
+#'      \item{end.date:} The last date to look for (format: YYYY-MM-DD). Must be
+#'        after start.date. Defaults to today's date.
 #'      \item{latitude:} The x coordinate of a point
 #'      \item{longitude:} The y coordinate of a point
 #'      \item{latmin:} The minimum latitude to search
@@ -180,14 +181,8 @@ TheiaQuery <-
   }
 
   # get fixed parts of links
-  private$server.url <-
-    ifelse(self$query$collection %in% c("Landsat", "SpotWorldHeritage"),
-           "https://theia-landsat.cnes.fr/",
-           "https://theia.cnes.fr/atdistrib/")
-  private$resto <-
-    ifelse(self$query$collection %in% c("Landsat", "SpotWorldHeritage"),
-           "resto/",
-           "resto2/")
+  private$server.url <- "https://theia.cnes.fr/atdistrib/"
+  private$resto      <- "resto2/"
 
   # fill query fields
   # build query links
@@ -195,7 +190,7 @@ TheiaQuery <-
   private$url <- paste0(private$server.url,
                         private$resto,
                         "api/collections/",
-                        query$collection,
+                        self$query$collection,
                         "/search.json?",
                         query.link)
 
@@ -235,7 +230,7 @@ TheiaQuery <-
 .TheiaQuery_check <- function(self, private)
 {
   # available choices
-  collection.choices <- c('Landsat', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
+  collection.choices <- c('LANDSAT', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
   platform.choices   <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
                           'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
                           'VENUS')
@@ -253,7 +248,9 @@ TheiaQuery <-
                                        choices = level.choices,
                                        default = "LEVEL2A")
   self$query$start.date <- parse_query(self$query$start.date, "date", "character")
-  self$query$end.date   <- parse_query(self$query$end.date, "date", "character")
+  self$query$end.date   <- parse_query(self$query$end.date, "date", "character",
+                                       default = format(Sys.time(), "%Y-%m-%d")
+                                      )
   self$query$max.clouds <- parse_query(self$query$max.clouds, "max.clouds", "numeric",
                                        choices = 0:100)
   self$query$latitude   <- parse_query(self$query$latitude, "latitude", "numeric")
@@ -268,10 +265,20 @@ TheiaQuery <-
   self$query$max.records      <- parse_query(self$query$max.records, "max.records", "numeric",
                                              default = 500)
 
+  # TODO: update response parsing to fit with old muscate format if collection == 'Landsat'
+  if (self$query$collection == 'Landsat') {
+    self$query$collection <- 'LANDSAT'
+  }
+
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
     stop("'Tile' is only available for SENTINEL2 collection",
          call. = FALSE)
+  }
+
+  # check that start date is lower than end date
+  if (as.Date(self$query$end.date) - as.Date(self$query$start.date) <= 0) {
+    stop("Invalid query: date. Start date must be lower than end date")
   }
 
   # check if user has not specified both a point and a rectangle
