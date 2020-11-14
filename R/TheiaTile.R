@@ -322,6 +322,19 @@ TheiaTile <-
 
 .TheiaTile_read <- function(self, bands)
 {
+  if (self$collection == 'Landsat57') {
+    stop(
+      'This feature is not available for Landsat57 collection. You can read the bands manually with the `raster` library.',
+      call. = FALSE
+    )
+    # file.name <- paste0('/vsitar/', self$file.path, '/', self$meta.data$FILES$ORTHO_SURF_CORR_PENTE)
+    # tiles.stack <- raster::stack(file.name)
+    # names(tiles.stack) <- avail.bands
+    # tiles.stack = tiles.stack[[bands]]
+
+    # return(tiles.stack)
+  }
+
   # check if requested bands are available
   avail.bands <- self$bands
 
