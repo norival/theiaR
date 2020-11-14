@@ -1,7 +1,16 @@
+# theiaR 0.4.0
+
+## Minor changes
+
+- Adds error when end.date is lower or equal to start.date
+
+## Bug fixes
+
+- Fix query metadata reading for Landsat57 format
 - Fix query URL and level compatibility for Landsat57 collection
 - Update README, vignette and documentation
-- Adds error when end.date is lower or equal to start.date
-- Fix error for nmew landsat metadata format
+- Fix error for new landsat metadata format
+
 
 # theiaR 0.3.0
 

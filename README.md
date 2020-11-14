@@ -167,7 +167,7 @@ MyTheiaPassword
 If it does not exist yet, you will be securely prompted for your login and
 password, and the file will be created.
 
-The `download()` memthod will check if files are present, check their hashes,
+The `download()` method will check if files are present, check their hashes,
 and download them if needed (if files do not exist or checksums are wrong). To
 overwrite existing files, run:
 

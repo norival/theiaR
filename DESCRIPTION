@@ -7,6 +7,7 @@ Authors@R: person("Xavier", "Laviron", email = "xavier@norival.dev",
 Description: Provides a simple interface to search available data provided by
     Theia (<https://theia.cnes.fr>), download it, and manage it. Data can be downloaded
     based on a search result or from a cart file downloaded from Theia website.
+Language: en-US
 Depends:
     R (>= 3.5)
 Imports:
