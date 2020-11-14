@@ -1,6 +1,6 @@
 Package: theiaR
 Title: Download and Manage Data from Theia
-Version: 0.4.0-1000
+Version: 0.4.0
 Authors@R: person("Xavier", "Laviron", email = "xavier@norival.dev",
     role = c("aut", "cre"),
     comment = c(ORCID = "0000-0002-9882-3253"))
