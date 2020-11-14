@@ -27,13 +27,8 @@ check_dir <- function(dir.name)
 
 read_tiff_from_zip <- function(file.name, zip.file)
 {
-  # generate filename uzing vsizip interface provided by GDAL
-  file.name <- paste0("/vsizip/", zip.file, "/", file.name)
-
-  # load the raster
-  ras <- raster::raster(file.name)
-
-  return(ras)
+  # load the raster using the vsizip interface from GDAL
+  return(raster::raster(paste0("/vsizip/", zip.file, "/", file.name)))
 }
 
 
