@@ -53,7 +53,7 @@ input given by the user.
      \item{tile:} The tile identifier to retrieve.
      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
      \item{end.date:} The last date to look for (format: YYYY-MM-DD). Must be
-       after start.date.
+       after start.date. Defaults to today's date.
      \item{latitude:} The x coordinate of a point
      \item{longitude:} The y coordinate of a point
      \item{latmin:} The minimum latitude to search
