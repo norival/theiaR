@@ -31,10 +31,13 @@ account.
 
 ## Installation
 
-You can install the latest development version by using:
+You can install the latest stable version from Github with:
 
 ``` r
 devtools::install_github('norival/theiaR')
+
+# or, to install the development version
+devtools::install_github('norival/theiaR', 'devel')
 ```
 
 Or, you can install it from CRAN:
@@ -65,8 +68,6 @@ mycollection$status
 
 # download the tiles into 'dir.path'
 mycollection$download(auth = "path/to/auth/file.txt")
-
-
 ```
 
 
