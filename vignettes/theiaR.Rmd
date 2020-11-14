@@ -47,7 +47,7 @@ account.
 
 You can install the latest stable version from Github with:
 
-``` r
+```{r , eval=FALSE}
 devtools::install_github('norival/theiaR')
 
 # or, to install the development version
@@ -56,7 +56,7 @@ devtools::install_github('norival/theiaR', 'devel')
 
 Or, you can install it from CRAN:
 
-``` r
+```{r , eval=FALSE}
 isntall.packages('theiaR')
 ```
 
@@ -65,7 +65,7 @@ isntall.packages('theiaR')
 
 A workflow to search and download tiles would be something like:
 
-``` r
+```{r , eval=FALSE}
 library(theiaR)
 
 # create a list containing the query
@@ -89,7 +89,7 @@ mycollection$download(auth = "path/to/auth/file.txt")
 
 First, load the package.
 
-```{r}
+```{r , eval=TRUE}
 library(theiaR)
 ```
 
@@ -182,7 +182,7 @@ cover:
 
 You can then create your collection with:
 
-```{r}
+```{r , eval=FALSE}
 mycollection <- TheiaCollection$new(query = myquery, dir.path = ".", check = TRUE)
 ```
 
@@ -194,7 +194,7 @@ Sentinel2 data, no hash is provided for other collections, and files are then
 assumed to be correct). This ensures that the files have been correctly
 downloaded. Set `check = FALSE` to skip file's check.
 
-```{r}
+```{r , eval=FALSE}
 print(mycollection)
 ```
 
@@ -283,7 +283,7 @@ _NOTE: loading several tiles needs a lot of memory (~900MB/tile)_
 Alternatively, you can use the great [gdalcubes](https://github.com/appelmar/gdalcubes_R)
 package to create a three dimensional representation of the tiles. Simply run:
 
-``` r
+```{r , eval=FALSE}
 library(gdalcubes)
 
 gdalcubes <- mycollection$as_gdalcube("path/to/gdalcubes.sqlite")
