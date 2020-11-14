@@ -33,13 +33,15 @@
 #'    Search criteria are given with a `list` accepting these fields:
 #'    \itemize{
 #'      \item{collection:} The collection to look for. Accepted values are:
-#'        'SENTINEL2', 'LANDSAT', 'SpotWorldHeritage', 'Snow'. Defaults to
-#'        'SENTINEL2'
+#'        'SENTINEL2', 'LANDSAT', 'Landsat57', 'SpotWorldHeritage', 'Snow'.
+#'        Defaults to 'SENTINEL2'
 #'      \item{platform:} The platform to look for. Accepted values are:
 #'        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
 #'        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B'
 #'      \item{level:} Processing level. Accepted values are: 'LEVEL1C',
-#'        'LEVEL2A', LEVEL3A'. Defaults to 'LEVEL2A'
+#'        'LEVEL2A', LEVEL3A', 'N2A'. For Landsat57 collection, only 'N2A' level
+#'        is available. Defaults to 'LEVEL2A' (or 'N2A' if querying Landsat57
+#'        collection).
 #'      \item{town:} The location to look for. Give a common town name.
 #'      \item{tile:} The tile identifier to retrieve.
 #'      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
@@ -230,11 +232,11 @@ TheiaQuery <-
 .TheiaQuery_check <- function(self, private)
 {
   # available choices
-  collection.choices <- c('LANDSAT', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
+  collection.choices <- c('LANDSAT', 'Landsat57', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
   platform.choices   <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
                           'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
                           'VENUS')
-  level.choices      <- c('LEVEL1C', 'LEVEL2A', 'LEVEL3A')
+  level.choices      <- c('LEVEL1C', 'LEVEL2A', 'LEVEL3A', 'N2A')
 
   # check queries
   self$query$tile       <- parse_query(self$query$tile, "tile", "character")
@@ -246,7 +248,7 @@ TheiaQuery <-
                                        choices = platform.choices)
   self$query$level      <- parse_query(self$query$level, "level", "character",
                                        choices = level.choices,
-                                       default = "LEVEL2A")
+                                       default = ifelse(self$query$collection == 'Landsat57', 'N2A', "LEVEL2A"))
   self$query$start.date <- parse_query(self$query$start.date, "date", "character")
   self$query$end.date   <- parse_query(self$query$end.date, "date", "character",
                                        default = format(Sys.time(), "%Y-%m-%d")
@@ -265,9 +267,12 @@ TheiaQuery <-
   self$query$max.records      <- parse_query(self$query$max.records, "max.records", "numeric",
                                              default = 500)
 
-  # TODO: update response parsing to fit with old muscate format if collection == 'Landsat'
-  if (self$query$collection == 'Landsat') {
-    self$query$collection <- 'LANDSAT'
+  # check level compatibility with Landsat57 collection
+  if (self$query$collection == 'Landsat57' && self$query$level != 'N2A') {
+    stop(
+      paste0("'", self$query$level, "' is not available for Landsat57 collection. Please use 'N2A'."),
+      call. = FALSE
+    )
   }
 
   # check for incompatible queries

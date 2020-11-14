@@ -1,3 +1,5 @@
+- Fix query URL and level compatibility for Landsat57 collection
+- Update README, vignette and documentation
 - Adds error when end.date is lower or equal to start.date
 - Fix error for nmew landsat metadata format
 

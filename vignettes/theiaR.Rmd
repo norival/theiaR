@@ -124,14 +124,15 @@ satellite around Grenoble, between 2018-07-01 and 2018-07-06.
 It accepts the following terms.
 
 * __collection__: The collection to look for. Accepted values are: `SENTINEL2`,
-  `LANDSAT`, `SpotWorldHeritage`, `Snow`. Defaults to `SENTINEL2`.
+  `LANDSAT`, `Landsat57`, `SpotWorldHeritage`, `Snow`. Defaults to `SENTINEL2`.
 
 * __platform__: The platform to look for. Accepted values are: `LANDSAT5`,
   `LANDSAT7`, `LANDSAT8`, `SPOT1`, `SPOT2`, `SPOT3`, `SPOT4`, `SPOT5`,
   `SENTINEL2A`, `SENTINEL2B`.
 
 * __level__: Processing level of products. Accepted values are: `LEVEL1C`,
-  `LEVEL2A` and `LEVEL3A`. Defaults to `'LEVEL2A`.
+  `LEVEL2A` and `LEVEL3A`, `N2A`. For Landsat57 collection, only `N2A` level is
+  available. Defaults to `LEVEL2A` (or `N2A` if querying Landsat57 collection).
 
 
 To specify the location of the tiles, several alternatives are available.
