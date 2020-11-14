@@ -7,6 +7,12 @@ cache: packages
 addons:
   apt:
     - r-cran-ncdf4
+    - libgdal1-dev
+    - gdal-bin
+    - libproj-dev
+    - proj-data
+    - proj-bin
+    - libgeos-dev
 
 branches:
   only:
