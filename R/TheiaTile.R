@@ -65,6 +65,7 @@ TheiaTile <-
                  url            = NA,
                  tile.name      = NA,
                  path.extracted = NA,
+                 md             = NULL,
                  collection     = NA,
                  status         = list(exists    = FALSE,
                                        checked   = FALSE,
@@ -116,7 +117,11 @@ TheiaTile <-
           active =
             list(meta.data = function()
                  {
-                   .TheiaTile_read_md(self)
+                   if (is.null(self$md)) {
+                     return(.TheiaTile_read_md(self))
+                   }
+
+                   return(self$md)
                  },
 
                  bands = function()
@@ -279,6 +284,9 @@ TheiaTile <-
 
   # remove temporary file
   unlink(file.path(tmp.dir, file.name))
+
+  # store it in object so it we don't have to read again if we need it
+  self$md = meta.data
 
   return(meta.data)
 }
