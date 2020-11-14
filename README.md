@@ -11,7 +11,7 @@ and manage products from [Theia website](https://theia.cnes.fr/atdistrib/rocket/
 
 ## Overview
 
-The basic functionalities are (for now):
+The basic functionalities are:
 
 - Search available tiles through Theia API
 - Download tiles resulting from a search
@@ -94,7 +94,7 @@ myquery <- list(collection = "SENTINEL2",
 will create a query to Theia database, looking for tiles from Sentinel2
 satellite around Grenoble, between 2018-07-01 and 2018-07-31.
 
-See the [vignette](https://norival.dev/) for all the available options.
+See the [vignette](https://theiar.norival.dev) for all the available options.
 
 You can then create your collection with:
 
