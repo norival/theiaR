@@ -39,9 +39,8 @@
 #'        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
 #'        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B'
 #'      \item{level:} Processing level. Accepted values are: 'LEVEL1C',
-#'        'LEVEL2A', LEVEL3A', 'N2A'. For Landsat57 collection, only 'N2A' level
-#'        is available. Defaults to 'LEVEL2A' (or 'N2A' if querying Landsat57
-#'        collection).
+#'        'LEVEL2A', LEVEL3A', 'N2A'. Defaults to 'LEVEL2A' (or 'N2A' if
+#'        querying Landsat57 collection).
 #'      \item{town:} The location to look for. Give a common town name.
 #'      \item{tile:} The tile identifier to retrieve.
 #'      \item{start.date:} The first date to look for (format: YYYY-MM-DD).
@@ -268,12 +267,12 @@ TheiaQuery <-
                                              default = 500)
 
   # check level compatibility with Landsat57 collection
-  if (self$query$collection == 'Landsat57' && self$query$level != 'N2A') {
-    stop(
-      paste0("'", self$query$level, "' is not available for Landsat57 collection. Please use 'N2A'."),
-      call. = FALSE
-    )
-  }
+  # if (self$query$collection == 'Landsat57' && self$query$level != 'N2A') {
+  #   stop(
+  #     paste0("'", self$query$level, "' is not available for Landsat57 collection. Please use 'N2A'."),
+  #     call. = FALSE
+  #   )
+  # }
 
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {

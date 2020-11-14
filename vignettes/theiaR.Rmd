@@ -131,8 +131,8 @@ It accepts the following terms.
   `SENTINEL2A`, `SENTINEL2B`.
 
 * __level__: Processing level of products. Accepted values are: `LEVEL1C`,
-  `LEVEL2A` and `LEVEL3A`, `N2A`. For Landsat57 collection, only `N2A` level is
-  available. Defaults to `LEVEL2A` (or `N2A` if querying Landsat57 collection).
+  `LEVEL2A` and `LEVEL3A`, `N2A`. Defaults to `LEVEL2A` (or `N2A` if querying
+  Landsat57 collection).
 
 
 To specify the location of the tiles, several alternatives are available.
