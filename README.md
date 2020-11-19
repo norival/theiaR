@@ -1,6 +1,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/norival/theiaR.svg?branch=master)](https://travis-ci.org/norival/theiaR)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/norival/theiaR?branch=master&svg=true)](https://ci.appveyor.com/project/norival/theiaR)
-[![CRAN status](https://www.r-pkg.org/badges/version/theiaR)](https://cran.r-project.org/package=theiaR)
+[![CRAN status](https://www.r-pkg.org/badges/version-ago/theiaR)](https://cran.r-project.org/package=theiaR)
+[![downloads](https://cranlogs.r-pkg.org/badges/grand-total/theiaR)](https://cran.r-project.org/package=theiaR)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://www.tidyverse.org/lifecycle/#stable)
 
 # TheiaR: search, download and manage data from Theia
@@ -31,19 +32,22 @@ account.
 
 ## Installation
 
-You can install the latest stable version from Github with:
-
-``` r
-devtools::install_github('norival/theiaR')
-
-# or, to install the development version
-devtools::install_github('norival/theiaR', 'devel')
-```
-
-Or, you can install it from CRAN:
+You can install the latest release from CRAN:
 
 ``` r
 isntall.packages('theiaR')
+```
+
+Alternatively, you can install the latest stable version from Github with:
+
+``` r
+devtools::install_github('norival/theiaR')
+```
+
+Or the latest development version:
+
+``` r
+devtools::install_github('norival/theiaR', 'devel')
 ```
 
 
