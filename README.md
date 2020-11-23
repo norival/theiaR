@@ -98,7 +98,9 @@ myquery <- list(collection = "SENTINEL2",
 will create a query to Theia database, looking for tiles from Sentinel2
 satellite around Grenoble, between 2018-07-01 and 2018-07-31.
 
-See the [vignette](https://theiar.norival.dev) for all the available options.
+See the
+[vignette](https://cran.r-project.org/web/packages/theiaR/vignettes/theiaR.html#create-a-collection-from-a-query)
+for all the available options.
 
 You can then create your collection with:
 
