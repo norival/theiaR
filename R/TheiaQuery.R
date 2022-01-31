@@ -247,7 +247,7 @@ TheiaQuery <-
                                        choices = platform.choices)
   self$query$level      <- parse_query(self$query$level, "level", "character",
                                        choices = level.choices,
-                                       default = ifelse(self$query$collection == 'Landsat57', 'N2A', "LEVEL2A"))
+                                       default = "LEVEL2A")
   self$query$start.date <- parse_query(self$query$start.date, "date", "character")
   self$query$end.date   <- parse_query(self$query$end.date, "date", "character",
                                        default = format(Sys.time(), "%Y-%m-%d")
@@ -266,13 +266,10 @@ TheiaQuery <-
   self$query$max.records      <- parse_query(self$query$max.records, "max.records", "numeric",
                                              default = 500)
 
-  # check level compatibility with Landsat57 collection
-  # if (self$query$collection == 'Landsat57' && self$query$level != 'N2A') {
-  #   stop(
-  #     paste0("'", self$query$level, "' is not available for Landsat57 collection. Please use 'N2A'."),
-  #     call. = FALSE
-  #   )
-  # }
+  # level is only used for SENTINEL2 and VENUS collections
+  if (self$query$collection != 'SENTINEL2' || self$query$collection != 'VENUS') {
+    self$query$level <- NULL
+  }
 
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
