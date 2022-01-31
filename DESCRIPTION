@@ -1,6 +1,6 @@
 Package: theiaR
 Title: Download and Manage Data from Theia
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: person("Xavier", "Laviron", email = "xavier@norival.dev",
     role = c("aut", "cre"),
     comment = c(ORCID = "0000-0002-9882-3253"))
@@ -21,8 +21,7 @@ License: GPL (>= 3.0)
 URL: https://github.com/norival/theiaR
 BugReports: https://github.com/norival/theiaR/issues
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests:
     knitr,
     rmarkdown,
