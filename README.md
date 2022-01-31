@@ -69,7 +69,7 @@ myquery <- list(collection = "SENTINEL2",
 # create a collection from the query
 mycollection <- TheiaCollection$new(query = myquery, dir.path = ".", check = TRUE)
 
-# check available tiles fro the query
+# check available tiles from the query
 mycollection$status
 
 # download the tiles into 'dir.path'

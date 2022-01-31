@@ -1,3 +1,11 @@
+# theiaR 0.4.1
+
+## Bug fixes
+
+- Fix bad default processing level for some collections
+- Fix cran checks note
+
+
 # theiaR 0.4.0
 
 ## Minor changes

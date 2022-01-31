@@ -31,6 +31,9 @@ knitr::opts_chunk$set(
 #  # download the tiles into 'dir.path'
 #  mycollection$download(auth = "path/to/auth/file.txt")
 
+## ---- eval=TRUE---------------------------------------------------------------
+library(theiaR)
+
 ## ---- eval=T------------------------------------------------------------------
 myquery <- list(collection = "SENTINEL2",
                 town       = "Grenoble",
