@@ -4,7 +4,7 @@
 ![GitHub R package version](https://img.shields.io/github/r-package/v/norival/theiaR)
 ![GitHub R package version (devel)](https://img.shields.io/github/r-package/v/norival/theiaR/devel)
 [![downloads](https://cranlogs.r-pkg.org/badges/grand-total/theiaR)](https://cran.r-project.org/package=theiaR)
-[![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://www.tidyverse.org/lifecycle/#stable)
+[![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 
 # TheiaR: search, download and manage data from Theia
 
@@ -101,7 +101,7 @@ will create a query to Theia database, looking for tiles from Sentinel2
 satellite around Grenoble, between 2018-07-01 and 2018-07-31.
 
 See the
-[vignette](https://cran.r-project.org/web/packages/theiaR/vignettes/theiaR.html#create-a-collection-from-a-query)
+[vignette](https://cran.r-project.org/package=theiaR/vignettes/theiaR.html#create-a-collection-from-a-query)
 for all the available options.
 
 You can then create your collection with:
