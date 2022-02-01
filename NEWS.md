@@ -1,3 +1,10 @@
+# theiaR 0.4.2-dev
+
+## Bug fixes
+
+- Fix processing level names for Snow collection [Issue #5](https://github.com/norival/theiaR/issues/5#issuecomment-1026136014)
+- Fix cran checks note
+
 # theiaR 0.4.1
 
 ## Bug fixes
