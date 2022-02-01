@@ -37,7 +37,7 @@
 #'        Defaults to 'SENTINEL2'
 #'      \item{platform:} The platform to look for. Accepted values are:
 #'        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
-#'        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B'
+#'        'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B', 'L2B-SNOW', 'L3B-SNOW'
 #'      \item{level:} Processing level. Accepted values are: 'LEVEL1C',
 #'        'LEVEL2A', LEVEL3A', 'N2A'. Defaults to 'LEVEL2A' (or 'N2A' if
 #'        querying Landsat57 collection).
