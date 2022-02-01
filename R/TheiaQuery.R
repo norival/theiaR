@@ -235,7 +235,7 @@ TheiaQuery <-
   platform.choices   <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
                           'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
                           'VENUS')
-  level.choices      <- c('LEVEL1C', 'LEVEL2A', 'LEVEL3A', 'N2A')
+  level.choices      <- c('LEVEL1C', 'LEVEL2A', 'LEVEL3A', 'N2A', 'L2B-SNOW', 'L3B-SNOW')
 
   # check queries
   self$query$tile       <- parse_query(self$query$tile, "tile", "character")
@@ -246,8 +246,7 @@ TheiaQuery <-
   self$query$platform   <- parse_query(self$query$platform, "platform", "character",
                                        choices = platform.choices)
   self$query$level      <- parse_query(self$query$level, "level", "character",
-                                       choices = level.choices,
-                                       default = "LEVEL2A")
+                                       choices = level.choices)
   self$query$start.date <- parse_query(self$query$start.date, "date", "character")
   self$query$end.date   <- parse_query(self$query$end.date, "date", "character",
                                        default = format(Sys.time(), "%Y-%m-%d")
@@ -265,11 +264,6 @@ TheiaQuery <-
   self$query$rel.orbit.number <- parse_query(self$query$rel.orbit.number, "rel.orbit.number", "numeric")
   self$query$max.records      <- parse_query(self$query$max.records, "max.records", "numeric",
                                              default = 500)
-
-  # level is only used for SENTINEL2 and VENUS collections
-  if (self$query$collection != 'SENTINEL2' || self$query$collection != 'VENUS') {
-    self$query$level <- NULL
-  }
 
   # check for incompatible queries
   if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
