@@ -1,4 +1,4 @@
-# theiaR 0.4.2-dev
+# theiaR 0.4.2
 
 ## Minor changes
 
