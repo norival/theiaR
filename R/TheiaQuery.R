@@ -266,8 +266,8 @@ TheiaQuery <-
                                              default = 500)
 
   # check for incompatible queries
-  if (!(is.null(self$query$tile)) && self$query$collection != "SENTINEL2") {
-    stop("'Tile' is only available for SENTINEL2 collection",
+  if (!(is.null(self$query$tile)) && self$query$collection == "VENUS") {
+    stop("'Tile' is not available for VENUS collection",
          call. = FALSE)
   }
 

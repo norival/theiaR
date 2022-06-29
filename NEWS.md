@@ -1,5 +1,9 @@
 # theiaR 0.4.2-dev
 
+## Minor changes
+
+- Allow "tile" field in queries for all collections except VENUS
+
 ## Bug fixes
 
 - Fix processing level names for Snow collection [Issue #5](https://github.com/norival/theiaR/issues/5#issuecomment-1026136014)
