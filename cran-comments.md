@@ -1,6 +1,6 @@
 ## Test environments
 
-* local ArchLinux install, R 4.1.2
+* local ArchLinux install, R 4.2.1
 * Windows Server 2022, R-devel
 
 
