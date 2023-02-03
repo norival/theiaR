@@ -1,4 +1,10 @@
-# theiaR 0.4.2-dev
+# theiaR 0.4.3
+
+## Minor changes
+
+- Add "VENUSVM05" collection
+
+# theiaR 0.4.2
 
 ## Minor changes
 

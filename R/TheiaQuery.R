@@ -33,7 +33,8 @@
 #'    Search criteria are given with a `list` accepting these fields:
 #'    \itemize{
 #'      \item{collection:} The collection to look for. Accepted values are:
-#'        'SENTINEL2', 'LANDSAT', 'Landsat57', 'SpotWorldHeritage', 'Snow'.
+#'        'SENTINEL2', 'LANDSAT', 'Landsat57', 'SpotWorldHeritage', 'Snow',
+#'        'VENUS' and 'VENUSVM05'.
 #'        Defaults to 'SENTINEL2'
 #'      \item{platform:} The platform to look for. Accepted values are:
 #'        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
@@ -231,7 +232,7 @@ TheiaQuery <-
 .TheiaQuery_check <- function(self, private)
 {
   # available choices
-  collection.choices <- c('LANDSAT', 'Landsat57', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS')
+  collection.choices <- c('LANDSAT', 'Landsat57', 'SpotWorldHeritage', 'SENTINEL2', 'Snow', 'VENUS', 'VENUSVM05')
   platform.choices   <- c('LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2',
                           'SPOT3', 'SPOT4', 'SPOT5', 'SENTINEL2A', 'SENTINEL2B',
                           'VENUS')
