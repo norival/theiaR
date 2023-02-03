@@ -267,10 +267,10 @@ TheiaQuery <-
                                              default = 500)
 
   # check for incompatible queries
-  if (!(is.null(self$query$tile)) && self$query$collection == "VENUS") {
-    stop("'Tile' is not available for VENUS collection",
-         call. = FALSE)
-  }
+  # if (!(is.null(self$query$tile)) && self$query$collection == "VENUS") {
+  #   stop("'Tile' is not available for VENUS collection",
+  #        call. = FALSE)
+  # }
 
   # check that start date is lower than end date
   if (as.Date(self$query$end.date) - as.Date(self$query$start.date) <= 0) {

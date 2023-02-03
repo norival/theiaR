@@ -42,7 +42,8 @@ input given by the user.
    Search criteria are given with a `list` accepting these fields:
    \itemize{
      \item{collection:} The collection to look for. Accepted values are:
-       'SENTINEL2', 'LANDSAT', 'Landsat57', 'SpotWorldHeritage', 'Snow'.
+       'SENTINEL2', 'LANDSAT', 'Landsat57', 'SpotWorldHeritage', 'Snow',
+       'VENUS' and 'VENUSVM05'.
        Defaults to 'SENTINEL2'
      \item{platform:} The platform to look for. Accepted values are:
        'LANDSAT5', 'LANDSAT7', 'LANDSAT8', 'SPOT1', 'SPOT2', 'SPOT3',
