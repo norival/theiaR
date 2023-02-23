@@ -93,14 +93,14 @@ TheiaTile <-
                    .TheiaTile_check(self, check)
                  },
 
-                 download = function(auth, overwrite = FALSE, check = TRUE, quiet = TRUE)
+                 download = function(auth, overwrite = FALSE, check = TRUE, quiet = TRUE, continue = FALSE)
                  {
                    if (quiet == TRUE) {
                      suppressMessages({
-                       .TheiaTile_download(self, auth, overwrite, check)
+                       .TheiaTile_download(self, auth, overwrite, check, continue)
                      })
                    } else {
-                     .TheiaTile_download(self, auth, overwrite, check)
+                     .TheiaTile_download(self, auth, overwrite, check, continue)
                    }
                  },
                   
@@ -215,7 +215,7 @@ TheiaTile <-
 }
 
 
-.TheiaTile_download <- function(self, auth, overwrite, check)
+.TheiaTile_download <- function(self, auth, overwrite, check, continue)
 {
   if (is.character(auth)) {
     # create authentification system if not supplied
@@ -230,20 +230,34 @@ TheiaTile <-
     url <- gsub("\\?_tk=.*$", "", self$url)
     url <- paste0(url, "/?issuerId=theia")
 
-    # HTTP request
-    req <- httr::GET(url,
-                     httr::add_headers(Authorization = paste("Bearer", auth$token)),
-                     httr::write_disk(self$file.path, overwrite = TRUE),
-                     httr::progress())
+    if (continue == TRUE) {
+      if (Sys.which("wget") == "") {
+        stop("'wget' is not available on your system and is required when 'continue=TRUE'")
+      }
 
-    httr::stop_for_status(req, task = paste0("download tile: ", self$file.path))
+      download.file(
+        url = url,
+        method = "wget",
+        destfile = self$file.path,
+        extra = paste("--continue --header='Authorization: Bearer", auth$token, "'")
+      )
+    } else {
+      # HTTP request
+      req <- httr::GET(
+        url,
+        httr::add_headers(Authorization = paste("Bearer", auth$token)),
+        httr::write_disk(self$file.path, overwrite = TRUE),
+        httr::progress()
+      )
 
-    # test if file is text
-    if (!(grepl("zip", httr::http_type(req)))) {
-      stop("Downloaded product is a text file, it should not be... Response:\n\n",
-           httr::content(req, as = "text"))
+      httr::stop_for_status(req, task = paste0("download tile: ", self$file.path))
+
+      # test if file is text
+      if (!(grepl("zip", httr::http_type(req)))) {
+        stop("Downloaded product is a text file, it should not be... Response:\n\n",
+          httr::content(req, as = "text"))
+      }
     }
-
   } else {
     # The file already exists
     message("File ",
